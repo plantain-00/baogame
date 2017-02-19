@@ -36,3 +36,8 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 .vscode
+dist
+static/scripts
+static/index.html
+static/rooms.html
+static/admin.html
