@@ -1,0 +1,75 @@
+<!doctype>
+<html>
+<head>
+	<title>暴走后台</title>
+	<style>
+		.btn {
+			display: block;
+			border: 1px solid #004;
+			padding: 10px 20px;
+			border-radius: 5px;
+			margin: 20px;
+			text-align: center;
+			color: #004;
+			text-decoration: none;
+		}
+		.btn:active {
+			background: #004;
+			color: #fff;
+		}
+		.btn.banned {
+			background: #c22;
+		}
+		.user {
+			margin: 5px;
+			border: 1px solid black;
+			padding: 5px;
+			display: -webkit-box;
+		}
+		.client {
+			width: 200px;
+			background: #eee;
+		}
+		.player {
+			-webkit-box-flex: 1;
+			width: 100%;
+		}
+		.action {
+			width: 200px;
+			background: #eee;
+		}
+		.items {
+			display: -webkit-box;
+		}
+		.rooms span {
+			display: inline-block;
+			background: rgba(255,255,0,.1);
+			border: 1px solid rgb(255,255,0);
+			padding: 10px;
+			margin: 10px;
+		}
+		.rooms span.active {
+			background: rgba(255,255,0,.4);
+		}
+	</style>
+</head>
+<body>
+	<div class="rooms"></div>
+	<a class="btn btn-heap">heapdump</a>
+	<div class="items">
+		生成道具：
+		<a class="btn" data-type="0">无敌</a>
+		<a class="btn" data-type="1">枪</a>
+		<a class="btn" data-type="2">地雷</a>
+		<a class="btn" data-type="3">毒药</a>
+		<a class="btn" data-type="4">隐身</a>
+		<a class="btn" data-type="5">?</a>
+		<a class="btn" data-type="6">二段跳</a>
+		<a class="btn" data-type="7">喷气背包</a>
+		<a class="btn" data-type="8">手雷</a>
+	</div>
+	<div class="users"></div>
+	<script src="zepto.js"></script>
+	<script src="scripts/<%= staticScriptsAdminJs %>"></script>
+</body>
+</html>

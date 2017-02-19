@@ -1,0 +1,37 @@
+{
+  "name": "baogame",
+  "description": "a html5 mutiplayer game",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plantain-00/baogame.git"
+  },
+  "author": "York Yao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/plantain-00/baogame/issues"
+  },
+  "scripts": {
+    "start": "node dist/app.js",
+    "build": "tsc -p src/back/ && tsc -p src/front/ && webpack && rev-static"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "homepage": "https://github.com/plantain-00/baogame#readme",
+  "dependencies": {
+    "express": "4.14.1",
+    "uws": "0.12.0"
+  },
+  "devDependencies": {
+    "@types/express": "4.0.35",
+    "@types/jquery": "2.0.40",
+    "@types/node": "7.0.5",
+    "@types/uws": "0.0.0",
+    "rev-static": "2.1.0",
+    "tslib": "1.5.0",
+    "tslint": "4.4.2",
+    "typescript": "2.1.6",
+    "webpack": "2.2.1"
+  }
+}
