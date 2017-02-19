@@ -3,7 +3,7 @@
 export function start(joing: (p: any) => void, initDone: () => void) {
     const p1 = {
         data: undefined,
-        id: undefined,
+        id: undefined as number | null | undefined,
         upDown: 0,
         downDown: 0,
         leftDown: 0,
@@ -14,7 +14,7 @@ export function start(joing: (p: any) => void, initDone: () => void) {
         rightPress: false,
         upPress: false,
         downPress: false,
-        onStruct: undefined,
+        onStruct: undefined as number | null | undefined,
     };
     const p2 = {
         id: undefined,

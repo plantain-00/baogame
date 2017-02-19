@@ -1,3 +1,5 @@
+import * as common from "../back/common";
+
 let ws: WebSocket | undefined;
 
 function processData(str: string) {
@@ -9,24 +11,24 @@ function processData(str: string) {
     }
 }
 
-export function connect(roomID: number | undefined, onsuccess: () => void, onmessage: (name: string, value: any) => void) {
+export function connect(roomID: number | undefined, onsuccess: () => void, onmessage: (protocol: common.OutProtocol) => void) {
     const protocol = location.protocol === "https:" ? "wss:" : "ws:";
     ws = new WebSocket(`${protocol}//${location.host}/ws/?roomID=${roomID || 1}`);
     ws.onopen = () => {
         onsuccess();
     };
-    ws.onmessage = (evt) => {
+    ws.onmessage = evt => {
         if (evt.data instanceof Blob) {
             const reader = new FileReader();
             reader.addEventListener("loadend", () => {
                 const x = new Uint8Array(reader.result);
                 const {name, value} = processData(x.toString());
-                onmessage(name, value);
+                onmessage({ name, data: value } as any);
             });
             reader.readAsArrayBuffer(evt.data);
         } else {
             const {name, value} = processData(evt.data);
-            onmessage(name, value);
+            onmessage({ name, data: value } as any);
         }
     };
     // ws.onclose = (evt) => {
@@ -41,9 +43,9 @@ export function connect(roomID: number | undefined, onsuccess: () => void, onmes
     };
 }
 
-export function emit(name: string, data?: any) {
+export function emit(protocol: common.InProtocol) {
     if (!ws) {
         return;
     }
-    ws.send(data ? name + "$" + JSON.stringify(data) : name);
+    ws.send(protocol.data ? protocol.name + "$" + JSON.stringify(protocol.data) : protocol.name);
 }

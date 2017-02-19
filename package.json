@@ -14,7 +14,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc -p src/back/ && tsc -p src/front/ && webpack && rev-static",
-    "clean": "rm -rf dist/ && rm -rf static/dist/ && rm -rf static/scripts/"
+    "clean": "rm -rf dist/ && rm -rf static/dist/ && rm -rf static/scripts/",
+    "lint": "tslint \"src/**/*.ts\""
   },
   "engines": {
     "node": ">=6"

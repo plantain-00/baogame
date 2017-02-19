@@ -5,12 +5,10 @@ export class Door {
     id: number;
     x: number;
     y: number;
-    utype: number;
     constructor(public game: services.Game, data: any) {
         this.id = data.id;
         this.x = data.x;
         this.y = data.y;
-        this.utype = data.utype;
     }
     update() {
         for (const user of this.game.users) {

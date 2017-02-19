@@ -33,7 +33,7 @@ class JPack {
         }
         return res;
     }
-    decode(arr: any) {
+    decode(arr: any[]) {
         const data: any = {};
         for (let i = 0; i < this.bits.length; i++) {
             const n = this.bits[i].name;

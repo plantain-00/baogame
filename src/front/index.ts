@@ -271,7 +271,7 @@ function notice(str: any) {
 
 let cdomBody: any;
 let ctxBody: any;
-let ctx: any;
+let context: any;
 let ctxBg;
 let P: any;
 let t = 0;
@@ -292,9 +292,12 @@ function joing(p: any) {
     } else {
         localStorage.removeItem("userName");
     }
-    emit("join", {
-        userName,
-        p1: p,
+    emit({
+        name: "join",
+        data: {
+            userName: userName!,
+            p1: p,
+        },
     });
 }
 
@@ -323,11 +326,11 @@ function initDone() {
     let controlCache = "";
     const param = parseParam();
     connect(param.roomID, () => {
-        emit("init", { userName });
-    }, (name, data) => {
-        if (name === "init") {
+        emit({ name: "init", data: { userName: userName! } });
+    }, protocol => {
+        if (protocol.name === "init") {
             Effect.clean();
-            P = data.props;	// 常量
+            P = protocol.data.props;	// 常量
             const cdom = document.createElement("canvas");	// 玩家层
             const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
             cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
@@ -339,10 +342,10 @@ function initDone() {
             cdomBg.id = "bg";
             cdomBody.width = P.w;
             cdomBody.height = P.h;
-            ctx = cdom.getContext("2d");
-            ctx.font = "14px 宋体";
-            ctx.textBaseline = "middle"; // 设置文本的垂直对齐方式
-            ctx.textAlign = "center"; // 设置文本的水平对对齐方式
+            context = cdom.getContext("2d");
+            context.font = "14px 宋体";
+            context.textBaseline = "middle"; // 设置文本的垂直对齐方式
+            context.textAlign = "center"; // 设置文本的水平对对齐方式
 
             ctxBg = cdomBg.getContext("2d");
             ctxBody = cdomBody.getContext("2d");
@@ -350,55 +353,57 @@ function initDone() {
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
-            drawBg(ctxBg, data.map);
+            drawBg(ctxBg, protocol.data.map);
             game.structs = [];
-            for (let i = 0; i < data.map.structs.length; i++) {
-                game.structs[data.map.structs[i].id] = data.map.structs[i];
+            for (let i = 0; i < protocol.data.map.structs.length; i++) {
+                game.structs[protocol.data.map.structs[i].id] = protocol.data.map.structs[i];
             }
             const middle: any = document.getElementById("middle");
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
             // 初始化尸体
-            for (const body of data.bodies) {
+            for (const body of protocol.data.bodies) {
                 const user = Packs.userPack.decode(body);
                 drawUser(ctxBody, user, {});
             }
             $(".joining").show();
-        } else if (name === "joinSuccess") {
+        } else if (protocol.name === "joinSuccess") {
             $(".joining").hide();
-        } else if (name === "joinFail") {
-            alert(data);
-        } else if (name === "tick") {
+        } else if (protocol.name === "joinFail") {
+            alert(protocol.data);
+        } else if (protocol.name === "tick") {
             t++;
-            p1.id = data.p1;
-            p1.onStruct = data.onStruct;
-            for (let i = 0; i < data.users.length; i++) {
-                data.users[i] = Packs.userPack.decode(data.users[i]);
-                if (data.users[i].id === p1) {
-                    p1.data = data.users[i];
+            p1.id = protocol.data.p1;
+            p1.onStruct = protocol.data.onStruct;
+            for (let i = 0; i < protocol.data.users.length; i++) {
+                protocol.data.users[i] = Packs.userPack.decode(protocol.data.users[i]);
+                if (protocol.data.users[i].id === p1) {
+                    p1.data = protocol.data.users[i];
                 }
             }
-            for (let i = 0; i < data.items.length; i++) {
-                data.items[i] = Packs.itemPack.decode(data.items[i]);
+            for (let i = 0; i < protocol.data.items.length; i++) {
+                protocol.data.items[i] = Packs.itemPack.decode(protocol.data.items[i]);
             }
-            for (let i = 0; i < data.mines.length; i++) {
-                data.mines[i] = Packs.minePack.decode(data.mines[i]);
+            for (let i = 0; i < protocol.data.mines.length; i++) {
+                protocol.data.mines[i] = Packs.minePack.decode(protocol.data.mines[i]);
             }
-            for (let i = 0; i < data.entitys.length; i++) {
-                data.entitys[i] = Packs.entityPack.decode(data.entitys[i]);
+            if (protocol.data.entitys) {
+                for (let i = 0; i < protocol.data.entitys.length; i++) {
+                    protocol.data.entitys[i] = Packs.entityPack.decode(protocol.data.entitys[i]);
+                }
             }
 
-            render(ctx, data);
+            render(context, protocol.data);
 
             // 发送控制
             const control = JSON.stringify(Packs.controlPack.encode(p1));
             if (controlCache !== control) {
                 controlCache = control;
-                emit("control", Packs.controlPack.encode(p1));
+                emit({ name: "control", data: Packs.controlPack.encode(p1) });
             }
             let userCount = 0;
-            for (const user of data.users) {
+            for (const user of protocol.data.users) {
                 if (!user.npc) {
                     userCount++;
                 }
@@ -417,21 +422,21 @@ function initDone() {
             p1.upPress = false;
             p1.downPress = false;
             p1.itemPress = false;
-        } else if (name === "explode") {
+        } else if (protocol.name === "explode") {
             cdx = 8;
             cdy = 9;
-            Effect.trigger(new Flare(data, true));
-        } else if (name === "userDead") {
-            const user = Packs.userPack.decode(data.user);
-            notice(data.message);
+            Effect.trigger(new Flare(protocol.data, true));
+        } else if (protocol.name === "userDead") {
+            const user = Packs.userPack.decode(protocol.data.user);
+            notice(protocol.data.message);
             // p1 dead
             if (user.id === p1.id) {
                 setTimeout(() => {
                     $(".joining").show().find("h4").html("你挂了");
                 }, 500);
             }
-            if (data.killer) {
-                const killer = Packs.userPack.decode(data.killer);
+            if (protocol.data.killer) {
+                const killer = Packs.userPack.decode(protocol.data.killer);
                 if (killer.score <= 10) {
                     Effect.trigger(new Toast({
                         x: killer.x,
@@ -441,7 +446,7 @@ function initDone() {
                     }));
                 }
             }
-        } else if (name === "win") {
+        } else if (protocol.name === "win") {
             $(".win").css("display", "-webkit-box");
         }
     });
@@ -551,22 +556,22 @@ function drawBg(ctx: any, map: any) {
 }
 
 function drawStructs(structs: any[]) {
-    ctx.fillStyle = "#fff";
-    ctx.font = "20px 宋体";
+    context.fillStyle = "#fff";
+    context.font = "20px 宋体";
     for (let i = 1; i < structs.length; i++) {
         const struct = structs[i];
         if (struct.type === "sign") {
             if (struct.id === p1.onStruct) {
-                ctx.fillText(struct.message, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight - 30);
+                context.fillText(struct.message, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight - 30);
             }
-            ctx.drawImage(imgs.sign, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(imgs.sign, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         } else if (struct.type === "itemGate") {
-            ctx.drawImage(imgs.itemGate, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(imgs.itemGate, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         } else {
-            ctx.drawImage(imgs.door, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(imgs.door, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         }
     }
-    ctx.font = "14px 宋体";
+    context.font = "14px 宋体";
 }
 
 function drawWater(ctx: any, height: any, color: any) {
@@ -621,7 +626,7 @@ function drawWeapon(ctx: any, index: any) {
 
 function drawUser(ctx: any, user: any, data: any) {
     if (user.doubleJumping) {
-        Effect.trigger(new Brust(user, 10, 40))
+        Effect.trigger(new Brust(user, 10, 40));
     }
 
     ctx.save();
@@ -701,7 +706,7 @@ function drawUser(ctx: any, user: any, data: any) {
         ctx.drawImage(imgs.bomb, P.userWidth / 2 - 10, -P.userHeight, 30, 40);
         if (!user.dead) {
             ctx.scale(user.faceing, 1);
-            const x = user.faceing * (P.userWidth / 2 + 10)
+            const x = user.faceing * (P.userWidth / 2 + 10);
             ctx.font = "28px 宋体";
             ctx.fillStyle = "#ff0";
             ctx.fillText(Math.floor(user.carryCount * 17 / 1000) + 1, x, -P.userHeight - 10);

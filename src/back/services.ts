@@ -10,6 +10,7 @@ import { map as map2 } from "./maps/lesson2";
 import { Door } from "./struct/door";
 import { Sign } from "./struct/sign";
 import { ItemGate } from "./struct/itemGate";
+import * as common from "./common";
 
 import * as libs from "./libs";
 
@@ -49,9 +50,9 @@ export function getClientData(client: Client) {
     };
 }
 
-export function emit(ws: libs.WebSocket, name: string, data?: any) {
+export function emit(ws: libs.WebSocket, protocol: common.OutProtocol) {
     try {
-        const c = name + "$" + JSON.stringify(data);
+        const c = protocol.name + "$" + JSON.stringify(protocol.data);
         ws.send(c);
     } catch (e) {
         console.log(e);

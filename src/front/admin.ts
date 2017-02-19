@@ -4,25 +4,25 @@ import { Packs } from "./JPack";
 const code = localStorage.getItem("code");
 
 connect(undefined, () => {
-    emit("init", { code });
-}, (name, data) => {
-    if (name === "initFail") {
+    emit({ name: "init", data: { code: code! } });
+}, protocol => {
+    if (protocol.name === "initFail") {
         alert("fail");
-    } else if (name === "tick") {
-        for (let i = 0; i < data.users.length; i++) {
-            data.users[i] = Packs.userPack.decode(data.users[i]);
+    } else if (protocol.name === "tick") {
+        for (let i = 0; i < protocol.data.users.length; i++) {
+            protocol.data.users[i] = Packs.userPack.decode(protocol.data.users[i]);
         }
-        for (let i = 0; i < data.items.length; i++) {
-            data.items[i] = Packs.itemPack.decode(data.items[i]);
+        for (let i = 0; i < protocol.data.items.length; i++) {
+            protocol.data.items[i] = Packs.itemPack.decode(protocol.data.items[i]);
         }
-        for (let i = 0; i < data.mines.length; i++) {
-            data.mines[i] = Packs.minePack.decode(data.mines[i]);
+        for (let i = 0; i < protocol.data.mines.length; i++) {
+            protocol.data.mines[i] = Packs.minePack.decode(protocol.data.mines[i]);
         }
         let html = '<div class="clients">';
-        if (data.clients) {
-            data.clients.forEach((client: any) => {
+        if (protocol.data.clients) {
+            protocol.data.clients.forEach((client: any) => {
                 let p1: any = null;
-                data.users.forEach((user: any) => {
+                protocol.data.users.forEach((user: any) => {
                     if (client.p1 === user.id) {
                         p1 = user;
                         return;
@@ -64,19 +64,16 @@ $(".users").on("click", ".btn.ban", (e) => {
     const $t = $(e.currentTarget);
     const clientid = $t.data("clientid");
     if ($t.is(".banned")) {
-        emit("unban", clientid);
+        emit({ name: "unban", data: clientid });
         $t.removeClass("banned");
     } else {
-        emit("ban", clientid);
+        emit({ name: "ban", data: clientid });
         $t.addClass("banned");
     }
 });
 $(".items .btn").click((e) => {
     const type = $(e.currentTarget).data("type");
-    emit("createItem", type);
-});
-$(".btn-heap").click(() => {
-    emit("heapdump");
+    emit({ name: "createItem", data: type });
 });
 
 $.ajax({

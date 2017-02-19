@@ -148,7 +148,7 @@ export class Game {
                 user.danger = true;
             }
         }
-        this.announce("explode", { x, y, power });
+        this.announce({ name: "explode", data: { x, y, power } });
     }
     checkShot(u: services.User) {
         const game = this;
@@ -208,13 +208,13 @@ export class Game {
             }
         }
     }
-    announce(type: string, data: any) {
+    announce(protocol: common.OutProtocol) {
         for (const client of this.clients) {
-            services.emit(client.ws, type, data);
+            services.emit(client.ws, protocol);
         }
     }
     win(user: { id: number }) {
-        this.announce("win", user.id);
+        this.announce({ name: "win", data: user.id });
         setTimeout(() => {
             clearInterval(this.runningTimer);
             removeGame(this);
@@ -308,22 +308,28 @@ export class Game {
             }
             if (client.admin) {
                 if (this.tick % 60 === 0) {
-                    services.emit(client.ws, "tick", {
-                        users: userdata,
-                        items: itemdata,
-                        mines: minedata,
-                        clients: clientsdata,
+                    services.emit(client.ws, {
+                        name: "tick",
+                        data: {
+                            users: userdata,
+                            items: itemdata,
+                            mines: minedata,
+                            clients: clientsdata,
+                        },
                     });
                 }
             } else {
-                services.emit(client.ws, "tick", {
-                    users: userdata,
-                    items: itemdata,
-                    mines: minedata,
-                    entitys: entitydata,
-                    p1,
-                    onStruct,
-                    p2,
+                services.emit(client.ws, {
+                    name: "tick",
+                    data: {
+                        users: userdata,
+                        items: itemdata,
+                        mines: minedata,
+                        entitys: entitydata,
+                        p1,
+                        onStruct,
+                        p2,
+                    },
                 });
             }
         }

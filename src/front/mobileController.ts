@@ -13,13 +13,13 @@ export function start(joing: (p: any) => void, initDone: () => void) {
         upPress: false,
         downPress: false,
     };
-    var p2 = {
+    const p2 = {
         upDown: 0,
         downDown: 0,
         leftDown: 0,
         rightDown: 0,
-        itemDown: 0
-    }
+        itemDown: 0,
+    };
     $("body").on("touchmove", e => {
         e.preventDefault();
     });

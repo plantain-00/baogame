@@ -447,10 +447,13 @@ export class User {
             }
         }
 
-        this.game.announce("userDead", {
-            user: this.getData(),
-            killer: killer && killer.getData(),
-            message,
+        this.game.announce({
+            name: "userDead",
+            data: {
+                user: this.getData(),
+                killer: killer ? killer.getData() : undefined,
+                message,
+            },
         });
     }
     getData() {
