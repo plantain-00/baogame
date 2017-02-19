@@ -1,4 +1,4 @@
-import { Packs } from "../back/Jpack";
+import { Packs } from "../back/JPack";
 export { Packs };
 
 export function run(this: any) {
