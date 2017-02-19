@@ -10,7 +10,8 @@ function processData(str: string) {
 }
 
 export function connect(roomID: number | undefined, onsuccess: () => void, onmessage: (name: string, value: any) => void) {
-    ws = new WebSocket("ws://" + location.host + "?roomID=" + (roomID || 1));
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    ws = new WebSocket(`${protocol}//${location.host}/ws/?roomID=${roomID || 1}`);
     ws.onopen = () => {
         onsuccess();
     };
