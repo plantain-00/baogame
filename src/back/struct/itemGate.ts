@@ -5,7 +5,7 @@ export class ItemGate {
     id: number;
     x: number;
     y: number;
-    itemType: any;
+    itemType: number | undefined;
     targetItem: services.Item;
     constructor(public game: services.Game, data: any) {
         this.id = data.id;

@@ -5,9 +5,9 @@ export class Map {
     structID: number;
     w: number;
     h: number;
-    floor: any;
-    pilla: any;
-    borns: any;
+    floor: number[][];
+    pilla: services.Pillar[];
+    borns: services.Born[];
     hooks: any;
     structs: services.Struct[];
     constructor(public game: services.Game, data?: any) {

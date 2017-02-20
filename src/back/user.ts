@@ -5,9 +5,9 @@ let userCount = 0;
 export class User {
     id: number;
     name: string;
-    onFloor: boolean;
+    onFloor: number | false;
     onPilla: boolean;
-    nearPilla: boolean;
+    nearPilla: boolean | services.Pillar;
     dead: boolean;
     rolling: boolean;
     crawl: boolean;
@@ -29,7 +29,6 @@ export class User {
     canDoubleJump: boolean;
     lastTouch: any;
     rollPoint: number;
-    upDown: any;
     downDown: any;
     pilla: any;
     itemPress: any;
@@ -41,18 +40,19 @@ export class User {
     itemDown: any;
     r: any;
     vr: any;
-    leftPress: any;
-    rightPress: any;
-    leftDown: any;
-    rightDown: any;
+    leftPress: boolean;
+    rightPress: boolean;
+    upPress: boolean;
+    downPress: boolean;
+    leftDown: number;
+    rightDown: number;
+    upDown: number;
     flypackActive: boolean;
-    upPress: any;
-    killer: any;
+    killer: number;
     killedBy: services.User;
     goleft: boolean;
     goright: boolean;
     facing: boolean;
-    downPress: any;
     constructor(public game: services.Game, public client: services.Client) {
         this.id = userCount++;
         this.name = client.name;
@@ -389,8 +389,10 @@ export class User {
     }
     killed(action: any, byUser?: services.User) {
         if (this.dieing) { return; }
-        this.killer = byUser && byUser.id;
-        this.dieing = true;
+        if (byUser) {
+            this.killer = byUser.id;
+        }
+
         this.killedBy = action;
         this.client.death++;
 

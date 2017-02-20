@@ -18,6 +18,8 @@ export { User, Game, Packs, playerAI, Grenade, Map, Item, map1, map2, Door, Sign
 
 export type Struct = Door | Sign | ItemGate;
 
+export type Entity = Grenade;
+
 export interface Client {
     id: number;
     p1: User | null;
@@ -57,4 +59,22 @@ export function emit(ws: libs.WebSocket, protocol: common.OutProtocol) {
     } catch (e) {
         console.log(e);
     }
+}
+
+export interface Mine {
+    x: number;
+    y: number;
+    creater: User;
+    dead?: boolean;
+}
+
+export interface Pillar {
+    x: number;
+    y1: number;
+    y2: number;
+}
+
+export interface Born {
+    x: number;
+    y: number;
 }

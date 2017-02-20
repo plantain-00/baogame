@@ -49,13 +49,22 @@ export class Game {
     users: services.User[];
     clients: services.Client[];
     items: services.Item[];
-    bodies: any[];
-    mines: any[];
-    entitys: any[];
+    bodies: services.User[];
+    mines: services.Mine[];
+    entitys: services.Entity[];
     tick: number;
-    props: any;
+    props = {
+        userHeight: 40,
+        userWidth: 40,
+        itemSize: 15,
+        tw: 28,
+        th: 15,
+        maxUser,
+        w: 0,
+        h: 0,
+    };
     map: services.Map;
-    runningTimer: any;
+    runningTimer: NodeJS.Timer;
     constructor(type: any, public adminCode: string, public id: number) {
         this.users = [];
         this.clients = [];
@@ -64,14 +73,6 @@ export class Game {
         this.mines = [];
         this.entitys = [];
         this.tick = 0;
-        this.props = {
-            userHeight: 40,
-            userWidth: 40,
-            itemSize: 15,
-            tw: 28,
-            th: 15,
-            maxUser,
-        };
         if (type === "lesson1") {
             this.props.th = services.map1.h;
             this.props.tw = services.map1.w;
@@ -118,6 +119,7 @@ export class Game {
                 return user;
             }
         }
+        return undefined;
     }
     getClient(cid: number) {
         for (const client of this.clients) {

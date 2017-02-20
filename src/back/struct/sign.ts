@@ -4,7 +4,7 @@ export class Sign {
     id: number;
     x: number;
     y: number;
-    message: any;
+    message: string;
     constructor(public game: services.Game, data: any) {
         this.id = data.id;
         this.x = data.x;
