@@ -1,6 +1,6 @@
 import * as services from "../services";
 
-export const map = {
+export const map: services.MapData = {
     w: 22,
     h: 12,
     floor: [

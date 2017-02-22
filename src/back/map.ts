@@ -10,7 +10,7 @@ export class Map {
     borns: services.Born[];
     hooks: any;
     structs: services.Struct[];
-    constructor(public game: services.Game, data?: any) {
+    constructor(public game: services.Game, data?: services.MapData) {
         this.structID = 1;
         if (data) {
             this.w = game.props.w;
@@ -37,7 +37,7 @@ export class Map {
                     const npc = this.game.createNPC({ name: npcData.name || "npc" });
                     npc.x = (npcData.x + .5) * common.constant.tileWidth;
                     npc.y = (npcData.y + .5) * common.constant.tileHeight;
-                    npc.carryCount = npcData.carryCount;
+                    npc.carryCount = npcData.carryCount!;
                     npc.carry = npcData.carry;
                     npc.AI = npcData.AI;
                 }

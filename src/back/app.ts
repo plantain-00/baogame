@@ -38,7 +38,7 @@ for (let i = 0; i < (opts.room || 1); i++) {
     services.createGame("大乱斗", adminCode);
 }
 
-const banedip: any = {};
+const banedip: { [ip: string]: boolean } = {};
 let concount = 0;
 
 wss.on("connection", ws => {
@@ -66,10 +66,7 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData: any = [];
-    for (const body of game.bodies) {
-        bodiesData.push(body.getData());
-    }
+    const bodiesData = game.bodies.map(body => body.getData());
 
     game.clients.push(client);
 
@@ -129,18 +126,16 @@ wss.on("connection", ws => {
             services.emit(ws, { name: "joinSuccess", data: protocol.data.p1 });
         } else if (protocol.name === "control") {
             if (client.p1 && protocol.data) {
-                const p1 = services.Packs.controlPack.decode(protocol.data);
-                client.p1.leftDown = p1.leftDown;
-                client.p1.rightDown = p1.rightDown;
-                client.p1.upDown = p1.upDown;
-                client.p1.downDown = p1.downDown;
-                client.p1.itemDown = p1.itemDown;
-
-                client.p1.leftPress = p1.leftPress;
-                client.p1.rightPress = p1.rightPress;
-                client.p1.upPress = p1.upPress;
-                client.p1.downPress = p1.downPress;
-                client.p1.itemPress = p1.itemPress;
+                client.p1.leftDown = protocol.data.leftDown;
+                client.p1.rightDown = protocol.data.rightDown;
+                client.p1.upDown = protocol.data.upDown;
+                client.p1.downDown = protocol.data.downDown;
+                client.p1.itemDown = protocol.data.itemDown;
+                client.p1.leftPress = protocol.data.leftPress;
+                client.p1.rightPress = protocol.data.rightPress;
+                client.p1.upPress = protocol.data.upPress;
+                client.p1.downPress = protocol.data.downPress;
+                client.p1.itemPress = protocol.data.itemPress;
             }
         } else if (protocol.name === "createItem") {
             if (client.admin) {

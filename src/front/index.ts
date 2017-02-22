@@ -1,14 +1,16 @@
 import { connect, emit } from "./socket";
-import { Packs } from "./JPack";
 import * as pcController from "./pcController";
 import * as mobileController from "./pcController";
 import * as common from "../back/common";
+import * as images from "./images";
 
 const {p1, p2} = (navigator.userAgent.indexOf("iPhone") === -1
     && navigator.userAgent.indexOf("Android") === -1
     && navigator.userAgent.indexOf("iPad") === -1)
     ? pcController.start(joing, initDone)
     : mobileController.start(joing, initDone);
+
+(window as any).items = common.items;
 
 // 5毛钱特效
 // effect 是由事件触发的，临时的，逻辑无关效果。如爆炸后的效果、喷出气体等
@@ -21,7 +23,7 @@ class Smoke {
         this.totalLife = Math.random() * 60 + 30;
         this.chaos = Math.random() * 4 - 2;
     }
-    draw(ctx: any, t: any) {
+    draw(ctx: CanvasRenderingContext2D, t: any) {
         t += this.chaos;
         const g = t < 5 ? 255 - Math.floor(t * 50) : Math.min(255, Math.floor(t * 20));
         const b = t < 5 ? 0 : Math.min(255, Math.floor(t * 20));
@@ -74,7 +76,7 @@ class Flare {
             }
         }
     }
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.translate(this.x, P.h - this.y);
         ctx.fillStyle = "#fff";
@@ -106,7 +108,7 @@ class Toast {
         this.size = user.size;
         this.txt = user.txt;
     }
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         this.t++;
         ctx.save();
         if (this.life < 10) {
@@ -144,7 +146,7 @@ class Brust {
         }
     }
 
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.fillStyle = "#fff";
         ctx.globalAlpha = this.life / 100;
@@ -176,7 +178,7 @@ class WaterDrops {
             });
         }
     }
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.fillStyle = "#95a";
         const _this = this;
@@ -197,7 +199,7 @@ class WaterDrops {
 class ItemDead {
     life = 40;
     constructor(public item: any, public name: any) { }
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.strokeStyle = "rgba(255,255,255," + (this.life) / 40 + ")";
         ctx.beginPath();
         ctx.arc(this.item.x, P.h - this.item.y, P.itemSize + (40 - this.life) / 2, 0, 2 * Math.PI);
@@ -213,7 +215,7 @@ class ItemDead {
 class ShotLine {
     life = 20;
     constructor(public x: number, public y: number, public dir: any) { }
-    draw(ctx: any) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.strokeStyle = "rgba(255,255,0," + (this.life) / 20 + ")";
         ctx.beginPath();
         if (this.dir === 1) {
@@ -236,7 +238,7 @@ const Effect = {
     trigger(effect: any) {
         lists.push(effect);
     },
-    render(ctx: any) {
+    render(ctx: CanvasRenderingContext2D) {
         for (let i = lists.length - 1; i >= 0; i--) {
             const eff = lists[i];
             if (eff.life < 0) {
@@ -353,7 +355,7 @@ function initDone() {
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
-            drawBg(ctxBg, protocol.data.map);
+            drawBg(ctxBg!, protocol.data.map);
             game.structs = [];
             for (let i = 0; i < protocol.data.map.structs.length; i++) {
                 game.structs[protocol.data.map.structs[i].id] = protocol.data.map.structs[i];
@@ -363,8 +365,7 @@ function initDone() {
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
             // 初始化尸体
-            for (const body of protocol.data.bodies) {
-                const user = Packs.userPack.decode(body);
+            for (const user of protocol.data.bodies) {
                 drawUser(ctxBody, user, {});
             }
             $(".joining").show();
@@ -377,30 +378,30 @@ function initDone() {
             p1.id = protocol.data.p1;
             p1.onStruct = protocol.data.onStruct;
             for (let i = 0; i < protocol.data.users.length; i++) {
-                protocol.data.users[i] = Packs.userPack.decode(protocol.data.users[i]);
-                if (protocol.data.users[i].id === p1) {
+                if (protocol.data.users[i].id === p1.id) {
                     p1.data = protocol.data.users[i];
-                }
-            }
-            for (let i = 0; i < protocol.data.items.length; i++) {
-                protocol.data.items[i] = Packs.itemPack.decode(protocol.data.items[i]);
-            }
-            for (let i = 0; i < protocol.data.mines.length; i++) {
-                protocol.data.mines[i] = Packs.minePack.decode(protocol.data.mines[i]);
-            }
-            if (protocol.data.entitys) {
-                for (let i = 0; i < protocol.data.entitys.length; i++) {
-                    protocol.data.entitys[i] = Packs.entityPack.decode(protocol.data.entitys[i]);
                 }
             }
 
             render(context, protocol.data);
 
             // 发送控制
-            const control = JSON.stringify(Packs.controlPack.encode(p1));
+            const controlProtocol: common.ControlProtocol = {
+                leftDown: p1.leftDown,
+                rightDown: p1.rightDown,
+                upDown: p1.upDown,
+                downDown: p1.downDown,
+                itemDown: p1.itemDown,
+                leftPress: p1.leftPress,
+                rightPress: p1.rightPress,
+                upPress: p1.upPress,
+                downPress: p1.downPress,
+                itemPress: p1.itemPress,
+            };
+            const control = JSON.stringify(controlProtocol);
             if (controlCache !== control) {
                 controlCache = control;
-                emit({ name: "control", data: Packs.controlPack.encode(p1) });
+                emit({ name: "control", data: controlProtocol });
             }
             let userCount = 0;
             for (const user of protocol.data.users) {
@@ -427,16 +428,15 @@ function initDone() {
             cdy = 9;
             Effect.trigger(new Flare(protocol.data, true));
         } else if (protocol.name === "userDead") {
-            const user = Packs.userPack.decode(protocol.data.user);
             notice(protocol.data.message);
             // p1 dead
-            if (user.id === p1.id) {
+            if (protocol.data.user.id === p1.id) {
                 setTimeout(() => {
                     $(".joining").show().find("h4").html("你挂了");
                 }, 500);
             }
             if (protocol.data.killer) {
-                const killer = Packs.userPack.decode(protocol.data.killer);
+                const killer = protocol.data.killer;
                 if (killer.score <= 10) {
                     Effect.trigger(new Toast({
                         x: killer.x,
@@ -452,56 +452,8 @@ function initDone() {
     });
 }
 
-const imgUrls: any = {
-    happy: "/head/happy.png",
-    throll: "/head/throll.png",
-    danger: "/head/danger3.png",
-    alone: "/head/alone.png",
-    alone2: "/head/alone2.png",
-    alone3: "/head/alone3.png",
-    normal: "/head/normal.png",
-    win: "/head/win.png",
-    wtf: "/head/wtf.png",
-    items: [
-        "/item/power.png",
-        "/item/gun.png",
-        "/item/mine.png",
-        "/item/drug.png",
-        "/item/hide.png",
-        "/item/random.png",
-        "/item/random.png",
-        "/item/flypack.png",
-        "/item/grenade.png",
-    ],
-    sign: "/tile/sign.png",
-    door: "/tile/door.png",
-    itemGate: "/tile/itemGate.png",
-    bomb: "/bomb.png",
-    arm: "/arm.png",
-    grenade: "/grenade.png",
-    minePlaced: "/mine.png",
-    jet: "/jet.png",
-};
-
-const imgs: any = {};
-for (const key in imgUrls) {
-    if (typeof (imgUrls[key]) === "string") {
-        const Img = new Image();
-        Img.src = "./imgs" + imgUrls[key];
-        imgs[key] = Img;
-    } else {
-        const arr = [];
-        for (const imgUrl of imgUrls[key]) {
-            const Img = new Image();
-            Img.src = "./imgs" + imgUrl;
-            arr.push(Img);
-        }
-        imgs[key] = arr;
-    }
-}
-
 // 绘制背景
-function drawBg(ctx: any, map: any) {
+function drawBg(ctx: CanvasRenderingContext2D, map: any) {
     ctx.clearRect(0, 0, P.w, P.h);
     // 绘制柱子
     map.pilla.forEach((pilla: any) => {
@@ -564,17 +516,17 @@ function drawStructs(structs: any[]) {
             if (struct.id === p1.onStruct) {
                 context.fillText(struct.message, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight - 30);
             }
-            context.drawImage(imgs.sign, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(images.sign, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         } else if (struct.type === "itemGate") {
-            context.drawImage(imgs.itemGate, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(images.itemGate, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         } else {
-            context.drawImage(imgs.door, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+            context.drawImage(images.door, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         }
     }
     context.font = "14px 宋体";
 }
 
-function drawWater(ctx: any, height: any, color: any) {
+function drawWater(ctx: CanvasRenderingContext2D, height: number, color: string) {
     const waveLen = 20;
     let waveHeight = height / 5;
     const c = waveLen / 2;
@@ -594,7 +546,7 @@ function drawWater(ctx: any, height: any, color: any) {
     ctx.fill();
 }
 
-function drawWeapon(ctx: any, index: any) {
+function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 6;
     if (index < 10) {
@@ -624,7 +576,7 @@ function drawWeapon(ctx: any, index: any) {
     ctx.lineWidth = 1;
 }
 
-function drawUser(ctx: any, user: any, data: any) {
+function drawUser(ctx: CanvasRenderingContext2D, user: any, data: any) {
     if (user.doubleJumping) {
         Effect.trigger(new Brust(user, 10, 40));
     }
@@ -633,21 +585,21 @@ function drawUser(ctx: any, user: any, data: any) {
     let img;
     ctx.translate(user.x, P.h - user.y);
     if (user.dead) {
-        img = imgs.alone;
+        img = images.alone;
     } else if (user.status === "dieing") {
-        img = imgs.alone;
-    } else if (user.carry === Packs.items.power.id) {
-        img = imgs.win;
+        img = images.alone;
+    } else if (user.carry === common.items.power.id) {
+        img = images.win;
     } else if (user.danger) {
-        img = imgs.danger;
+        img = images.danger;
     } else if (user.status === "crawling" || user.status === "mining" || user.status === "rolling2") {
-        img = imgs.throll;
-    } else if (user.carry === Packs.items.bomb.id) {
-        img = imgs.wtf;
+        img = images.throll;
+    } else if (user.carry === common.items.bomb.id) {
+        img = images.wtf;
     } else if (user.status === "falling" || user.status === "climbing") {
-        img = imgs.happy;
+        img = images.happy;
     } else {
-        img = imgs.normal;
+        img = images.normal;
     }
 
     if (user.id === data.p1) {
@@ -659,7 +611,7 @@ function drawUser(ctx: any, user: any, data: any) {
     }
 
     // 用户指示器
-    if (user.carry !== Packs.items.hide.id || (user.id === p1.id && !p2.id)) {
+    if (user.carry !== common.items.hide.id || (user.id === p1.id && !p2.id)) {
         ctx.fillText(user.name, 0, -50);
         if (user.nearPilla && (user.id === p1.id || user.id === p2.id)) {
             ctx.fillText("上", 0, -70);
@@ -678,7 +630,7 @@ function drawUser(ctx: any, user: any, data: any) {
         ctx.restore();
     }
 
-    if (user.carry === Packs.items.hide.id) {
+    if (user.carry === common.items.hide.id) {
         ctx.globalAlpha = user.carryCount > 900 ? (user.carryCount - 900) / 100 : user.carryCount > 100 ? 0 : (100 - user.carryCount) / 100;
     }
 
@@ -687,29 +639,29 @@ function drawUser(ctx: any, user: any, data: any) {
     } else {
         ctx.drawImage(img, -P.userWidth / 2, -P.userHeight, P.userWidth, P.userHeight);
     }
-    if (user.carry === Packs.items.flypack.id) {
+    if (user.carry === common.items.flypack.id) {
         const bottleWidth = 10;
         const bottleHeight = 30;
         const wPadding = -P.userWidth / 2 - bottleWidth;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.fillStyle = "rgb(100,160,255)";
-        ctx.fillRect(wPadding, -bottleHeight * user.carryCount / Packs.items.flypack.count, bottleWidth, bottleHeight * user.carryCount / Packs.items.flypack.count);
+        ctx.fillRect(wPadding, -bottleHeight * user.carryCount / common.items.flypack.count, bottleWidth, bottleHeight * user.carryCount / common.items.flypack.count);
         ctx.stroke();
 
-        ctx.drawImage(imgs.jet, wPadding - 16, -bottleHeight - 10, 40, bottleHeight + 20);
+        ctx.drawImage(images.jet, wPadding - 16, -bottleHeight - 10, 40, bottleHeight + 20);
         if (user.flying) {
             Effect.trigger(new Brust(user, 1, 5, user.faceing * (wPadding + bottleWidth / 2), -10));
         }
     }
-    if (user.carry === Packs.items.bomb.id) {
-        ctx.drawImage(imgs.bomb, P.userWidth / 2 - 10, -P.userHeight, 30, 40);
+    if (user.carry === common.items.bomb.id) {
+        ctx.drawImage(images.bomb, P.userWidth / 2 - 10, -P.userHeight, 30, 40);
         if (!user.dead) {
             ctx.scale(user.faceing, 1);
             const x = user.faceing * (P.userWidth / 2 + 10);
             ctx.font = "28px 宋体";
             ctx.fillStyle = "#ff0";
-            ctx.fillText(Math.floor(user.carryCount * 17 / 1000) + 1, x, -P.userHeight - 10);
+            ctx.fillText((Math.floor(user.carryCount * 17 / 1000) + 1).toString(), x, -P.userHeight - 10);
             ctx.font = "14px 宋体";
             ctx.scale(user.faceing, 1);
         }
@@ -721,14 +673,14 @@ function drawUser(ctx: any, user: any, data: any) {
         ctx.rotate((25 - user.grenadeing) / 10);
         ctx.translate(-40, -P.userHeight / 2);
 
-        ctx.drawImage(imgs.arm, 0, 0, 40, 40);
-        ctx.drawImage(imgs.grenade, -10, -13, 30, 40);
+        ctx.drawImage(images.arm, 0, 0, 40, 40);
+        ctx.drawImage(images.grenade, -10, -13, 30, 40);
         ctx.restore();
     }
     ctx.restore();
 }
 
-function drawItem(ctx: any, item: any) {
+function drawItem(ctx: CanvasRenderingContext2D, item: any) {
     const s = common.constant.itemSize;
     ctx.strokeStyle = "rgba(255,255,255," + Math.abs((t % 300) / 150 - 1) + ")";
     ctx.lineWidth = 3;
@@ -739,21 +691,21 @@ function drawItem(ctx: any, item: any) {
     ctx.stroke();
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.drawImage(imgs.items[item.id - 1], -s, -s, s * 2, s * 2);
+    ctx.drawImage(images.items[item.id - 1], -s, -s, s * 2, s * 2);
     ctx.restore();
 }
 
-function drawEntity(ctx: any, entity: any) {
+function drawEntity(ctx: CanvasRenderingContext2D, entity: any) {
     const w = 15;
     const h = 18;
     ctx.save();
     ctx.translate(entity.x, P.h - entity.y);
     ctx.rotate(entity.r / 10);
-    ctx.drawImage(imgs.grenade, -w, -h, w * 2, h * 2);
+    ctx.drawImage(images.grenade, -w, -h, w * 2, h * 2);
     ctx.restore();
 }
 
-function render(ctx: any, data: any) {
+function render(ctx: CanvasRenderingContext2D, data: any) {
     ctx.clearRect(0, 0, P.w, P.h);
     ctx.save();
     ctx.translate(cdx, cdy);
@@ -774,7 +726,7 @@ function render(ctx: any, data: any) {
     drawStructs(game.structs);
 
     data.mines.forEach((mine: any) => {
-        ctx.drawImage(imgs.minePlaced, mine.x - 12, P.h - mine.y - 3, 23, 5);
+        ctx.drawImage(images.mine, mine.x - 12, P.h - mine.y - 3, 23, 5);
         if (mine.dead) {
             cdx = 3;
             cdy = 11;
@@ -797,9 +749,9 @@ function render(ctx: any, data: any) {
         drawItem(ctx, item);
         if (item.dead) {
             let itemName = "";
-            for (const key in Packs.items) {
-                if ((Packs.items as any)[key].id === item.id) {
-                    itemName = (Packs.items as any)[key].name;
+            for (const key in common.items) {
+                if ((common.items as any)[key].id === item.id) {
+                    itemName = (common.items as any)[key].name;
                 }
             }
             Effect.trigger(new ItemDead(item, itemName));

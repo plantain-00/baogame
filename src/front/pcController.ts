@@ -1,8 +1,9 @@
 // pc的控制器
+import * as common from "../back/common";
 
 export function start(joing: (p: any) => void, initDone: () => void) {
     const p1 = {
-        data: undefined,
+        data: undefined as common.UserProtocol | undefined,
         id: undefined as number | null | undefined,
         upDown: 0,
         downDown: 0,

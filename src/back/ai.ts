@@ -37,7 +37,7 @@ export function playerAI(user: services.User) {
             let find = false;
             for (const other of user.game.users) {
                 if (user === other || other.dieing) { continue; }
-                if (Math.abs(other.y - user.y) < 10 && other.carry !== services.Packs.items.hide.id) {
+                if (Math.abs(other.y - user.y) < 10 && other.carry !== common.items.hide.id) {
                     if (user.facing && other.x < user.x || !user.facing && other.x > user.x) {
                         find = true;
                         break;

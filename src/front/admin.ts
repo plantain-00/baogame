@@ -1,5 +1,4 @@
 import { connect, emit } from "./socket";
-import { Packs } from "./JPack";
 
 const code = localStorage.getItem("code");
 
@@ -8,21 +7,12 @@ connect(undefined, () => {
 }, protocol => {
     if (protocol.name === "initFail") {
         alert("fail");
-    } else if (protocol.name === "tick") {
-        for (let i = 0; i < protocol.data.users.length; i++) {
-            protocol.data.users[i] = Packs.userPack.decode(protocol.data.users[i]);
-        }
-        for (let i = 0; i < protocol.data.items.length; i++) {
-            protocol.data.items[i] = Packs.itemPack.decode(protocol.data.items[i]);
-        }
-        for (let i = 0; i < protocol.data.mines.length; i++) {
-            protocol.data.mines[i] = Packs.minePack.decode(protocol.data.mines[i]);
-        }
+    } else if (protocol.name === "admin_tick") {
         let html = '<div class="clients">';
         if (protocol.data.clients) {
-            protocol.data.clients.forEach((client: any) => {
+            protocol.data.clients.forEach(client => {
                 let p1: any = null;
-                protocol.data.users.forEach((user: any) => {
+                protocol.data.users.forEach(user => {
                     if (client.p1 === user.id) {
                         p1 = user;
                         return;

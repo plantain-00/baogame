@@ -4,6 +4,119 @@ export const constant = {
     itemSize: 15,
 };
 
+export const items = {
+    power: {
+        id: 1,
+        name: "无敌",
+        count: 1000,
+    },
+    gun: {
+        id: 2,
+        name: "枪",
+        count: 3,
+    },
+    mine: {
+        id: 3,
+        name: "地雷",
+        count: 2,
+    },
+    drug: {
+        id: 4,
+        name: "毒药",
+    },
+    hide: {
+        id: 5,
+        name: "隐身",
+        count: 1000,
+    },
+    bomb: {
+        id: 6,
+        name: "惊喜！",
+        count: 550,
+    },
+    doublejump: {
+        id: 7,
+        name: "二段跳",
+    },
+    flypack: {
+        id: 8,
+        name: "喷气背包",
+        count: 250,
+    },
+    grenade: {
+        id: 9,
+        name: "手雷",
+        count: 3,
+    },
+};
+
+export type ControlProtocol = {
+    leftDown: number;
+    rightDown: number;
+    upDown: number;
+    downDown: number;
+    itemDown: number;
+    leftPress: boolean;
+    rightPress: boolean;
+    upPress: boolean;
+    downPress: boolean;
+    itemPress: boolean;
+};
+
+export type ItemProtocol = {
+    x: number;
+    y: number;
+    id: number;
+    dead: boolean;
+};
+
+export type MineProtocol = {
+    x: number;
+    y: number;
+    dead: boolean;
+};
+
+export type EntityProtocol = {
+    x: number;
+    y: number;
+    r: number;
+};
+
+export type UserProtocol = {
+    carry: string;
+    carryCount: number;
+    nearPilla: boolean;
+    faceing: number;
+    fireing: number;
+    grenadeing: number;
+    danger: boolean,
+    status: string;
+    name: string;
+    id: number;
+    x: number;
+    y: number;
+    vy: number;
+    score: number;
+    dead: boolean,
+    npc: boolean,
+    doubleJumping: boolean,
+    flying: number;
+};
+
+export type ClientProtocol = {
+    p1: number | null;
+    p2: number | null;
+    id: number;
+    admin: boolean;
+    name: string;
+    banned: boolean;
+    joinTime: number;
+    ip: string;
+    kill: number;
+    death: number;
+    highestKill: number;
+};
+
 export type InProtocol =
     {
         name: "init";
@@ -24,7 +137,7 @@ export type InProtocol =
     |
     {
         name: "control";
-        data: any[];
+        data: ControlProtocol;
     }
     |
     {
@@ -62,7 +175,7 @@ export type OutProtocol =
                     y: number;
                 }[];
             }
-            bodies: any[];
+            bodies: UserProtocol[];
         }
     }
     |
@@ -81,14 +194,23 @@ export type OutProtocol =
     {
         name: "tick";
         data: {
-            users: any[];
-            items: any[];
-            mines: any[];
-            clients?: any[];
-            entitys?: any[];
-            p1?: number | null | undefined;
-            onStruct?: number | null | undefined;
-            p2?: number | null | undefined;
+            users: UserProtocol[];
+            items: ItemProtocol[];
+            mines: MineProtocol[];
+            entitys: EntityProtocol[];
+            p1: number | null | undefined;
+            onStruct: number | null | undefined;
+            p2: number | null | undefined;
+        };
+    }
+    |
+    {
+        name: "admin_tick";
+        data: {
+            users: UserProtocol[];
+            items: ItemProtocol[];
+            mines: MineProtocol[];
+            clients: ClientProtocol[];
         };
     }
     |
@@ -109,8 +231,10 @@ export type OutProtocol =
     {
         name: "userDead";
         data: {
-            user: any[];
-            killer: any[] | undefined;
+            user: UserProtocol;
+            killer: UserProtocol | undefined;
             message: string;
         };
     };
+
+export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";

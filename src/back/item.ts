@@ -1,8 +1,9 @@
 import * as services from "./services";
+import * as common from "./common";
 
 const Items: services.Item[] = [];
-for (const key in services.Packs.items) {
-    Items.push((services.Packs.items as any)[key]);
+for (const key in common.items) {
+    Items.push((common.items as any)[key]);
 }
 
 export class Item {
@@ -49,7 +50,7 @@ export class Item {
         }
     }
     touchUser(u: services.User) {
-        if (this.id === services.Packs.items.drug.id) {
+        if (this.id === common.items.drug.id) {
             this.dead = true;
             u.killed("drug");
         } else {
@@ -58,7 +59,12 @@ export class Item {
             u.carryCount = this.count;
         }
     }
-    getData() {
-        return services.Packs.itemPack.encode(this);
+    getData(): common.ItemProtocol {
+        return {
+            x: this.x,
+            y: this.y,
+            id: this.id,
+            dead: this.dead,
+        };
     }
 }

@@ -65,7 +65,7 @@ export class Game {
     };
     map: services.Map;
     runningTimer: NodeJS.Timer;
-    constructor(type: any, public adminCode: string, public id: number) {
+    constructor(type: string, public adminCode: string, public id: number) {
         this.users = [];
         this.clients = [];
         this.items = [];
@@ -290,28 +290,25 @@ export class Game {
         for (const user of this.users) {
             userdata.push(user.getData());
         }
-        const clientsdata = [];
-        for (const client of this.clients) {
-            clientsdata.push(services.getClientData(client));
-        }
-        const entitydata = [];
-        for (const entity of this.entitys) {
-            entitydata.push(services.Packs.entityPack.encode(entity));
-        }
+        const clientsdata = this.clients.map(client => services.getClientData(client));
+        const entitydata = this.entitys.map(e => ({
+            x: e.x,
+            y: e.y,
+            r: e.r,
+        }));
         for (const client of this.clients) {
             const p1 = client.p1 && client.p1.id;
             const p2 = client.p2 && client.p2.id;
             const onStruct = client.p1 && client.p1.onStruct;
-            const minedata = [];
-            for (const mine of this.mines) {
-                if ((mine.creater.id === p1 && !p2) || mine.dead) {
-                    minedata.push(services.Packs.minePack.encode(mine));
-                }
-            }
+            const minedata: common.MineProtocol[] = this.mines.filter(mine => (mine.creater.id === p1 && !p2) || mine.dead).map(mine => ({
+                x: mine.x,
+                y: mine.y,
+                dead: mine.dead!,
+            }));
             if (client.admin) {
                 if (this.tick % 60 === 0) {
                     services.emit(client.ws, {
-                        name: "tick",
+                        name: "admin_tick",
                         data: {
                             users: userdata,
                             items: itemdata,
@@ -342,36 +339,36 @@ export class Game {
         if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > this.props.userWidth * this.props.userWidth) { return; }
 
         // 带电情况
-        if (a.carry === services.Packs.items.power.id && b.carry !== services.Packs.items.power.id) {
+        if (a.carry === common.items.power.id && b.carry !== common.items.power.id) {
             b.killed("power", a);
             b.vx = (b.x - a.x) / 2;
-            if (b.carry === services.Packs.items.bomb.id) {
+            if (b.carry === common.items.bomb.id) {
                 a.carry = b.carry;
                 a.carryCount = b.carryCount;
                 b.carry = "";
             }
             return;
-        } else if (a.carry !== services.Packs.items.power.id && b.carry === services.Packs.items.power.id) {
+        } else if (a.carry !== common.items.power.id && b.carry === common.items.power.id) {
             a.killed("power", b);
             a.vx = (a.x - b.x) / 2;
-            if (a.carry === services.Packs.items.bomb.id) {
+            if (a.carry === common.items.bomb.id) {
                 b.carry = a.carry;
                 b.carryCount = a.carryCount;
                 a.carry = "";
             }
             return;
-        } else if (a.carry === services.Packs.items.power.id && b.carry === services.Packs.items.power.id) {
+        } else if (a.carry === common.items.power.id && b.carry === common.items.power.id) {
             a.carry = "";
             b.carry = "";
         }
         // 排除刚刚碰撞
         if (a.ignore[b.id] > 0 || b.ignore[a.id] > 0) { return; }
 
-        if (b.carry === services.Packs.items.bomb.id && a.carry !== services.Packs.items.bomb.id) {
+        if (b.carry === common.items.bomb.id && a.carry !== common.items.bomb.id) {
             a.carry = b.carry;
             a.carryCount = b.carryCount;
             b.carry = "";
-        } else if (a.carry === services.Packs.items.bomb.id && b.carry !== services.Packs.items.bomb.id) {
+        } else if (a.carry === common.items.bomb.id && b.carry !== common.items.bomb.id) {
             b.carry = a.carry;
             b.carryCount = a.carryCount;
             a.carry = "";
@@ -457,7 +454,7 @@ export class Game {
     }
     eatItem(a: services.User, b: services.Item) {
         if (a.dead || b.dead) { return; }
-        if (a.carry === services.Packs.items.bomb.id) { return; }
+        if (a.carry === common.items.bomb.id) { return; }
         if ((a.x - b.x) * (a.x - b.x) + (a.y + this.props.userHeight / 2 - b.y) * (a.y + this.props.userHeight / 2 - b.y) >
             (this.props.userWidth + common.constant.itemSize) * (this.props.userWidth + common.constant.itemSize) / 4) {
             return;

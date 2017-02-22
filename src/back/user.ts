@@ -34,7 +34,7 @@ export class User {
     itemPress: any;
     doubleJumping: boolean;
     flying: number;
-    status: any;
+    status: common.userStatus;
     npc: boolean;
     AI: any;
     itemDown: any;
@@ -98,7 +98,7 @@ export class User {
 
         this.game.entitys.push(g);
     }
-    getStatus() {
+    getStatus(): common.userStatus {
         this.crawl = false;
         if (this.dieing) { return "dieing"; }
         if ((this.vy <= 0 || this.onPilla) && this.game.checkMine(this)) {
@@ -157,12 +157,12 @@ export class User {
                         if (this.vx < 0) { this.vx -= 2; }
                         return "rolling2";
                     }
-                } else if (this.itemPress && this.vx === 0 && this.carry === services.Packs.items.mine.id && this.carryCount > 0) {
+                } else if (this.itemPress && this.vx === 0 && this.carry === common.items.mine.id && this.carryCount > 0) {
                     this.mining = 20;
                     return "mining";
                 } else {
                     this.lastTouch = null;
-                    if (this.carry === services.Packs.items.doublejump.id) {
+                    if (this.carry === common.items.doublejump.id) {
                         this.canDoubleJump = true;
                     }
                     return "standing";
@@ -180,10 +180,10 @@ export class User {
             this.ignore[key]--;
         }
         // 时限
-        if (this.carry === services.Packs.items.power.id || this.carry === services.Packs.items.hide.id || this.carry === services.Packs.items.bomb.id) {
+        if (this.carry === common.items.power.id || this.carry === common.items.hide.id || this.carry === common.items.bomb.id) {
             this.carryCount--;
             if (this.carryCount <= 0) {
-                if (this.carry === services.Packs.items.bomb.id) {
+                if (this.carry === common.items.bomb.id) {
                     this.game.explode(this.x + this.faceing * 20, this.y + this.game.props.userHeight / 2, this, 120);
                 }
                 this.carry = 0;
@@ -212,7 +212,7 @@ export class User {
                     }
                     this.game.checkShot(this);
                 }
-            } else if (this.itemPress && this.carry === services.Packs.items.gun.id && this.carryCount > 0) {
+            } else if (this.itemPress && this.carry === common.items.gun.id && this.carryCount > 0) {
                 this.fireing = 25;
             }
         } else {
@@ -231,7 +231,7 @@ export class User {
                 if (this.carryCount === 0) {
                     this.carry = 0;
                 }
-            } else if (this.grenadeing === 0 && this.itemPress && this.carry === services.Packs.items.grenade.id && this.carryCount > 0) {
+            } else if (this.grenadeing === 0 && this.itemPress && this.carry === common.items.grenade.id && this.carryCount > 0) {
                 this.grenadeing = 1;
             }
         } else {
@@ -269,13 +269,13 @@ export class User {
         } else if (this.status === "standing") {
             if (this.leftDown && !this.rightDown) {
                 if (this.vx > 0) {
-                    if (this.carry === services.Packs.items.power.id) {
+                    if (this.carry === common.items.power.id) {
                         this.vx = -.4;
                     } else {
                         this.vx = -1;
                     }
                 } else {
-                    if (this.carry === services.Packs.items.power.id) {
+                    if (this.carry === common.items.power.id) {
                         this.vx -= .08;
                     } else {
                         this.vx -= .2;
@@ -285,13 +285,13 @@ export class User {
                 this.vx = Math.max(this.vx, -4, -this.leftDown / 20);
             } else if (!this.leftDown && this.rightDown) {
                 if (this.vx < 0) {
-                    if (this.carry === services.Packs.items.power.id) {
+                    if (this.carry === common.items.power.id) {
                         this.vx = .4;
                     } else {
                         this.vx = 1;
                     }
                 } else {
-                    if (this.carry === services.Packs.items.power.id) {
+                    if (this.carry === common.items.power.id) {
                         this.vx += .08;
                     } else {
                         this.vx += .2;
@@ -318,10 +318,10 @@ export class User {
                 this.canDoubleJump = false;
                 this.vy = 5;
             }
-            if (this.upPress && this.carry === services.Packs.items.flypack.id) {
+            if (this.upPress && this.carry === common.items.flypack.id) {
                 this.flypackActive = true;
             }
-            if (this.upDown && this.carry === services.Packs.items.flypack.id && this.carryCount > 0 && this.flypackActive) {
+            if (this.upDown && this.carry === common.items.flypack.id && this.carryCount > 0 && this.flypackActive) {
                 this.vy += .3;
                 this.flying += 1;
                 this.carryCount--;
@@ -332,12 +332,12 @@ export class User {
             if (this.rightPress && this.faceing === -1) {
                 this.faceing = 1;
             }
-            if (this.leftDown && this.carry === services.Packs.items.flypack.id && this.carryCount > 0) {
+            if (this.leftDown && this.carry === common.items.flypack.id && this.carryCount > 0) {
                 this.vx -= .15;
                 this.flying += 2;
                 this.carryCount -= .2;
             }
-            if (this.rightDown && this.carry === services.Packs.items.flypack.id && this.carryCount > 0) {
+            if (this.rightDown && this.carry === common.items.flypack.id && this.carryCount > 0) {
                 this.vx += .15;
                 this.flying += 4;
                 this.carryCount -= .2;
@@ -458,7 +458,26 @@ export class User {
             },
         });
     }
-    getData() {
-        return services.Packs.userPack.encode(this);
+    getData(): common.UserProtocol {
+        return {
+            carry: this.carry,
+            carryCount: this.carryCount,
+            nearPilla: this.nearPilla as boolean,
+            faceing: this.faceing,
+            fireing: this.fireing as number,
+            grenadeing: this.grenadeing,
+            danger: this.danger,
+            status: this.status,
+            name: this.name,
+            id: this.id,
+            x: this.x,
+            y: this.y,
+            vy: this.vy,
+            score: this.score,
+            dead: this.dead,
+            npc: this.npc,
+            doubleJumping: this.doubleJumping,
+            flying: this.flying,
+        };
     }
 }
