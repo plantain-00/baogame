@@ -153,13 +153,12 @@ export class Game {
         this.announce({ name: "explode", data: { x, y, power } });
     }
     checkShot(u: services.User) {
-        const game = this;
         const x = u.x;
-        const y = u.y + game.props.userHeight * 2 / 3;
+        const y = u.y + this.props.userHeight * 2 / 3;
         const f = u.faceing;
 
         for (const user of this.users) {
-            let uh = game.props.userHeight;
+            let uh = this.props.userHeight;
             if (user.crawl) {
                 uh /= 2;
             }
@@ -282,14 +281,8 @@ export class Game {
         }
     }
     sendTick() {
-        const itemdata = [];
-        for (const item of this.items) {
-            itemdata.push(item.getData());
-        }
-        const userdata = [];
-        for (const user of this.users) {
-            userdata.push(user.getData());
-        }
+        const itemdata = this.items.map(item => item.getData());
+        const userdata = this.users.map(user => user.getData());
         const clientsdata = this.clients.map(client => services.getClientData(client));
         const entitydata = this.entitys.map(e => ({
             x: e.x,
@@ -308,7 +301,7 @@ export class Game {
             if (client.admin) {
                 if (this.tick % 60 === 0) {
                     services.emit(client.ws, {
-                        name: "admin_tick",
+                        name: "adminTick",
                         data: {
                             users: userdata,
                             items: itemdata,

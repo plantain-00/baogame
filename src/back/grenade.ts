@@ -1,4 +1,4 @@
-import * as services from "../services";
+import * as services from "./services";
 
 export class Grenade {
     x = 0;
@@ -8,15 +8,12 @@ export class Grenade {
     life = 100;
     r = 0;
     dead = false;
-    game: services.Game;
-    constructor(public creater: services.User) {
-        this.game = creater.game;
-    }
+    constructor(public creater: services.User) { }
 
     update() {
         this.x += this.vx;
         this.r += this.vx / 5;
-        if (this.x < 0 || this.x > this.game.props.w) {
+        if (this.x < 0 || this.x > this.creater.game.props.w) {
             this.vx *= -1;
         }
 
@@ -27,8 +24,8 @@ export class Grenade {
             this.y += Math.floor(this.vy);
         } else {
             for (let i = 0; i < -this.vy; i++) {
-                if (this.game.map.onFloor(this.x, this.y)) {
-                    if (this.game.map.onPilla(this.x, this.y)) {
+                if (this.creater.game.map.onFloor(this.x, this.y)) {
+                    if (this.creater.game.map.onPilla(this.x, this.y)) {
                         this.vx *= .7;
                     } else {
                         this.vy *= -.85;
@@ -44,7 +41,7 @@ export class Grenade {
         this.life--;
         if (this.life < 0) {
             this.dead = true;
-            this.game.explode(this.x, this.y, this.creater, 100);
+            this.creater.game.explode(this.x, this.y, this.creater, 100);
         }
     }
 }

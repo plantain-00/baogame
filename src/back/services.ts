@@ -1,14 +1,14 @@
 import { User } from "./user";
 import { Game, createGame, getGameData, games } from "./game";
 import { playerAI } from "./ai";
-import { Grenade } from "./entity/grenade";
+import { Grenade } from "./grenade";
 import { Map } from "./map";
 import { Item } from "./item";
 import { map as map1 } from "./maps/lesson1";
 import { map as map2 } from "./maps/lesson2";
-import { Door } from "./struct/door";
-import { Sign } from "./struct/sign";
-import { ItemGate } from "./struct/itemGate";
+import { Door } from "./door";
+import { Sign } from "./sign";
+import { ItemGate } from "./itemGate";
 import * as common from "./common";
 
 import * as libs from "./libs";
@@ -53,8 +53,7 @@ export function getClientData(client: Client): common.ClientProtocol {
 
 export function emit(ws: libs.WebSocket, protocol: common.OutProtocol) {
     try {
-        const c = protocol.name + "$" + JSON.stringify(protocol.data);
-        ws.send(c);
+        ws.send(JSON.stringify(protocol));
     } catch (e) {
         console.log(e);
     }

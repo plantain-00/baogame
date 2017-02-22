@@ -205,7 +205,7 @@ export type OutProtocol =
     }
     |
     {
-        name: "admin_tick";
+        name: "adminTick";
         data: {
             users: UserProtocol[];
             items: ItemProtocol[];

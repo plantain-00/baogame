@@ -1,5 +1,5 @@
-import * as services from "../services";
-import * as common from "../common";
+import * as services from "./services";
+import * as common from "./common";
 
 export class ItemGate {
     id: number;

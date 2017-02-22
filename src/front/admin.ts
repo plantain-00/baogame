@@ -7,7 +7,7 @@ connect(undefined, () => {
 }, protocol => {
     if (protocol.name === "initFail") {
         alert("fail");
-    } else if (protocol.name === "admin_tick") {
+    } else if (protocol.name === "adminTick") {
         let html = '<div class="clients">';
         if (protocol.data.clients) {
             protocol.data.clients.forEach(client => {
