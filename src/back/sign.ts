@@ -1,12 +1,11 @@
 import * as services from "./services";
+import * as common from "./common";
 
 export class Sign {
-    id: number;
     x: number;
     y: number;
     message: string;
-    constructor(public game: services.Game, data: any) {
-        this.id = data.id;
+    constructor(public game: services.Game, data: common.SignProtocol) {
         this.x = data.x;
         this.y = data.y;
         this.message = data.message;
@@ -14,10 +13,8 @@ export class Sign {
     update() {
         // do nothing
     }
-    getData() {
+    getData(): common.SignProtocol {
         return {
-            id: this.id,
-            type: "sign",
             x: this.x,
             y: this.y,
             message: this.message,

@@ -21,7 +21,6 @@ export class User {
     ignore: any[];
     carry: any;
     carryCount: number;
-    onStruct: number;
     fireing: number | boolean;
     mining: number | boolean;
     grenadeing: number;
@@ -72,7 +71,6 @@ export class User {
         this.ignore = [];
         this.carry = "";
         this.carryCount = 0;
-        this.onStruct = 0;
 
         this.fireing = 0;
         this.mining = 0;
@@ -191,12 +189,6 @@ export class User {
             }
         }
         this.status = this.getStatus();
-
-        if (this.status === "standing" || this.status === "crawling") {
-            this.onStruct = this.game.map.onStruct(this);
-        } else {
-            this.onStruct = 0;
-        }
 
         if (this.npc && this.AI) {
             services.playerAI(this);

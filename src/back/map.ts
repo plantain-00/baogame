@@ -2,16 +2,16 @@ import * as services from "./services";
 import * as common from "./common";
 
 export class Map {
-    structID: number;
     w: number;
     h: number;
     floor: number[][];
     pilla: services.Pillar[];
     borns: services.Born[];
     hooks: any;
-    structs: services.Struct[];
+    doors: services.Door[] = [];
+    itemGates: services.ItemGate[] = [];
+    signs: services.Sign[] = [];
     constructor(public game: services.Game, data?: services.MapData) {
-        this.structID = 1;
         if (data) {
             this.w = game.props.w;
             this.h = game.props.h;
@@ -19,19 +19,9 @@ export class Map {
             this.pilla = data.pilla;
             this.borns = data.borns;
             this.hooks = data.hooks || {};
-            this.structs = [];
-            for (const struct of data.structs) {
-                if (struct.type === "door") {
-                    this.structs.push(new services.Door(this.game, struct));
-                } else if (struct.type === "sign") {
-                    this.structs.push(new services.Sign(this.game, struct));
-                } else if (struct.type === "itemGate") {
-                    this.structs.push(new services.ItemGate(this.game, struct));
-                }
-            }
-            for (const struct of this.structs) {
-                struct.id = this.structID++;
-            }
+            this.doors = data.doors.map(door => new services.Door(this.game, door));
+            this.itemGates = data.itemGates.map(itemGate => new services.ItemGate(this.game, itemGate));
+            this.signs = data.signs.map(sign => new services.Sign(this.game, sign));
             if (data.npcs) {
                 for (const npcData of data.npcs) {
                     const npc = this.game.createNPC({ name: npcData.name || "npc" });
@@ -51,7 +41,6 @@ export class Map {
             this.floor = [];
             this.pilla = [];
             this.hooks = {};
-            this.structs = [];
 
             for (let i = 0; i < h; i++) {
                 this.floor[i] = [];
@@ -141,20 +130,10 @@ export class Map {
                 }
             }
 
-            this.structs.push(new services.ItemGate(this.game, { id: 1, x: 0, y: this.h / 2 }));
-            this.structs.push(new services.ItemGate(this.game, { id: 2, x: this.w - 1, y: this.h / 2 }));
-            this.structs.push(new services.ItemGate(this.game, { id: 3, x: this.w / 2, y: this.h - 1 }));
+            this.itemGates.push(new services.ItemGate(this.game, { x: 0, y: this.h / 2 }));
+            this.itemGates.push(new services.ItemGate(this.game, { x: this.w - 1, y: this.h / 2 }));
+            this.itemGates.push(new services.ItemGate(this.game, { x: this.w / 2, y: this.h - 1 }));
         }
-    }
-    onStruct(u: services.User) {
-        const ux = Math.floor(u.x / common.constant.tileWidth);
-        const uy = Math.floor(u.y / common.constant.tileHeight);
-        for (const struct of this.structs) {
-            if (ux === struct.x && uy === struct.y) {
-                return struct.id;
-            }
-        }
-        return 0;
     }
     born() {
         const i = Math.floor(Math.random() * this.borns.length);
@@ -190,19 +169,26 @@ export class Map {
         return false;
     }
     update() {
-        for (const struct of this.structs) {
-            struct.update();
+        for (const sign of this.signs) {
+            sign.update();
+        }
+        for (const door of this.doors) {
+            door.update();
+        }
+        for (const itemGate of this.itemGates) {
+            itemGate.update();
         }
     }
     getData() {
-        const structdata = [];
-        for (const struct of this.structs) {
-            structdata.push(struct.getData());
-        }
+        const signs = this.signs.map(sign => sign.getData());
+        const doors = this.doors.map(door => door.getData());
+        const itemGates = this.itemGates.map(itemGate => itemGate.getData());
         return {
             floor: this.floor,
             pilla: this.pilla,
-            structs: structdata,
+            signs,
+            doors,
+            itemGates,
         };
     }
 };

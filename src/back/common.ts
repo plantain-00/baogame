@@ -117,6 +117,23 @@ export type ClientProtocol = {
     highestKill: number;
 };
 
+export type SignProtocol = {
+    x: number;
+    y: number;
+    message: string;
+};
+
+export type DoorProtocol = {
+    x: number;
+    y: number;
+};
+
+export type ItemGateProtocol = {
+    x: number;
+    y: number;
+    itemType?: number,
+};
+
 export type InProtocol =
     {
         name: "init";
@@ -168,12 +185,9 @@ export type OutProtocol =
             map: {
                 floor: any;
                 pilla: any;
-                structs: {
-                    id: number;
-                    type: string,
-                    x: number;
-                    y: number;
-                }[];
+                signs: SignProtocol[],
+                doors: DoorProtocol[],
+                itemGates: ItemGateProtocol[],
             }
             bodies: UserProtocol[];
         }
@@ -199,7 +213,6 @@ export type OutProtocol =
             mines: MineProtocol[];
             entitys: EntityProtocol[];
             p1: number | null | undefined;
-            onStruct: number | null | undefined;
             p2: number | null | undefined;
         };
     }

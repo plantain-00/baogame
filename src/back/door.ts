@@ -2,11 +2,9 @@ import * as services from "./services";
 import * as common from "./common";
 
 export class Door {
-    id: number;
     x: number;
     y: number;
-    constructor(public game: services.Game, data: any) {
-        this.id = data.id;
+    constructor(public game: services.Game, data: common.DoorProtocol) {
         this.x = data.x;
         this.y = data.y;
     }
@@ -21,10 +19,8 @@ export class Door {
         npc.x = (this.x + .5) * common.constant.tileWidth;
         npc.y = (this.y + .5) * common.constant.tileHeight;
     }
-    getData() {
+    getData(): common.DoorProtocol {
         return {
-            id: this.id,
-            type: "door",
             x: this.x,
             y: this.y,
         };

@@ -2,13 +2,11 @@ import * as services from "./services";
 import * as common from "./common";
 
 export class ItemGate {
-    id: number;
     x: number;
     y: number;
     itemType: number | undefined;
     targetItem: services.Item;
-    constructor(public game: services.Game, data: any) {
-        this.id = data.id;
+    constructor(public game: services.Game, data: common.ItemGateProtocol) {
         this.x = data.x;
         this.y = data.y;
         this.itemType = data.itemType;
@@ -32,10 +30,8 @@ export class ItemGate {
             }
         }
     }
-    getData() {
+    getData(): common.ItemGateProtocol {
         return {
-            id: this.id,
-            type: "itemGate",
             x: this.x,
             y: this.y,
         };

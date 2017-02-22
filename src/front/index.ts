@@ -280,7 +280,15 @@ let t = 0;
 let cdx = 0;
 let cdy = 0;
 let canJoin: any = null;
-const game: any = {};
+const game: {
+    signs: common.SignProtocol[],
+    doors: common.DoorProtocol[],
+    itemGates: common.ItemGateProtocol[],
+} = {
+        signs: [],
+        doors: [],
+        itemGates: [],
+    };
 
 let userName = localStorage.getItem("userName");
 if (userName) {
@@ -325,7 +333,6 @@ function parseParam() {
 }
 
 function initDone() {
-    let controlCache = "";
     const param = parseParam();
     connect(param.roomID, () => {
         emit({ name: "init", data: { userName: userName! } });
@@ -356,10 +363,9 @@ function initDone() {
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
             drawBg(ctxBg!, protocol.data.map);
-            game.structs = [];
-            for (let i = 0; i < protocol.data.map.structs.length; i++) {
-                game.structs[protocol.data.map.structs[i].id] = protocol.data.map.structs[i];
-            }
+            game.itemGates = protocol.data.map.itemGates;
+            game.doors = protocol.data.map.doors;
+            game.signs = protocol.data.map.signs;
             const middle: any = document.getElementById("middle");
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
@@ -376,7 +382,6 @@ function initDone() {
         } else if (protocol.name === "tick") {
             t++;
             p1.id = protocol.data.p1;
-            p1.onStruct = protocol.data.onStruct;
             for (let i = 0; i < protocol.data.users.length; i++) {
                 if (protocol.data.users[i].id === p1.id) {
                     p1.data = protocol.data.users[i];
@@ -398,11 +403,7 @@ function initDone() {
                 downPress: p1.downPress,
                 itemPress: p1.itemPress,
             };
-            const control = JSON.stringify(controlProtocol);
-            if (controlCache !== control) {
-                controlCache = control;
-                emit({ name: "control", data: controlProtocol });
-            }
+            emit({ name: "control", data: controlProtocol });
             let userCount = 0;
             for (const user of protocol.data.users) {
                 if (!user.npc) {
@@ -507,21 +508,39 @@ function drawBg(ctx: CanvasRenderingContext2D, map: any) {
     }
 }
 
-function drawStructs(structs: any[]) {
+function drawSigns(signs: common.SignProtocol[]) {
     context.fillStyle = "#fff";
     context.font = "20px 宋体";
-    for (let i = 1; i < structs.length; i++) {
-        const struct = structs[i];
-        if (struct.type === "sign") {
-            if (struct.id === p1.onStruct) {
-                context.fillText(struct.message, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight - 30);
+    for (const sign of signs) {
+        context.drawImage(images.sign, sign.x * common.constant.tileWidth, P.h - (sign.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+    }
+    if (p1.data) {
+        const ux = Math.floor(p1.data.x / common.constant.tileWidth);
+        const uy = Math.floor(p1.data.y / common.constant.tileHeight);
+        for (const sign of signs) {
+            if (ux === sign.x && uy === sign.y) {
+                context.fillText(sign.message, sign.x * common.constant.tileWidth, P.h - (sign.y + 1) * common.constant.tileHeight - 30);
+                break;
             }
-            context.drawImage(images.sign, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
-        } else if (struct.type === "itemGate") {
-            context.drawImage(images.itemGate, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
-        } else {
-            context.drawImage(images.door, struct.x * common.constant.tileWidth, P.h - (struct.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
         }
+    }
+    context.font = "14px 宋体";
+}
+
+function drawDoors(doors: common.DoorProtocol[]) {
+    context.fillStyle = "#fff";
+    context.font = "20px 宋体";
+    for (const door of doors) {
+        context.drawImage(images.door, door.x * common.constant.tileWidth, P.h - (door.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+    }
+    context.font = "14px 宋体";
+}
+
+function drawItemGates(itemGates: common.ItemGateProtocol[]) {
+    context.fillStyle = "#fff";
+    context.font = "20px 宋体";
+    for (const itemGate of itemGates) {
+        context.drawImage(images.itemGate, itemGate.x * common.constant.tileWidth, P.h - (itemGate.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
     }
     context.font = "14px 宋体";
 }
@@ -723,7 +742,9 @@ function render(ctx: CanvasRenderingContext2D, data: any) {
 
     ctx.drawImage(cdomBody, 0, 0);
 
-    drawStructs(game.structs);
+    drawDoors(game.doors);
+    drawSigns(game.signs);
+    drawItemGates(game.itemGates);
 
     data.mines.forEach((mine: any) => {
         ctx.drawImage(images.mine, mine.x - 12, P.h - mine.y - 3, 23, 5);

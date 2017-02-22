@@ -15,8 +15,6 @@ import * as libs from "./libs";
 
 export { User, Game, playerAI, Grenade, Map, Item, map1, map2, Door, Sign, ItemGate, createGame, getGameData, games };
 
-export type Struct = Door | Sign | ItemGate;
-
 export type Entity = Grenade;
 
 export interface Client {
@@ -97,14 +95,6 @@ export type NPC = {
     AI?: "walking";
 };
 
-export type StructData = {
-    type: "sign" | "door" | "itemGate";
-    x: number;
-    y: number;
-    message?: string;
-    itemType?: number,
-};
-
 export type MapData = {
     w: number;
     h: number;
@@ -112,7 +102,9 @@ export type MapData = {
     pilla: Pilla[];
     borns: Position[];
     npcs: NPC[];
-    structs: StructData[];
+    signs: common.SignProtocol[];
+    doors: common.DoorProtocol[];
+    itemGates: common.ItemGateProtocol[];
     hooks: {
         onKilled: (game: Game, u: User) => void,
     };

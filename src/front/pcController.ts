@@ -15,7 +15,6 @@ export function start(joing: (p: any) => void, initDone: () => void) {
         rightPress: false,
         upPress: false,
         downPress: false,
-        onStruct: undefined as number | null | undefined,
     };
     const p2 = {
         id: undefined,

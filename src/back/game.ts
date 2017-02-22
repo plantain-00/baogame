@@ -44,7 +44,6 @@ export function getGameData() {
 }
 
 export class Game {
-    name: string;
     dead?: number;
     users: services.User[];
     clients: services.Client[];
@@ -65,7 +64,7 @@ export class Game {
     };
     map: services.Map;
     runningTimer: NodeJS.Timer;
-    constructor(type: string, public adminCode: string, public id: number) {
+    constructor(public name: string, public adminCode: string, public id: number) {
         this.users = [];
         this.clients = [];
         this.items = [];
@@ -73,19 +72,19 @@ export class Game {
         this.mines = [];
         this.entitys = [];
         this.tick = 0;
-        if (type === "lesson1") {
+        if (name === "lesson1") {
             this.props.th = services.map1.h;
             this.props.tw = services.map1.w;
-        } else if (type === "lesson2") {
+        } else if (name === "lesson2") {
             this.props.th = services.map2.h;
             this.props.tw = services.map2.w;
         }
         this.props.w = this.props.tw * common.constant.tileWidth;
         this.props.h = this.props.th * common.constant.tileHeight;
 
-        if (type === "lesson1") {
+        if (name === "lesson1") {
             this.map = new services.Map(this, services.map1);
-        } else if (type === "lesson2") {
+        } else if (name === "lesson2") {
             this.map = new services.Map(this, services.map2);
         } else {
             this.map = new services.Map(this);
@@ -292,7 +291,6 @@ export class Game {
         for (const client of this.clients) {
             const p1 = client.p1 && client.p1.id;
             const p2 = client.p2 && client.p2.id;
-            const onStruct = client.p1 && client.p1.onStruct;
             const minedata: common.MineProtocol[] = this.mines.filter(mine => (mine.creater.id === p1 && !p2) || mine.dead).map(mine => ({
                 x: mine.x,
                 y: mine.y,
@@ -319,7 +317,6 @@ export class Game {
                         mines: minedata,
                         entitys: entitydata,
                         p1,
-                        onStruct,
                         p2,
                     },
                 });
