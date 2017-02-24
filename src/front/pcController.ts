@@ -1,7 +1,7 @@
 // pc的控制器
 import * as common from "../back/common";
 
-export function start(joing: (p: any) => void, initDone: () => void) {
+export function start(joing: (p: boolean) => void, initDone: () => void) {
     const p1 = {
         data: undefined as common.UserProtocol | undefined,
         id: undefined as number | null | undefined,
@@ -49,7 +49,7 @@ export function start(joing: (p: any) => void, initDone: () => void) {
         }
         if (e.keyCode === 69) {
             if ($(".joining").css("display") !== "none") {
-                joing(p1);
+                joing(!!p1);
             }
         }
         e.preventDefault();

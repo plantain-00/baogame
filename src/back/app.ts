@@ -70,19 +70,12 @@ wss.on("connection", ws => {
     game.clients.push(client);
 
     ws.on("message", message => {
-        const index = message.indexOf("$");
-        const protocol: common.InProtocol = index === -1 ? {
-            name: message,
-            data: {},
-        } : {
-                name: message.substring(0, index),
-                data: JSON.parse(message.substring(index + 1)),
-            };
+        const protocol: common.InProtocol = JSON.parse(message);
 
-        if (protocol.name === "init") {
+        if (protocol.kind === "init") {
             if (protocol.data.code !== undefined) {
                 if (protocol.data.code !== game.adminCode) {
-                    services.emit(ws, { name: "initFail" });
+                    services.emit(ws, { kind: "initFail" });
                 } else {
                     client.admin = true;
                 }
@@ -91,16 +84,16 @@ wss.on("connection", ws => {
                 client.name = protocol.data.userName.replace(/[<>]/g, "").substring(0, 8);
             }
             services.emit(ws, {
-                name: "init",
+                kind: "init",
                 data: {
                     props: game.props,
                     map: game.map.getData(),
                     bodies: bodiesData,
                 },
             });
-        } else if (protocol.name === "join") {
+        } else if (protocol.kind === "join") {
             if (client.banned) {
-                services.emit(ws, { name: "joinFail", data: "you are banned" });
+                services.emit(ws, { kind: "joinFail", data: "you are banned" });
                 return;
             }
             let u = 0;
@@ -110,7 +103,7 @@ wss.on("connection", ws => {
                 }
             }
             if (u >= game.props.maxUser) {
-                services.emit(ws, { name: "joinFail", data: "加入失败，服务器已满" });
+                services.emit(ws, { kind: "joinFail", data: "加入失败，服务器已满" });
                 return;
             }
             if (protocol.data.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
@@ -119,8 +112,8 @@ wss.on("connection", ws => {
             if (protocol.data.p1) {
                 client.p1 = u2;
             }
-            services.emit(ws, { name: "joinSuccess", data: protocol.data.p1 });
-        } else if (protocol.name === "control") {
+            services.emit(ws, { kind: "joinSuccess" });
+        } else if (protocol.kind === "control") {
             if (client.p1 && protocol.data) {
                 client.p1.leftDown = protocol.data.leftDown;
                 client.p1.rightDown = protocol.data.rightDown;
@@ -133,13 +126,13 @@ wss.on("connection", ws => {
                 client.p1.downPress = protocol.data.downPress;
                 client.p1.itemPress = protocol.data.itemPress;
             }
-        } else if (protocol.name === "createItem") {
+        } else if (protocol.kind === "createItem") {
             if (client.admin) {
                 const item = game.createItem(protocol.data);
                 item.x = Math.random() * common.constant.tileWidth;
                 item.y = Math.random() * common.constant.tileHeight;
             }
-        } else if (protocol.name === "ban") {
+        } else if (protocol.kind === "ban") {
             if (client.admin) {
                 const target = game.getClient(protocol.data);
                 if (target) {
@@ -147,7 +140,7 @@ wss.on("connection", ws => {
                     banedip[target.ip] = true;
                 }
             }
-        } else if (protocol.name === "unban") {
+        } else if (protocol.kind === "unban") {
             if (client.admin) {
                 const target = game.getClient(protocol.data);
                 if (target) {

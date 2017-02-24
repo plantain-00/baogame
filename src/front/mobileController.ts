@@ -1,6 +1,6 @@
 // 移动的控制器
 
-export function start(joing: (p: any) => void, initDone: () => void) {
+export function start(joing: (p: boolean) => void, initDone: () => void) {
     const p1 = {
         upDown: 0,
         downDown: 0,

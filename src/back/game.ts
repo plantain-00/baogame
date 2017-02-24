@@ -149,7 +149,7 @@ export class Game {
                 user.danger = true;
             }
         }
-        this.announce({ name: "explode", data: { x, y, power } });
+        this.announce({ kind: "explode", data: { x, y, power } });
     }
     checkShot(u: services.User) {
         const x = u.x;
@@ -214,7 +214,7 @@ export class Game {
         }
     }
     win(user: { id: number }) {
-        this.announce({ name: "win", data: user.id });
+        this.announce({ kind: "win", data: user.id });
         setTimeout(() => {
             clearInterval(this.runningTimer);
             removeGame(this);
@@ -298,7 +298,7 @@ export class Game {
             if (client.admin) {
                 if (this.tick % 60 === 0) {
                     services.emit(client.ws, {
-                        name: "adminTick",
+                        kind: "adminTick",
                         data: {
                             users: userdata,
                             items: itemdata,
@@ -309,7 +309,7 @@ export class Game {
                 }
             } else {
                 services.emit(client.ws, {
-                    name: "tick",
+                    kind: "tick",
                     data: {
                         users: userdata,
                         items: itemdata,

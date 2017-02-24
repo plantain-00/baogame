@@ -57,7 +57,7 @@ let userName = localStorage.getItem("userName");
 if (userName) {
     $("#name").val(userName);
 }
-function joing(p: any) {
+function joing(p: boolean) {
     if (!canJoin) { return; }
     userName = $("#name").val() || "无名小卒";
     if ($("#name").val()) {
@@ -66,7 +66,7 @@ function joing(p: any) {
         localStorage.removeItem("userName");
     }
     emit({
-        name: "join",
+        kind: "join",
         data: {
             userName: userName!,
             p1: p,
@@ -86,9 +86,9 @@ function getUrlParameter(name: string): string | undefined {
 function initDone() {
     const roomId = +getUrlParameter("roomID");
     connect(roomId, () => {
-        emit({ name: "init", data: { userName: userName! } });
+        emit({ kind: "init", data: { userName: userName! } });
     }, protocol => {
-        if (protocol.name === "init") {
+        if (protocol.kind === "init") {
             P = protocol.data.props;	// 常量
             const cdom = document.createElement("canvas");	// 玩家层
             const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
@@ -125,11 +125,11 @@ function initDone() {
                 drawer.drawUser(ctxBody, user, {}, P.h, P.w, P.userWidth, P.userHeight, p1.id);
             }
             $(".joining").show();
-        } else if (protocol.name === "joinSuccess") {
+        } else if (protocol.kind === "joinSuccess") {
             $(".joining").hide();
-        } else if (protocol.name === "joinFail") {
+        } else if (protocol.kind === "joinFail") {
             alert(protocol.data);
-        } else if (protocol.name === "tick") {
+        } else if (protocol.kind === "tick") {
             t++;
             p1.id = protocol.data.p1;
             for (let i = 0; i < protocol.data.users.length; i++) {
@@ -153,7 +153,7 @@ function initDone() {
                 downPress: p1.downPress,
                 itemPress: p1.itemPress,
             };
-            emit({ name: "control", data: controlProtocol });
+            emit({ kind: "control", data: controlProtocol });
             let userCount = 0;
             for (const user of protocol.data.users) {
                 if (!user.npc) {
@@ -174,11 +174,11 @@ function initDone() {
             p1.upPress = false;
             p1.downPress = false;
             p1.itemPress = false;
-        } else if (protocol.name === "explode") {
+        } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
             drawer.lists.push(new Flare(protocol.data, P.h, true));
-        } else if (protocol.name === "userDead") {
+        } else if (protocol.kind === "userDead") {
             notice(protocol.data.message);
             // p1 dead
             if (protocol.data.user.id === p1.id) {
@@ -197,7 +197,7 @@ function initDone() {
                     }, P.h));
                 }
             }
-        } else if (protocol.name === "win") {
+        } else if (protocol.kind === "win") {
             $(".win").css("display", "-webkit-box");
         }
     });

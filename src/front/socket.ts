@@ -27,5 +27,5 @@ export function emit(protocol: common.InProtocol) {
     if (!ws) {
         return;
     }
-    ws.send(protocol.data ? protocol.name + "$" + JSON.stringify(protocol.data) : protocol.name);
+    ws.send(JSON.stringify(protocol));
 }

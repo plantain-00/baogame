@@ -142,7 +142,7 @@ export type TickProtocol = {
 
 export type InProtocol =
     {
-        name: "init";
+        kind: "init";
         data: {
             code?: string;
             userName?: string;
@@ -150,46 +150,54 @@ export type InProtocol =
     }
     |
     {
-        name: "join";
+        kind: "join";
         data: {
-            p1: any;
+            p1: boolean;
             userName: string;
         };
     }
     |
     {
-        name: "control";
+        kind: "control";
         data: ControlProtocol;
     }
     |
     {
-        name: "createItem";
+        kind: "createItem";
         data: number;
     }
     |
     {
-        name: "ban";
+        kind: "ban";
         data: number;
     }
     |
     {
-        name: "unban";
+        kind: "unban";
         data: number;
     };
 
 export type OutProtocol =
     {
-        name: "initFail";
-        data?: undefined;
+        kind: "initFail";
     }
     |
     {
-        name: "init";
+        kind: "init";
         data: {
-            props: any;
+            props: {
+                userHeight: number;
+                userWidth: number;
+                itemSize: number;
+                tw: number;
+                th: number;
+                maxUser: number;
+                w: number;
+                h: number;
+            };
             map: {
-                floor: any;
-                pilla: any;
+                floor: number[][];
+                pilla: Pilla[];
                 signs: SignProtocol[],
                 doors: DoorProtocol[],
                 itemGates: ItemGateProtocol[],
@@ -199,24 +207,21 @@ export type OutProtocol =
     }
     |
     {
-        name: "joinFail";
+        kind: "joinFail";
         data: string;
     }
     |
     {
-        name: "joinSuccess";
-        data: {
-            p1: any;
-        };
+        kind: "joinSuccess";
     }
     |
     {
-        name: "tick";
+        kind: "tick";
         data: TickProtocol;
     }
     |
     {
-        name: "adminTick";
+        kind: "adminTick";
         data: {
             users: UserProtocol[];
             items: ItemProtocol[];
@@ -226,7 +231,7 @@ export type OutProtocol =
     }
     |
     {
-        name: "explode";
+        kind: "explode";
         data: {
             x: number;
             y: number;
@@ -235,12 +240,12 @@ export type OutProtocol =
     }
     |
     {
-        name: "win";
+        kind: "win";
         data: number;
     }
     |
     {
-        name: "userDead";
+        kind: "userDead";
         data: {
             user: UserProtocol;
             killer: UserProtocol | undefined;
@@ -249,3 +254,9 @@ export type OutProtocol =
     };
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
+
+export type Pilla = {
+    x: number;
+    y1: number;
+    y2: number;
+};

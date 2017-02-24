@@ -442,7 +442,7 @@ export class User {
         }
 
         this.game.announce({
-            name: "userDead",
+            kind: "userDead",
             data: {
                 user: this.getData(),
                 killer: killer ? killer.getData() : undefined,

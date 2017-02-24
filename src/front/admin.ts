@@ -3,11 +3,11 @@ import { connect, emit } from "./socket";
 const code = localStorage.getItem("code");
 
 connect(undefined, () => {
-    emit({ name: "init", data: { code: code! } });
+    emit({ kind: "init", data: { code: code! } });
 }, protocol => {
-    if (protocol.name === "initFail") {
+    if (protocol.kind === "initFail") {
         alert("fail");
-    } else if (protocol.name === "adminTick") {
+    } else if (protocol.kind === "adminTick") {
         let html = '<div class="clients">';
         if (protocol.data.clients) {
             protocol.data.clients.forEach(client => {
@@ -54,16 +54,16 @@ $(".users").on("click", ".btn.ban", (e) => {
     const $t = $(e.currentTarget);
     const clientid = $t.data("clientid");
     if ($t.is(".banned")) {
-        emit({ name: "unban", data: clientid });
+        emit({ kind: "unban", data: clientid });
         $t.removeClass("banned");
     } else {
-        emit({ name: "ban", data: clientid });
+        emit({ kind: "ban", data: clientid });
         $t.addClass("banned");
     }
 });
 $(".items .btn").click((e) => {
     const type = $(e.currentTarget).data("type");
-    emit({ name: "createItem", data: type });
+    emit({ kind: "createItem", data: type });
 });
 
 $.ajax({

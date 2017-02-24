@@ -72,12 +72,6 @@ export interface Born {
     y: number;
 }
 
-export type Pilla = {
-    x: number;
-    y1: number;
-    y2: number;
-};
-
 export type Position = {
     x: number;
     y: number;
@@ -103,7 +97,7 @@ export type MapData = {
     w: number;
     h: number;
     floor: number[][];
-    pilla: Pilla[];
+    pilla: common.Pilla[];
     borns: Position[];
     npcs: NPC[];
     signs: common.SignProtocol[];
