@@ -13,13 +13,6 @@ export function start(joing: (p: any) => void, initDone: () => void) {
         upPress: false,
         downPress: false,
     };
-    const p2 = {
-        upDown: 0,
-        downDown: 0,
-        leftDown: 0,
-        rightDown: 0,
-        itemDown: 0,
-    };
     $("body").on("touchmove", e => {
         e.preventDefault();
     });
@@ -91,5 +84,5 @@ export function start(joing: (p: any) => void, initDone: () => void) {
     if (initDone) {
         initDone();
     }
-    return { p1, p2 };
+    return p1;
 }

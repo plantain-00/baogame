@@ -54,7 +54,6 @@ wss.on("connection", ws => {
     const client: services.Client = {
         id: concount++,
         p1: null,
-        p2: null,
         admin: false,
         name: "无名小卒",
         joinTime: Date.now(),
@@ -115,13 +114,10 @@ wss.on("connection", ws => {
                 return;
             }
             if (protocol.data.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
-            if (protocol.data.p2 && client.p2 && !client.p2.dieing && !client.p2.dead) { return; }
             client.name = protocol.data.userName.replace(/[<>]/g, "").substring(0, 8);
             const u2 = game.createUser(client);
             if (protocol.data.p1) {
                 client.p1 = u2;
-            } else {
-                client.p2 = u2;
             }
             services.emit(ws, { name: "joinSuccess", data: protocol.data.p1 });
         } else if (protocol.name === "control") {

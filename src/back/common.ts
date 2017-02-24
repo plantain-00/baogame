@@ -105,7 +105,6 @@ export type UserProtocol = {
 
 export type ClientProtocol = {
     p1: number | null;
-    p2: number | null;
     id: number;
     admin: boolean;
     name: string;
@@ -131,7 +130,14 @@ export type DoorProtocol = {
 export type ItemGateProtocol = {
     x: number;
     y: number;
-    itemType?: number,
+};
+
+export type TickProtocol = {
+    users: UserProtocol[];
+    items: ItemProtocol[];
+    mines: MineProtocol[];
+    entitys: EntityProtocol[];
+    p1: number | null | undefined;
 };
 
 export type InProtocol =
@@ -147,7 +153,6 @@ export type InProtocol =
         name: "join";
         data: {
             p1: any;
-            p2?: any;
             userName: string;
         };
     }
@@ -207,14 +212,7 @@ export type OutProtocol =
     |
     {
         name: "tick";
-        data: {
-            users: UserProtocol[];
-            items: ItemProtocol[];
-            mines: MineProtocol[];
-            entitys: EntityProtocol[];
-            p1: number | null | undefined;
-            p2: number | null | undefined;
-        };
+        data: TickProtocol;
     }
     |
     {

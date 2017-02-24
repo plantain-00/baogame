@@ -6,21 +6,19 @@ import { Map } from "./map";
 import { Item } from "./item";
 import { map as map1 } from "./maps/lesson1";
 import { map as map2 } from "./maps/lesson2";
-import { Door } from "./door";
-import { Sign } from "./sign";
-import { ItemGate } from "./itemGate";
+import * as doorService from "./door";
+import * as itemGateService from "./itemGate";
 import * as common from "./common";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, Grenade, Map, Item, map1, map2, Door, Sign, ItemGate, createGame, getGameData, games };
+export { User, Game, playerAI, Grenade, Map, Item, map1, map2, doorService, itemGateService, createGame, getGameData, games };
 
 export type Entity = Grenade;
 
 export interface Client {
     id: number;
     p1: User | null;
-    p2: User | null;
     admin: boolean;
     name: string;
     joinTime: number;
@@ -36,7 +34,6 @@ export interface Client {
 export function getClientData(client: Client): common.ClientProtocol {
     return {
         p1: client.p1 && client.p1.id,
-        p2: client.p2 && client.p2.id,
         id: client.id,
         admin: client.admin,
         name: client.name,
@@ -95,6 +92,13 @@ export type NPC = {
     AI?: "walking";
 };
 
+export type ItemGate = {
+    x: number;
+    y: number;
+    itemType?: number;
+    targetItem?: Item;
+};
+
 export type MapData = {
     w: number;
     h: number;
@@ -104,7 +108,7 @@ export type MapData = {
     npcs: NPC[];
     signs: common.SignProtocol[];
     doors: common.DoorProtocol[];
-    itemGates: common.ItemGateProtocol[];
+    itemGates: ItemGate[];
     hooks: {
         onKilled: (game: Game, u: User) => void,
     };

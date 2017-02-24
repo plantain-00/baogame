@@ -8,9 +8,9 @@ export class Map {
     pilla: services.Pillar[];
     borns: services.Born[];
     hooks: any;
-    doors: services.Door[] = [];
+    doors: common.DoorProtocol[] = [];
     itemGates: services.ItemGate[] = [];
-    signs: services.Sign[] = [];
+    signs: common.SignProtocol[] = [];
     constructor(public game: services.Game, data?: services.MapData) {
         if (data) {
             this.w = game.props.w;
@@ -19,9 +19,9 @@ export class Map {
             this.pilla = data.pilla;
             this.borns = data.borns;
             this.hooks = data.hooks || {};
-            this.doors = data.doors.map(door => new services.Door(this.game, door));
-            this.itemGates = data.itemGates.map(itemGate => new services.ItemGate(this.game, itemGate));
-            this.signs = data.signs.map(sign => new services.Sign(this.game, sign));
+            this.doors = data.doors;
+            this.itemGates = data.itemGates;
+            this.signs = data.signs;
             if (data.npcs) {
                 for (const npcData of data.npcs) {
                     const npc = this.game.createNPC({ name: npcData.name || "npc" });
@@ -130,9 +130,9 @@ export class Map {
                 }
             }
 
-            this.itemGates.push(new services.ItemGate(this.game, { x: 0, y: this.h / 2 }));
-            this.itemGates.push(new services.ItemGate(this.game, { x: this.w - 1, y: this.h / 2 }));
-            this.itemGates.push(new services.ItemGate(this.game, { x: this.w / 2, y: this.h - 1 }));
+            this.itemGates.push({ x: 0, y: this.h / 2 });
+            this.itemGates.push({ x: this.w - 1, y: this.h / 2 });
+            this.itemGates.push({ x: this.w / 2, y: this.h - 1 });
         }
     }
     born() {
@@ -169,25 +169,20 @@ export class Map {
         return false;
     }
     update() {
-        for (const sign of this.signs) {
-            sign.update();
-        }
         for (const door of this.doors) {
-            door.update();
+            services.doorService.update(this.game, door);
         }
         for (const itemGate of this.itemGates) {
-            itemGate.update();
+            services.itemGateService.update(this.game, itemGate);
         }
     }
     getData() {
-        const signs = this.signs.map(sign => sign.getData());
-        const doors = this.doors.map(door => door.getData());
-        const itemGates = this.itemGates.map(itemGate => itemGate.getData());
+        const itemGates = this.itemGates.map(itemGate => services.itemGateService.getData(itemGate));
         return {
             floor: this.floor,
             pilla: this.pilla,
-            signs,
-            doors,
+            signs: this.signs,
+            doors: this.doors,
             itemGates,
         };
     }

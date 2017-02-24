@@ -290,8 +290,7 @@ export class Game {
         }));
         for (const client of this.clients) {
             const p1 = client.p1 && client.p1.id;
-            const p2 = client.p2 && client.p2.id;
-            const minedata: common.MineProtocol[] = this.mines.filter(mine => (mine.creater.id === p1 && !p2) || mine.dead).map(mine => ({
+            const minedata: common.MineProtocol[] = this.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
                 x: mine.x,
                 y: mine.y,
                 dead: mine.dead!,
@@ -317,7 +316,6 @@ export class Game {
                         mines: minedata,
                         entitys: entitydata,
                         p1,
-                        p2,
                     },
                 });
             }
