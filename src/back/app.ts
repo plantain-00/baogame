@@ -6,44 +6,41 @@ const server = libs.http.createServer(app);
 const wss = new libs.WebSocketServer({ server });
 import * as services from "./services";
 
-const opts: any = {};
-for (const key of process.argv.splice(2)) {
-    const keys = key.split("=");
-    opts[keys[0]] = keys[1];
-}
+const adminCode = process.env.BAO_DEFAULT_ROOM_ADMIN_CODE || "admin";
 
-const adminCode = opts.code || "admin";
+const argv = libs.minimist(process.argv.slice(2));
+const port = argv["p"] || 8030;
+const host = argv["h"] || "localhost";
 
-server.listen(opts.port || 8030, () => {
-    console.log("Listening on " + server.address().port);
+server.listen(port || 8030, () => {
+    console.log(`Listening on ${host}:${port}`);
 });
 
 app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 // 游戏地址
 app.get("/createRoom", (req, res) => {
-    const type = req.query.type;
-    const room = services.createGame(type, adminCode);
+    const name = req.query.name || "new room";
+    const code = req.query.code;
+    const room = services.createGame(name, code);
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end(room.id + "");
+    res.end(room.id.toString());
 });
 
 // 获取房间列表
 app.get("/roomsData", (req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end(JSON.stringify(services.getGameData()));
+    res.end(JSON.stringify(services.getGameData(), null, "  "));
 });
 
-for (let i = 0; i < (opts.room || 1); i++) {
-    services.createGame("大乱斗", adminCode);
-}
+services.createGame("大乱斗", adminCode);
 
 const banedip: { [ip: string]: boolean } = {};
 let concount = 0;
 
 wss.on("connection", ws => {
     const location = libs.url.parse(ws.upgradeReq.url!, true);
-    const roomId = +location.query.roomID || 1;
+    const roomId = +location.query.roomId || 1;
     const game = services.games.find(r => r.id === roomId);
     if (!game) {
         ws.close();
@@ -73,13 +70,6 @@ wss.on("connection", ws => {
         const protocol: common.InProtocol = JSON.parse(message);
 
         if (protocol.kind === "init") {
-            if (protocol.code !== undefined) {
-                if (protocol.code !== game.adminCode) {
-                    services.emit(ws, { kind: "initFail" });
-                } else {
-                    client.admin = true;
-                }
-            }
             if (protocol.userName) {
                 client.name = protocol.userName.replace(/[<>]/g, "").substring(0, 8);
             }
@@ -91,6 +81,13 @@ wss.on("connection", ws => {
                     bodies: bodiesData,
                 },
             });
+        } else if (protocol.kind === "adminInit") {
+            if (protocol.code === game.adminCode) {
+                client.admin = true;
+            } else {
+                services.emit(ws, { kind: "adminInitFail" });
+                ws.close();
+            }
         } else if (protocol.kind === "join") {
             if (client.banned) {
                 services.emit(ws, { kind: "joinFail", data: "you are banned" });

@@ -143,8 +143,12 @@ export type TickProtocol = {
 export type InProtocol =
     {
         kind: "init";
-        code?: string;
-        userName?: string;
+        userName: string;
+    }
+    |
+    {
+        kind: "adminInit";
+        code: string;
     }
     |
     {
@@ -175,10 +179,6 @@ export type InProtocol =
 
 export type OutProtocol =
     {
-        kind: "initFail";
-    }
-    |
-    {
         kind: "init";
         data: {
             props: {
@@ -200,6 +200,10 @@ export type OutProtocol =
             }
             bodies: UserProtocol[];
         }
+    }
+    |
+    {
+        kind: "adminInitFail";
     }
     |
     {

@@ -1,6 +1,6 @@
 $(".btn-lesson").click((e) => {
-    $.get("./createRoom?type=" + $(e.currentTarget).attr("roomtype"), (roomID) => {
-        location.href = "./?roomID=" + roomID;
+    $.get("./createRoom?type=" + $(e.currentTarget).attr("roomtype"), roomId => {
+        location.href = "./?roomId=" + roomId;
     });
 });
 function refresh() {
@@ -8,7 +8,7 @@ function refresh() {
         const roomsData: any[] = JSON.parse(data);
         const rooms = [];
         for (const room of roomsData) {
-            rooms.push('<a href="/?roomID=' + room.id + '"><div class="room">' + room.name + "[" + room.users + "/" + room.maxUser + "]</div></a>");
+            rooms.push('<a href="/?roomId=' + room.id + '"><div class="room">' + room.name + "[" + room.users + "/" + room.maxUser + "]</div></a>");
         }
         $(".rooms").html("").append(rooms.join(""));
     });

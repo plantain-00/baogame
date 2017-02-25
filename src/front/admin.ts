@@ -1,12 +1,13 @@
-import { connect, emit } from "./socket";
+import { connect, emit, getUrlParameter } from "./socket";
 
-const code = localStorage.getItem("code");
+const code = getUrlParameter("code");
+const roomId = +getUrlParameter("roomId");
 
-connect(undefined, () => {
-    emit({ kind: "init", code: code! });
+connect(roomId, () => {
+    emit({ kind: "adminInit", code });
 }, protocol => {
-    if (protocol.kind === "initFail") {
-        alert("fail");
+    if (protocol.kind === "adminInitFail") {
+        alert("wrong admin code.");
     } else if (protocol.kind === "adminTick") {
         let html = '<div class="clients">';
         if (protocol.data.clients) {

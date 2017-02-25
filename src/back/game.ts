@@ -19,10 +19,10 @@ setInterval(() => {
     }
 }, 1000);
 
-const maxUser = 6;
+const maxUser = process.env.BAO_MAX_USER | 10;
 
-export function createGame(type: string, adminCode: string) {
-    const game = new services.Game(type, adminCode, startGameId++);
+export function createGame(name: string, adminCode: string) {
+    const game = new services.Game(name, adminCode, startGameId++);
     games.push(game);
     return game;
 }

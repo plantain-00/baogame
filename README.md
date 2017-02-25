@@ -19,3 +19,25 @@ node dist/app.js
 ```
 
 Then open http://localhost:8030 in your browser.
+
+#### CLI parameters
+
+key | default value | description
+--- | --- | ---
+p | 8030 | port
+h | localhost | host
+
+#### environment variables
+
+key | default value | description
+--- | --- | ---
+BAO_DEFAULT_ROOM_ADMIN_CODE | "admin" | admin code of the default room
+BAO_MAX_USER | 10 | the max user count of a room
+
+#### create room named "test" and set its admin code
+
+`/createRoom?name=test&code=admin`
+
+#### access admin page of a room by its admin code
+
+`/admin.html?code=admin&roomId=1`

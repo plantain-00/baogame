@@ -1,4 +1,4 @@
-import { connect, emit } from "./socket";
+import { connect, emit, getUrlParameter } from "./socket";
 import * as pcController from "./pcController";
 import * as mobileController from "./pcController";
 import * as common from "../back/common";
@@ -16,6 +16,8 @@ const p1 = (navigator.userAgent.indexOf("iPhone") === -1
     : mobileController.start(joing, initDone);
 
 (window as any).items = common.items;
+
+const roomId = +getUrlParameter("roomId");
 
 const scoreText = [
     "小试牛刀",
@@ -72,19 +74,9 @@ function joing(p: boolean) {
     });
 }
 
-function getUrlParameter(name: string): string | undefined {
-    const reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    const array: RegExpMatchArray | null = window.location.search.substr(1).match(reg);
-    if (array && array.length >= 3) {
-        return decodeURI(array[2]);
-    }
-    return undefined;
-}
-
 let lastControl: string;
 
 function initDone() {
-    const roomId = +getUrlParameter("roomID");
     connect(roomId, () => {
         emit({ kind: "init", userName: userName! });
     }, protocol => {
