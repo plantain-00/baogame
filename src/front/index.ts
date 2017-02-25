@@ -67,10 +67,8 @@ function joing(p: boolean) {
     }
     emit({
         kind: "join",
-        data: {
-            userName: userName!,
-            p1: p,
-        },
+        userName: userName!,
+        p1: p,
     });
 }
 
@@ -83,10 +81,12 @@ function getUrlParameter(name: string): string | undefined {
     return undefined;
 }
 
+let lastControl: string;
+
 function initDone() {
     const roomId = +getUrlParameter("roomID");
     connect(roomId, () => {
-        emit({ kind: "init", data: { userName: userName! } });
+        emit({ kind: "init", userName: userName! });
     }, protocol => {
         if (protocol.kind === "init") {
             P = protocol.data.props;	// 常量
@@ -140,7 +140,6 @@ function initDone() {
 
             render(context, protocol.data);
 
-            // 发送控制
             const controlProtocol: common.ControlProtocol = {
                 leftDown: p1.leftDown,
                 rightDown: p1.rightDown,
@@ -153,7 +152,11 @@ function initDone() {
                 downPress: p1.downPress,
                 itemPress: p1.itemPress,
             };
-            emit({ kind: "control", data: controlProtocol });
+            const thisControl = JSON.stringify(controlProtocol);
+            if (thisControl !== lastControl) {
+                lastControl = thisControl;
+                emit({ kind: "control", data: controlProtocol });
+            }
             let userCount = 0;
             for (const user of protocol.data.users) {
                 if (!user.npc) {

@@ -3,7 +3,7 @@ import { connect, emit } from "./socket";
 const code = localStorage.getItem("code");
 
 connect(undefined, () => {
-    emit({ kind: "init", data: { code: code! } });
+    emit({ kind: "init", code: code! });
 }, protocol => {
     if (protocol.kind === "initFail") {
         alert("fail");

@@ -143,18 +143,14 @@ export type TickProtocol = {
 export type InProtocol =
     {
         kind: "init";
-        data: {
-            code?: string;
-            userName?: string;
-        };
+        code?: string;
+        userName?: string;
     }
     |
     {
         kind: "join";
-        data: {
-            p1: boolean;
-            userName: string;
-        };
+        p1: boolean;
+        userName: string;
     }
     |
     {

@@ -29,7 +29,7 @@ export class User {
     lastTouch: any;
     rollPoint: number;
     downDown: any;
-    pilla: any;
+    pilla: common.Pilla;
     itemPress: any;
     doubleJumping: boolean;
     flying: number;

@@ -73,15 +73,15 @@ wss.on("connection", ws => {
         const protocol: common.InProtocol = JSON.parse(message);
 
         if (protocol.kind === "init") {
-            if (protocol.data.code !== undefined) {
-                if (protocol.data.code !== game.adminCode) {
+            if (protocol.code !== undefined) {
+                if (protocol.code !== game.adminCode) {
                     services.emit(ws, { kind: "initFail" });
                 } else {
                     client.admin = true;
                 }
             }
-            if (protocol.data.userName) {
-                client.name = protocol.data.userName.replace(/[<>]/g, "").substring(0, 8);
+            if (protocol.userName) {
+                client.name = protocol.userName.replace(/[<>]/g, "").substring(0, 8);
             }
             services.emit(ws, {
                 kind: "init",
@@ -106,10 +106,10 @@ wss.on("connection", ws => {
                 services.emit(ws, { kind: "joinFail", data: "加入失败，服务器已满" });
                 return;
             }
-            if (protocol.data.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
-            client.name = protocol.data.userName.replace(/[<>]/g, "").substring(0, 8);
+            if (protocol.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
+            client.name = protocol.userName.replace(/[<>]/g, "").substring(0, 8);
             const u2 = game.createUser(client);
-            if (protocol.data.p1) {
+            if (protocol.p1) {
                 client.p1 = u2;
             }
             services.emit(ws, { kind: "joinSuccess" });
