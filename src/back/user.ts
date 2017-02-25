@@ -443,14 +443,14 @@ export class User {
 
         this.game.announce({
             kind: "userDead",
-            data: {
+            userDead: {
                 user: this.getData(),
                 killer: killer ? killer.getData() : undefined,
                 message,
             },
         });
     }
-    getData(): common.UserProtocol {
+    getData(): common.User {
         return {
             carry: this.carry,
             carryCount: this.carryCount,

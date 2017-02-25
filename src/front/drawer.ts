@@ -10,10 +10,10 @@ import { ShotLine } from "./effects/shotLine";
 export let lists: (Flare | Toast | Brust | WaterDrops | ItemDead | ItemDead | ShotLine)[] = [];
 
 // 绘制背景
-export function drawBg(ctx: CanvasRenderingContext2D, map: any, width: number, height: number) {
+export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
     ctx.clearRect(0, 0, width, height);
     // 绘制柱子
-    map.pilla.forEach((pilla: any) => {
+    for (const pilla of map.pilla) {
         ctx.fillStyle = "#888";
         for (let j = height - pilla.y2 * common.constant.tileHeight + 10; j < height - pilla.y1 * common.constant.tileHeight; j += 20) {
             ctx.fillRect(pilla.x * common.constant.tileWidth - 10, j, 20, 4);
@@ -37,7 +37,7 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: any, width: number, h
         ctx.arc(pilla.x * common.constant.tileWidth + 10, height - pilla.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
-    });
+    }
 
     // 绘制地板
     for (let i = 0; i < map.floor.length; i++) {
@@ -64,7 +64,7 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: any, width: number, h
     }
 }
 
-export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.SignProtocol[], height: number, p1Data: any) {
+export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.Sign[], height: number, p1Data: any) {
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const sign of signs) {
@@ -83,7 +83,7 @@ export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.SignProto
     ctx.font = "14px 宋体";
 }
 
-export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.DoorProtocol[], height: number) {
+export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.Door[], height: number) {
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const door of doors) {
@@ -92,7 +92,7 @@ export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.DoorProto
     ctx.font = "14px 宋体";
 }
 
-export function drawItemGates(ctx: CanvasRenderingContext2D, itemGates: common.ItemGateProtocol[], height: number) {
+export function drawItemGates(ctx: CanvasRenderingContext2D, itemGates: common.ItemGate[], height: number) {
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const itemGate of itemGates) {

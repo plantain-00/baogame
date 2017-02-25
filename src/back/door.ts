@@ -1,7 +1,7 @@
 import * as services from "./services";
 import * as common from "./common";
 
-export function update(game: services.Game, door: common.DoorProtocol) {
+export function update(game: services.Game, door: common.Door) {
     for (const user of game.users) {
         if (user.name === "王二狗") {
             return;

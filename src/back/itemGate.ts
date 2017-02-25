@@ -21,7 +21,7 @@ export function update(game: services.Game, data: services.ItemGate) {
     }
 }
 
-export function getData(data: services.ItemGate): common.ItemGateProtocol {
+export function getData(data: services.ItemGate): common.ItemGate {
     return {
         x: data.x,
         y: data.y,

@@ -50,39 +50,26 @@ export const items = {
     },
 };
 
-export type ControlProtocol = {
-    leftDown: number;
-    rightDown: number;
-    upDown: number;
-    downDown: number;
-    itemDown: number;
-    leftPress: boolean;
-    rightPress: boolean;
-    upPress: boolean;
-    downPress: boolean;
-    itemPress: boolean;
-};
-
-export type ItemProtocol = {
+export type Item = {
     x: number;
     y: number;
     id: number;
     dead: boolean;
 };
 
-export type MineProtocol = {
+export type Mine = {
     x: number;
     y: number;
     dead: boolean;
 };
 
-export type EntityProtocol = {
+export type Entity = {
     x: number;
     y: number;
     r: number;
 };
 
-export type UserProtocol = {
+export type User = {
     carry: string;
     carryCount: number;
     nearPilla: boolean;
@@ -103,7 +90,7 @@ export type UserProtocol = {
     flying: number;
 };
 
-export type ClientProtocol = {
+export type Client = {
     p1: number | null;
     id: number;
     admin: boolean;
@@ -116,142 +103,173 @@ export type ClientProtocol = {
     highestKill: number;
 };
 
-export type SignProtocol = {
+export type Sign = {
     x: number;
     y: number;
     message: string;
 };
 
-export type DoorProtocol = {
+export type Door = {
     x: number;
     y: number;
 };
 
-export type ItemGateProtocol = {
+export type ItemGate = {
     x: number;
     y: number;
 };
 
 export type TickProtocol = {
-    users: UserProtocol[];
-    items: ItemProtocol[];
-    mines: MineProtocol[];
-    entitys: EntityProtocol[];
-    p1: number | null | undefined;
+    kind: "tick";
+    tick: {
+        users: User[];
+        items: Item[];
+        mines: Mine[];
+        entitys: Entity[];
+        p1: number | null | undefined;
+    };
 };
 
-export type InProtocol =
-    {
-        kind: "init";
+export type AdminTickProtocol = {
+    kind: "adminTick";
+    adminTick: {
+        users: User[];
+        items: Item[];
+        mines: Mine[];
+        clients: Client[];
+    };
+};
+
+export type InitProtocol = {
+    kind: "init";
+    init: {
         userName: string;
+    };
+};
+
+export type Props = {
+    userHeight: number;
+    userWidth: number;
+    itemSize: number;
+    tw: number;
+    th: number;
+    maxUser: number;
+    w: number;
+    h: number;
+};
+
+export type MapData = {
+    floor: number[][];
+    pilla: Pilla[];
+    signs: Sign[],
+    doors: Door[],
+    itemGates: ItemGate[],
+};
+
+export type InitSuccessProtocol = {
+    kind: "initSuccess";
+    initSuccess: {
+        props: Props;
+        map: MapData;
+        bodies: User[];
     }
-    |
-    {
-        kind: "adminInit";
+};
+
+export type AdminInitProtocol = {
+    kind: "adminInit";
+    adminInit: {
         code: string;
-    }
-    |
-    {
-        kind: "join";
+    };
+};
+
+export type AdminInitFailProtocol = {
+    kind: "adminInitFail";
+};
+
+export type JoinProtocol = {
+    kind: "join";
+    join: {
         p1: boolean;
         userName: string;
-    }
-    |
-    {
-        kind: "control";
-        data: ControlProtocol;
-    }
-    |
-    {
-        kind: "createItem";
-        data: number;
-    }
-    |
-    {
-        kind: "ban";
-        data: number;
-    }
-    |
-    {
-        kind: "unban";
-        data: number;
     };
+};
 
-export type OutProtocol =
-    {
-        kind: "init";
-        data: {
-            props: {
-                userHeight: number;
-                userWidth: number;
-                itemSize: number;
-                tw: number;
-                th: number;
-                maxUser: number;
-                w: number;
-                h: number;
-            };
-            map: {
-                floor: number[][];
-                pilla: Pilla[];
-                signs: SignProtocol[],
-                doors: DoorProtocol[],
-                itemGates: ItemGateProtocol[],
-            }
-            bodies: UserProtocol[];
-        }
-    }
-    |
-    {
-        kind: "adminInitFail";
-    }
-    |
-    {
-        kind: "joinFail";
-        data: string;
-    }
-    |
-    {
-        kind: "joinSuccess";
-    }
-    |
-    {
-        kind: "tick";
-        data: TickProtocol;
-    }
-    |
-    {
-        kind: "adminTick";
-        data: {
-            users: UserProtocol[];
-            items: ItemProtocol[];
-            mines: MineProtocol[];
-            clients: ClientProtocol[];
-        };
-    }
-    |
-    {
-        kind: "explode";
-        data: {
-            x: number;
-            y: number;
-            power: number;
-        };
-    }
-    |
-    {
-        kind: "win";
-        data: number;
-    }
-    |
-    {
-        kind: "userDead";
-        data: {
-            user: UserProtocol;
-            killer: UserProtocol | undefined;
-            message: string;
-        };
+export type JoinFailProtocol = {
+    kind: "joinFail";
+    joinFail: {
+        message: string;
     };
+};
+
+export type JoinSuccessProtocol = {
+    kind: "joinSuccess";
+};
+
+export type ControlProtocol = {
+    kind: "control";
+    control: {
+        leftDown: number;
+        rightDown: number;
+        upDown: number;
+        downDown: number;
+        itemDown: number;
+        leftPress: boolean;
+        rightPress: boolean;
+        upPress: boolean;
+        downPress: boolean;
+        itemPress: boolean;
+    };
+};
+
+export type CreateItemProtocol = {
+    kind: "createItem";
+    createItem: {
+        type: number;
+    };
+};
+
+export type BanProtocol = {
+    kind: "ban";
+    ban: {
+        clientId: number;
+    };
+};
+
+export type UnbanProtocol = {
+    kind: "unban";
+    unban: {
+        clientId: number;
+    };
+};
+
+export type ExplodeProtocol = {
+    kind: "explode";
+    explode: {
+        x: number;
+        y: number;
+        power: number;
+    };
+};
+
+export type WinProtocol = {
+    kind: "win";
+    win: {
+        userId: number;
+    };
+};
+
+export type UserDeadProtocol = {
+    kind: "userDead";
+    userDead: {
+        user: User;
+        killer: User | undefined;
+        message: string;
+    };
+};
+
+export type Protocol = InitProtocol | InitSuccessProtocol | AdminInitProtocol | AdminInitFailProtocol
+    | JoinProtocol | JoinFailProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
+    | BanProtocol | UnbanProtocol | TickProtocol | AdminTickProtocol | ExplodeProtocol | WinProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 

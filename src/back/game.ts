@@ -149,7 +149,7 @@ export class Game {
                 user.danger = true;
             }
         }
-        this.announce({ kind: "explode", data: { x, y, power } });
+        this.announce({ kind: "explode", explode: { x, y, power } });
     }
     checkShot(u: services.User) {
         const x = u.x;
@@ -208,13 +208,13 @@ export class Game {
             }
         }
     }
-    announce(protocol: common.OutProtocol) {
+    announce(protocol: common.Protocol) {
         for (const client of this.clients) {
             services.emit(client.ws, protocol);
         }
     }
     win(user: { id: number }) {
-        this.announce({ kind: "win", data: user.id });
+        this.announce({ kind: "win", win: { userId: user.id } });
         setTimeout(() => {
             clearInterval(this.runningTimer);
             removeGame(this);
@@ -290,7 +290,7 @@ export class Game {
         }));
         for (const client of this.clients) {
             const p1 = client.p1 && client.p1.id;
-            const minedata: common.MineProtocol[] = this.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
+            const minedata: common.Mine[] = this.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
                 x: mine.x,
                 y: mine.y,
                 dead: mine.dead!,
@@ -299,7 +299,7 @@ export class Game {
                 if (this.tick % 60 === 0) {
                     services.emit(client.ws, {
                         kind: "adminTick",
-                        data: {
+                        adminTick: {
                             users: userdata,
                             items: itemdata,
                             mines: minedata,
@@ -310,7 +310,7 @@ export class Game {
             } else {
                 services.emit(client.ws, {
                     kind: "tick",
-                    data: {
+                    tick: {
                         users: userdata,
                         items: itemdata,
                         mines: minedata,

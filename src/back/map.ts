@@ -8,9 +8,9 @@ export class Map {
     pilla: services.Pillar[];
     borns: services.Born[];
     hooks: any;
-    doors: common.DoorProtocol[] = [];
+    doors: common.Door[] = [];
     itemGates: services.ItemGate[] = [];
-    signs: common.SignProtocol[] = [];
+    signs: common.Sign[] = [];
     constructor(public game: services.Game, data?: services.MapData) {
         if (data) {
             this.w = game.props.w;

@@ -9,10 +9,11 @@ import { map as map2 } from "./maps/lesson2";
 import * as doorService from "./door";
 import * as itemGateService from "./itemGate";
 import * as common from "./common";
+import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, Grenade, Map, Item, map1, map2, doorService, itemGateService, createGame, getGameData, games };
+export { User, Game, playerAI, Grenade, Map, Item, map1, map2, doorService, itemGateService, createGame, getGameData, games, format };
 
 export type Entity = Grenade;
 
@@ -31,7 +32,7 @@ export interface Client {
     ws: libs.WebSocket;
 }
 
-export function getClientData(client: Client): common.ClientProtocol {
+export function getClientData(client: Client): common.Client {
     return {
         p1: client.p1 && client.p1.id,
         id: client.id,
@@ -46,8 +47,9 @@ export function getClientData(client: Client): common.ClientProtocol {
     };
 }
 
-export function emit(ws: libs.WebSocket, protocol: common.OutProtocol) {
+export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     try {
+        // ws.send(format.encode(protocol), { binary: true });
         ws.send(JSON.stringify(protocol));
     } catch (e) {
         console.log(e);
@@ -100,8 +102,8 @@ export type MapData = {
     pilla: common.Pilla[];
     borns: Position[];
     npcs: NPC[];
-    signs: common.SignProtocol[];
-    doors: common.DoorProtocol[];
+    signs: common.Sign[];
+    doors: common.Door[];
     itemGates: ItemGate[];
     hooks: {
         onKilled: (game: Game, u: User) => void,

@@ -46,9 +46,9 @@ let cdx = 0;
 let cdy = 0;
 let canJoin: any = null;
 const game: {
-    signs: common.SignProtocol[],
-    doors: common.DoorProtocol[],
-    itemGates: common.ItemGateProtocol[],
+    signs: common.Sign[],
+    doors: common.Door[],
+    itemGates: common.ItemGate[],
 } = {
         signs: [],
         doors: [],
@@ -69,8 +69,10 @@ function joing(p: boolean) {
     }
     emit({
         kind: "join",
-        userName: userName!,
-        p1: p,
+        join: {
+            userName: userName!,
+            p1: p,
+        },
     });
 }
 
@@ -78,10 +80,10 @@ let lastControl: string;
 
 function initDone() {
     connect(roomId, () => {
-        emit({ kind: "init", userName: userName! });
+        emit({ kind: "init", init: { userName: userName! } });
     }, protocol => {
-        if (protocol.kind === "init") {
-            P = protocol.data.props;	// 常量
+        if (protocol.kind === "initSuccess") {
+            P = protocol.initSuccess.props;	// 常量
             const cdom = document.createElement("canvas");	// 玩家层
             const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
             cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
@@ -104,53 +106,56 @@ function initDone() {
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
-            drawer.drawBg(ctxBg!, protocol.data.map, P.w, P.h);
-            game.itemGates = protocol.data.map.itemGates;
-            game.doors = protocol.data.map.doors;
-            game.signs = protocol.data.map.signs;
+            drawer.drawBg(ctxBg!, protocol.initSuccess.map, P.w, P.h);
+            game.itemGates = protocol.initSuccess.map.itemGates;
+            game.doors = protocol.initSuccess.map.doors;
+            game.signs = protocol.initSuccess.map.signs;
             const middle = document.getElementById("middle") !;
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
             // 初始化尸体
-            for (const user of protocol.data.bodies) {
+            for (const user of protocol.initSuccess.bodies) {
                 drawer.drawUser(ctxBody, user, {}, P.h, P.w, P.userWidth, P.userHeight, p1.id);
             }
             $(".joining").show();
         } else if (protocol.kind === "joinSuccess") {
             $(".joining").hide();
         } else if (protocol.kind === "joinFail") {
-            alert(protocol.data);
+            alert(protocol.joinFail.message);
         } else if (protocol.kind === "tick") {
             t++;
-            p1.id = protocol.data.p1;
-            for (let i = 0; i < protocol.data.users.length; i++) {
-                if (protocol.data.users[i].id === p1.id) {
-                    p1.data = protocol.data.users[i];
+            p1.id = protocol.tick.p1;
+            for (let i = 0; i < protocol.tick.users.length; i++) {
+                if (protocol.tick.users[i].id === p1.id) {
+                    p1.data = protocol.tick.users[i];
                 }
             }
 
-            render(context, protocol.data);
+            render(context, protocol);
 
             const controlProtocol: common.ControlProtocol = {
-                leftDown: p1.leftDown,
-                rightDown: p1.rightDown,
-                upDown: p1.upDown,
-                downDown: p1.downDown,
-                itemDown: p1.itemDown,
-                leftPress: p1.leftPress,
-                rightPress: p1.rightPress,
-                upPress: p1.upPress,
-                downPress: p1.downPress,
-                itemPress: p1.itemPress,
+                kind: "control",
+                control: {
+                    leftDown: p1.leftDown,
+                    rightDown: p1.rightDown,
+                    upDown: p1.upDown,
+                    downDown: p1.downDown,
+                    itemDown: p1.itemDown,
+                    leftPress: p1.leftPress,
+                    rightPress: p1.rightPress,
+                    upPress: p1.upPress,
+                    downPress: p1.downPress,
+                    itemPress: p1.itemPress,
+                },
             };
             const thisControl = JSON.stringify(controlProtocol);
             if (thisControl !== lastControl) {
                 lastControl = thisControl;
-                emit({ kind: "control", data: controlProtocol });
+                emit(controlProtocol);
             }
             let userCount = 0;
-            for (const user of protocol.data.users) {
+            for (const user of protocol.tick.users) {
                 if (!user.npc) {
                     userCount++;
                 }
@@ -172,17 +177,17 @@ function initDone() {
         } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
-            drawer.lists.push(new Flare(protocol.data, P.h, true));
+            drawer.lists.push(new Flare(protocol.explode, P.h, true));
         } else if (protocol.kind === "userDead") {
-            notice(protocol.data.message);
+            notice(protocol.userDead.message);
             // p1 dead
-            if (protocol.data.user.id === p1.id) {
+            if (protocol.userDead.user.id === p1.id) {
                 setTimeout(() => {
                     $(".joining").show().find("h4").html("你挂了");
                 }, 500);
             }
-            if (protocol.data.killer) {
-                const killer = protocol.data.killer;
+            if (protocol.userDead.killer) {
+                const killer = protocol.userDead.killer;
                 if (killer.score <= 10) {
                     drawer.lists.push(new Toast({
                         x: killer.x,
@@ -198,7 +203,7 @@ function initDone() {
     });
 }
 
-function render(ctx: CanvasRenderingContext2D, data: common.TickProtocol) {
+function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
     ctx.clearRect(0, 0, P.w, P.h);
     ctx.save();
     ctx.translate(cdx, cdy);
@@ -220,7 +225,7 @@ function render(ctx: CanvasRenderingContext2D, data: common.TickProtocol) {
     drawer.drawSigns(context, game.signs, P.h, p1.data);
     drawer.drawItemGates(context, game.itemGates, P.h);
 
-    for (const mine of data.mines) {
+    for (const mine of protocol.tick.mines) {
         ctx.drawImage(images.mine, mine.x - 12, P.h - mine.y - 3, 23, 5);
         if (mine.dead) {
             cdx = 3;
@@ -229,18 +234,18 @@ function render(ctx: CanvasRenderingContext2D, data: common.TickProtocol) {
         }
     }
 
-    for (const user of data.users) {
+    for (const user of protocol.tick.users) {
         if (user.dead === true) {
             drawer.lists.push(new WaterDrops(user, P.h));
             drawer.drawUser(ctxBody, user, {}, P.h, P.w, P.userWidth, P.userHeight, p1.id);
         } else {
-            drawer.drawUser(ctx, user, data, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+            drawer.drawUser(ctx, user, protocol.tick, P.h, P.w, P.userWidth, P.userHeight, p1.id);
         }
     }
 
     drawer.drawWater(ctx, 10, "#95a", P.h, P.w, t);
 
-    for (const item of data.items) {
+    for (const item of protocol.tick.items) {
         drawer.drawItem(ctx, item, t, P.h);
         if (item.dead) {
             let itemName = "";
@@ -253,7 +258,7 @@ function render(ctx: CanvasRenderingContext2D, data: common.TickProtocol) {
         }
     }
 
-    for (const entity of data.entitys) {
+    for (const entity of protocol.tick.entitys) {
         drawer.drawEntity(ctx, entity, P.h);
     }
 

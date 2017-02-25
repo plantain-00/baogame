@@ -3,7 +3,7 @@ import * as common from "../back/common";
 
 export function start(joing: (p: boolean) => void, initDone: () => void) {
     const p1 = {
-        data: undefined as common.UserProtocol | undefined,
+        data: undefined as common.User | undefined,
         id: undefined as number | null | undefined,
         upDown: 0,
         downDown: 0,

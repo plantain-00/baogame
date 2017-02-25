@@ -2,7 +2,7 @@ import * as common from "../back/common";
 
 let ws: WebSocket | undefined;
 
-export function connect(roomId: number | undefined, onsuccess: () => void, onmessage: (protocol: common.OutProtocol) => void) {
+export function connect(roomId: number | undefined, onsuccess: () => void, onmessage: (protocol: common.Protocol) => void) {
     const protocol = location.protocol === "https:" ? "wss:" : "ws:";
     ws = new WebSocket(`${protocol}//${location.host}/ws/?roomId=${roomId || 1}`);
     ws.onopen = () => {
@@ -23,7 +23,7 @@ export function connect(roomId: number | undefined, onsuccess: () => void, onmes
     };
 }
 
-export function emit(protocol: common.InProtocol) {
+export function emit(protocol: common.Protocol) {
     if (!ws) {
         return;
     }

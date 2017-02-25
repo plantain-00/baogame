@@ -59,7 +59,7 @@ export class Item {
             u.carryCount = this.count;
         }
     }
-    getData(): common.ItemProtocol {
+    getData(): common.Item {
         return {
             x: this.x,
             y: this.y,

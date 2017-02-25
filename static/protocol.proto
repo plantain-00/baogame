@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package protocolPackage;
+
+message Protocol {
+    required string kind = 1;
+    optional Tick tick = 2;
+    optional AdminTick adminTick = 3;
+    optional Init init = 4;
+    optional InitSuccess initSuccess = 5;
+}
+
+message InitSuccess {
+    required Props props = 1;
+    required MapData map = 2;
+    repeated User bodies = 3;;
+}
+
+message MapData {
+    repeated uint32 floor = 1;
+    repeated Pilla pilla = 2;
+    repeated Sign signs = 3;
+    repeated Door doors = 4;
+    repeated ItemGate itemGates = 5;
+}
+
+message Pilla {
+    required uint32 x = 1;
+    required uint32 y1 = 2;
+    required uint32 y2 = 3;
+}
+
+message Props {
+    required uint32 userHeight = 1;
+    required uint32 userWidth = 2;
+    required uint32 itemSize = 3;
+    required uint32 tw = 4;
+    required uint32 th = 5;
+    required uint32 maxUser = 6;
+    required uint32 w = 7;
+    required uint32 h = 8;
+}
+
+message Init {
+    required string userName = 1;
+}
+
+message AdminTick {
+    repeated User users = 1;
+    repeated Item items = 2;
+    repeated Mine mines = 3;
+    repeated Client clients = 4;
+}
+
+message Client {
+    required uint32 p1 = 1;
+    required uint32 id = 2;
+    required boolean admin = 3;
+    required string name = 4;
+    required boolean banned = 5;
+    required uint32 joinTime = 6;
+    required string ip = 7;
+    required uint32 kill = 8;
+    required uint32 death = 9;
+    required uint32 highestKill = 10;
+}
+
+message Tick {
+    repeated User users = 1;
+    repeated Item items = 2;
+    repeated Mine mines = 3;
+    repeated Entity entitys = 4;
+    optional number p1 = 5;
+}
+
+message User {
+    required string carry = 1;
+    required uint32 carryCount = 2;
+    required boolean nearPilla = 3;
+    required uint32 faceing = 4;
+    required uint32 fireing = 5;
+    required uint32 grenadeing = 6;
+    required boolean danger = 7;
+    required string status = 8;
+    required string name = 9;
+    required uint32 id = 10;
+    required uint32 x = 11;
+    required uint32 y = 12;
+    required uint32 vy = 13;
+    required uint32 score = 14;
+    required boolean dead = 15;
+    required boolean npc = 16;
+    required boolean doubleJumping = 17;
+    required uint32 flying = 18;
+}
+
+message Item {
+    required uint32 x = 1;
+    required uint32 y = 2;
+    required uint32 id = 3;
+    required boolean dead = 4;
+}
+
+message Mine {
+    required uint32 x = 1;
+    required uint32 y = 2;
+    required boolean dead = 3;
+}
+
+message Entity {
+    required uint32 x = 1;
+    required uint32 y = 2;
+    required uint32 r = 3;
+}
