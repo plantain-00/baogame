@@ -64,7 +64,7 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
     }
 }
 
-export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.Sign[], height: number, p1Data: any) {
+export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.Sign[], height: number, p1Data: common.User | undefined) {
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const sign of signs) {
@@ -151,9 +151,9 @@ export function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
     ctx.lineWidth = 1;
 }
 
-export function drawUser(ctx: CanvasRenderingContext2D, user: any, data: any, height: number, width: number, userWidth: number, userHeight: number, p1id: number | null | undefined) {
+export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number, p1id: number | null | undefined) {
     if (user.doubleJumping) {
-        lists.push(new Brust(user, 10, 40, height));
+        lists.push(new Brust(user.x, user.y, 10, 40, height));
     }
 
     ctx.save();
@@ -177,7 +177,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: any, data: any, he
         img = images.normal;
     }
 
-    if (user.id === data.p1) {
+    if (user.id === p1Id) {
         ctx.fillStyle = "#ffa";
     } else {
         ctx.fillStyle = "#f77";
@@ -224,7 +224,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: any, data: any, he
 
         ctx.drawImage(images.jet, wPadding - 16, -bottleHeight - 10, 40, bottleHeight + 20);
         if (user.flying) {
-            lists.push(new Brust(user, 1, 5, height, user.faceing * (wPadding + bottleWidth / 2), -10));
+            lists.push(new Brust(user.x, user.y, 1, 5, height, user.faceing * (wPadding + bottleWidth / 2), -10));
         }
     }
     if (user.carry === common.items.bomb.id) {
@@ -253,7 +253,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: any, data: any, he
     ctx.restore();
 }
 
-export function drawItem(ctx: CanvasRenderingContext2D, item: any, t: number, height: number) {
+export function drawItem(ctx: CanvasRenderingContext2D, item: common.Item, t: number, height: number) {
     const s = common.constant.itemSize;
     ctx.strokeStyle = "rgba(255,255,255," + Math.abs((t % 300) / 150 - 1) + ")";
     ctx.lineWidth = 3;
@@ -268,7 +268,7 @@ export function drawItem(ctx: CanvasRenderingContext2D, item: any, t: number, he
     ctx.restore();
 }
 
-export function drawEntity(ctx: CanvasRenderingContext2D, entity: any, height: number) {
+export function drawEntity(ctx: CanvasRenderingContext2D, entity: common.Entity, height: number) {
     const w = 15;
     const h = 18;
     ctx.save();

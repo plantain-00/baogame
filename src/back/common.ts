@@ -70,7 +70,7 @@ export type Entity = {
 };
 
 export type User = {
-    carry: string;
+    carry: number;
     carryCount: number;
     nearPilla: boolean;
     faceing: number;

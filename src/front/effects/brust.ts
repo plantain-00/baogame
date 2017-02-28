@@ -1,17 +1,8 @@
 export class Brust {
-    x: number;
-    y: number;
-    size: number;
     life = 100;
-    drops: { x: number; y: number }[];
+    drops: { x: number; y: number }[] = [];
     vy = 2;
-    constructor(u: any, count: any, w: any, public height: number, dx?: any, dy?: any, size?: any) {
-        this.x = u.x;
-        this.y = u.y;
-        this.size = size || 6;
-        this.drops = [];
-        dx = dx || 0;
-        dy = dy || 0;
+    constructor(public x: number, public y: number, count: number, w: number, public height: number, dx = 0, dy = 0, public size = 6) {
         for (let i = 0; i < count; i++) {
             this.drops.push({
                 x: Math.random() * w - w / 2 + dx,

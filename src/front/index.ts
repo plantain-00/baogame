@@ -32,19 +32,19 @@ const scoreText = [
     "已经超越神了",
 ];
 
-function notice(str: any) {
+function notice(str: string) {
     $(".notice .notiveIn").prepend("<div class='noticeItem'>" + str + "</div>");
 }
 
-let cdomBody: any;
-let ctxBody: any;
-let context: any;
+let cdomBody: HTMLCanvasElement;
+let ctxBody: CanvasRenderingContext2D;
+let context: CanvasRenderingContext2D;
 let ctxBg;
-let P: any;
+let P: common.Props;
 let t = 0;
 let cdx = 0;
 let cdy = 0;
-let canJoin: any = null;
+let canJoin = false;
 const game: {
     signs: common.Sign[],
     doors: common.Door[],
@@ -95,13 +95,13 @@ function initDone() {
             cdomBg.id = "bg";
             cdomBody.width = P.w;
             cdomBody.height = P.h;
-            context = cdom.getContext("2d");
+            context = cdom.getContext("2d")!;
             context.font = "14px 宋体";
             context.textBaseline = "middle"; // 设置文本的垂直对齐方式
             context.textAlign = "center"; // 设置文本的水平对对齐方式
 
             ctxBg = cdomBg.getContext("2d");
-            ctxBody = cdomBody.getContext("2d");
+            ctxBody = cdomBody.getContext("2d")!;
             ctxBody.font = "14px 宋体";
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
@@ -116,7 +116,7 @@ function initDone() {
             middle.appendChild(cdom);
             // 初始化尸体
             for (const user of protocol.initSuccess.bodies) {
-                drawer.drawUser(ctxBody, user, {}, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+                drawer.drawUser(ctxBody, user, undefined, P.h, P.w, P.userWidth, P.userHeight, p1.id);
             }
             $(".joining").show();
         } else if (protocol.kind === "joinSuccess") {
@@ -177,7 +177,7 @@ function initDone() {
         } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
-            drawer.lists.push(new Flare(protocol.explode, P.h, true));
+            drawer.lists.push(new Flare(protocol.explode.x, protocol.explode.y, protocol.explode.power, P.h, true));
         } else if (protocol.kind === "userDead") {
             notice(protocol.userDead.message);
             // p1 dead
@@ -189,12 +189,7 @@ function initDone() {
             if (protocol.userDead.killer) {
                 const killer = protocol.userDead.killer;
                 if (killer.score <= 10) {
-                    drawer.lists.push(new Toast({
-                        x: killer.x,
-                        y: killer.y,
-                        size: killer.score * 1.5 + 14,
-                        txt: killer.name + scoreText[killer.score - 1],
-                    }, P.h));
+                    drawer.lists.push(new Toast(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], P.h));
                 }
             }
         } else if (protocol.kind === "win") {
@@ -230,16 +225,16 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
         if (mine.dead) {
             cdx = 3;
             cdy = 11;
-            drawer.lists.push(new Flare(mine, P.h));
+            drawer.lists.push(new Flare(mine.x, mine.y, 0, P.h));
         }
     }
 
     for (const user of protocol.tick.users) {
         if (user.dead === true) {
-            drawer.lists.push(new WaterDrops(user, P.h));
-            drawer.drawUser(ctxBody, user, {}, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+            drawer.lists.push(new WaterDrops(user.x, user.y, user.vy, P.h));
+            drawer.drawUser(ctxBody, user, undefined, P.h, P.w, P.userWidth, P.userHeight, p1.id);
         } else {
-            drawer.drawUser(ctx, user, protocol.tick, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+            drawer.drawUser(ctx, user, protocol.tick.p1, P.h, P.w, P.userWidth, P.userHeight, p1.id);
         }
     }
 
@@ -254,7 +249,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
                     itemName = (common.items as any)[key].name;
                 }
             }
-            drawer.lists.push(new ItemDead(item, itemName, P.h, P.itemSize));
+            drawer.lists.push(new ItemDead(item.x, item.y, itemName, P.h, P.itemSize));
         }
     }
 

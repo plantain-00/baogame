@@ -1,17 +1,8 @@
 export class Toast {
-    x: any;
-    y: any;
     dy = -60;
-    size: number;
-    txt: string;
     life = 40;
     t = 0;
-    constructor(user: any, public height: number) {
-        this.x = user.x;
-        this.y = user.y;
-        this.size = user.size;
-        this.txt = user.txt;
-    }
+    constructor(public x: number, public y: number, public size: number, public txt: string, public height: number) { }
     draw(ctx: CanvasRenderingContext2D) {
         this.t++;
         ctx.save();
