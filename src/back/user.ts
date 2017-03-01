@@ -5,40 +5,40 @@ let userCount = 0;
 export class User {
     id: number;
     name: string;
-    onFloor: number | false;
-    onPilla: boolean;
-    nearPilla: boolean | services.Pillar;
-    dead: boolean;
-    rolling: boolean;
-    crawl: boolean;
+    onFloor: number | false = false;
+    onPilla = false;
+    nearPilla: boolean | services.Pillar = false;
+    dead = false;
+    rolling = false;
+    crawl = false;
     x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    dieing: boolean;
-    faceing: number;
-    danger: boolean;
-    ignore: any[];
-    carry: any;
-    carryCount: number;
-    fireing: number | boolean;
-    mining: number | boolean;
-    grenadeing: number;
-    score: number;
-    canDoubleJump: boolean;
-    lastTouch: any;
+    y = 380;
+    vx = 0;
+    vy = 0;
+    dieing = false;
+    faceing = 1;
+    danger = false;
+    ignore: any[] = [];
+    carry: number;
+    carryCount = 0;
+    fireing: number | boolean = 0;
+    mining: number | boolean = 0;
+    grenadeing = 0;
+    score = 0;
+    canDoubleJump = false;
+    lastTouch: number | null = null;
     rollPoint: number;
-    downDown: any;
+    downDown: number;
     pilla: common.Pilla;
-    itemPress: any;
+    itemPress: boolean;
     doubleJumping: boolean;
     flying: number;
     status: common.userStatus;
     npc: boolean;
-    AI: any;
-    itemDown: any;
-    r: any;
-    vr: any;
+    AI: string;
+    itemDown: number;
+    r: number;
+    vr: number;
     leftPress: boolean;
     rightPress: boolean;
     upPress: boolean;
@@ -47,38 +47,15 @@ export class User {
     rightDown: number;
     upDown: number;
     flypackActive: boolean;
-    killer: number;
-    killedBy: services.User;
+    killer: number | null;
+    killedBy: services.KillReason;
     goleft: boolean;
     goright: boolean;
     facing: boolean;
     constructor(public game: services.Game, public client: services.Client) {
         this.id = userCount++;
         this.name = client.name;
-        this.onFloor = false;
-        this.onPilla = false;
-        this.nearPilla = false;
-        this.dead = false;
-        this.rolling = false;
-        this.crawl = false;
         this.x = Math.random() * (game.props.w - 300) + 150;
-        this.y = 380;
-        this.vx = 0;
-        this.vy = 0;
-        this.dieing = false;
-        this.faceing = 1;
-        this.danger = false;
-        this.ignore = [];
-        this.carry = "";
-        this.carryCount = 0;
-
-        this.fireing = 0;
-        this.mining = 0;
-        this.grenadeing = 0;
-
-        this.score = 0;
-        this.canDoubleJump = false;
-        this.lastTouch = null;
     }
     throwGrenade() {
         const g = new services.Grenade(this);
@@ -375,11 +352,11 @@ export class User {
         if (this.score > this.client.highestKill) {
             this.client.highestKill = this.score;
         }
-        if (this.game.map.hooks.onKill) {
-            this.game.map.hooks.onKill(this.game, this);
+        if (this.game.map.hooks && this.game.map.hooks.onKilled) {
+            this.game.map.hooks.onKilled(this.game, this);
         }
     }
-    killed(action: any, byUser?: services.User) {
+    killed(action: services.KillReason, byUser?: services.User) {
         if (this.dieing) { return; }
         if (byUser) {
             this.killer = byUser.id;

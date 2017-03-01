@@ -8,13 +8,7 @@ export const games: Game[] = [];
 setInterval(() => {
     for (let i = 1; i < games.length; i++) {
         if (games[i].clients.length === 0) {
-            if (games[i].dead > 10) {
-                games.splice(i, 1);
-            } else if (games[i].dead > 0) {
-                games[i].dead++;
-            } else {
-                games[i].dead = 1;
-            }
+            games.splice(i, 1);
         }
     }
 }, 1000);
@@ -34,7 +28,7 @@ function removeGame(game: services.Game) {
         }
     }
 }
-export function getGameData() {
+export function getGameData(): common.RoomData[] {
     return games.map(r => ({
         id: r.id,
         maxUser: r.props.maxUser,
@@ -44,7 +38,6 @@ export function getGameData() {
 }
 
 export class Game {
-    dead?: number;
     users: services.User[];
     clients: services.Client[];
     items: services.Item[];
@@ -323,8 +316,12 @@ export class Game {
     }
     userCollide(a: services.User, b: services.User) {
         // 不碰撞情况
-        if (a.dead || b.dead) { return; }
-        if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > this.props.userWidth * this.props.userWidth) { return; }
+        if (a.dead || b.dead) {
+            return;
+        }
+        if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > this.props.userWidth * this.props.userWidth) {
+            return;
+        }
 
         // 带电情况
         if (a.carry === common.items.power.id && b.carry !== common.items.power.id) {
@@ -333,7 +330,7 @@ export class Game {
             if (b.carry === common.items.bomb.id) {
                 a.carry = b.carry;
                 a.carryCount = b.carryCount;
-                b.carry = "";
+                b.carry = 0;
             }
             return;
         } else if (a.carry !== common.items.power.id && b.carry === common.items.power.id) {
@@ -342,12 +339,12 @@ export class Game {
             if (a.carry === common.items.bomb.id) {
                 b.carry = a.carry;
                 b.carryCount = a.carryCount;
-                a.carry = "";
+                a.carry = 0;
             }
             return;
         } else if (a.carry === common.items.power.id && b.carry === common.items.power.id) {
-            a.carry = "";
-            b.carry = "";
+            a.carry = 0;
+            b.carry = 0;
         }
         // 排除刚刚碰撞
         if (a.ignore[b.id] > 0 || b.ignore[a.id] > 0) { return; }
@@ -355,11 +352,11 @@ export class Game {
         if (b.carry === common.items.bomb.id && a.carry !== common.items.bomb.id) {
             a.carry = b.carry;
             a.carryCount = b.carryCount;
-            b.carry = "";
+            b.carry = 0;
         } else if (a.carry === common.items.bomb.id && b.carry !== common.items.bomb.id) {
             b.carry = a.carry;
             b.carryCount = a.carryCount;
-            a.carry = "";
+            a.carry = 0;
         }
         // 正常情况
         if (a.onFloor && b.onFloor) {

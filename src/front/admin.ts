@@ -1,4 +1,5 @@
 import { connect, emit, getUrlParameter } from "./socket";
+import * as common from "../back/common";
 
 const code = getUrlParameter("code");
 const roomId = +getUrlParameter("roomId");
@@ -12,13 +13,13 @@ connect(roomId, () => {
         let html = '<div class="clients">';
         if (protocol.adminTick.clients) {
             for (const client of protocol.adminTick.clients) {
-                let p1: any = null;
-                protocol.adminTick.users.forEach(user => {
+                let p1: common.User | null = null;
+                for (const user of protocol.adminTick.users) {
                     if (client.p1 === user.id) {
                         p1 = user;
-                        return;
+                        break;
                     }
-                });
+                }
                 let playerData: string;
                 if (p1) {
                     playerData = `<div class="player">
@@ -70,7 +71,7 @@ $(".items .btn").click((e) => {
 $.ajax({
     url: "/roomsData",
     dataType: "json",
-    success(roomsData: any[]) {
+    success(roomsData: common.RoomData[]) {
         const roomElement = $(".rooms");
         for (let i = 0; i < roomsData.length; i++) {
             roomElement.append(`<span>${i + 1}</span>`);

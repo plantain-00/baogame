@@ -109,3 +109,9 @@ export type MapData = {
         onKilled: (game: Game, u: User) => void,
     };
 };
+
+export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
+
+export type Hook = {
+    onKilled?: (game: Game, u: User) => void;
+};

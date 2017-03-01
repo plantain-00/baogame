@@ -278,3 +278,10 @@ export type Pilla = {
     y1: number;
     y2: number;
 };
+
+export type RoomData = {
+    id: number;
+    maxUser: number;
+    users: number;
+    name: string;
+};

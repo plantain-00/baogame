@@ -7,7 +7,7 @@ export class Map {
     floor: number[][];
     pilla: services.Pillar[];
     borns: services.Born[];
-    hooks: any;
+    hooks: services.Hook;
     doors: common.Door[] = [];
     itemGates: services.ItemGate[] = [];
     signs: common.Sign[] = [];
@@ -28,8 +28,8 @@ export class Map {
                     npc.x = (npcData.x + .5) * common.constant.tileWidth;
                     npc.y = (npcData.y + .5) * common.constant.tileHeight;
                     npc.carryCount = npcData.carryCount!;
-                    npc.carry = npcData.carry;
-                    npc.AI = npcData.AI;
+                    npc.carry = npcData.carry!;
+                    npc.AI = npcData.AI!;
                 }
             }
         } else {
