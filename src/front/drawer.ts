@@ -40,11 +40,11 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
     }
 
     // 绘制地板
-    for (let i = 0; i < map.floor.length; i++) {
-        for (let j = 0; j < map.floor[i].length; j++) {
-            const x = j * common.constant.tileWidth;
-            const y = height - (i) * common.constant.tileHeight;
-            if (map.floor[i][j]) {
+    for (let i = 0; i < map.h; i++) {
+        for (let j = 0; j < map.w; j++) {
+            if (map.floor[i * map.w + j]) {
+                const x = j * common.constant.tileWidth;
+                const y = height - i * common.constant.tileHeight;
                 ctx.beginPath();
                 ctx.fillStyle = "#aa8";
                 ctx.moveTo(x + 1, y);

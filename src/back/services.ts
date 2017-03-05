@@ -87,7 +87,7 @@ export type ItemGate = {
 export type MapData = {
     w: number; // width of floor
     h: number; // height of floor
-    floor: number[][]; // should be number[]
+    floor: number[][];
     ladders: common.Ladder[];
     borns: Position[]; // user is born in one of these positions
     npcs: NPC[]; // position, name, status of npcs

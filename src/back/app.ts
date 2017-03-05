@@ -75,14 +75,15 @@ wss.on("connection", ws => {
             if (protocol.init.userName) {
                 client.name = protocol.init.userName.replace(/[<>]/g, "").substring(0, 8);
             }
-            services.emit(ws, {
+            const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
                     props: game.props,
                     map: game.map.getData(),
                     bodies: bodiesData,
                 },
-            });
+            };
+            services.emit(ws, outProtocol);
         } else if (protocol.kind === "adminInit") {
             if (protocol.adminInit.code === game.adminCode) {
                 client.admin = true;

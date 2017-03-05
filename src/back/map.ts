@@ -50,7 +50,9 @@ export class Map {
                             this.floor[i][j] = 0;
                         } else {
                             this.floor[i][j] = on;
-                            if (Math.random() > .8) { on = 1 - on; }
+                            if (Math.random() > .8) {
+                                on = 1 - on;
+                            }
                         }
                     }
                 }
@@ -128,6 +130,13 @@ export class Map {
                     this.borns.push({ x, y });
                 }
             }
+            for (const f of this.floor) {
+                for (let i = 0; i < this.w; i++) {
+                    if (f[i] !== 0 && f[i] !== 1) {
+                        f[i] = 0;
+                    }
+                }
+            }
 
             this.itemGates.push({ x: 0, y: this.h / 2 });
             this.itemGates.push({ x: this.w - 1, y: this.h / 2 });
@@ -175,10 +184,12 @@ export class Map {
             services.itemGateService.update(this.game, itemGate);
         }
     }
-    getData() {
+    getData(): common.MapData {
         const itemGates = this.itemGates.map(itemGate => services.itemGateService.getData(itemGate));
         return {
-            floor: this.floor,
+            w: this.w,
+            h: this.h,
+            floor: this.floor.reduce((acc, f) => acc.concat(f), []),
             ladders: this.ladders,
             signs: this.signs,
             doors: this.doors,

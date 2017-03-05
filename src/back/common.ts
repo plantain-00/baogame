@@ -159,7 +159,9 @@ export type Props = {
 };
 
 export type MapData = {
-    floor: number[][];
+    w: number;
+    h: number;
+    floor: number[];
     ladders: Ladder[];
     signs: Sign[],
     doors: Door[],
