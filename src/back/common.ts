@@ -273,7 +273,7 @@ export type Protocol = InitProtocol | InitSuccessProtocol | AdminInitProtocol | 
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 
-export type Pilla = {
+export type Pilla = { // ladder (x,y1) until (x,y2)
     x: number;
     y1: number;
     y2: number;

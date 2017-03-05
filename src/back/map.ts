@@ -7,7 +7,7 @@ export class Map {
     floor: number[][];
     pilla: services.Pillar[];
     borns: services.Born[];
-    hooks: services.Hook;
+    onKilled: services.OnKilled;
     doors: common.Door[] = [];
     itemGates: services.ItemGate[] = [];
     signs: common.Sign[] = [];
@@ -18,7 +18,7 @@ export class Map {
             this.floor = data.floor;
             this.pilla = data.pilla;
             this.borns = data.borns;
-            this.hooks = data.hooks || {};
+            this.onKilled = data.onKilled;
             this.doors = data.doors;
             this.itemGates = data.itemGates;
             this.signs = data.signs;
@@ -40,7 +40,6 @@ export class Map {
             const h = this.h;
             this.floor = [];
             this.pilla = [];
-            this.hooks = {};
 
             for (let i = 0; i < h; i++) {
                 this.floor[i] = [];

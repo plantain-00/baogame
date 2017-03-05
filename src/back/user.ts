@@ -352,8 +352,8 @@ export class User {
         if (this.score > this.client.highestKill) {
             this.client.highestKill = this.score;
         }
-        if (this.game.map.hooks && this.game.map.hooks.onKilled) {
-            this.game.map.hooks.onKilled(this.game, this);
+        if (this.game.map.onKilled) {
+            this.game.map.onKilled(this.game, this);
         }
     }
     killed(action: services.KillReason, byUser?: services.User) {
@@ -380,8 +380,8 @@ export class User {
             this.killer = this.lastTouch;
         }
 
-        if (this.game.map.hooks.onKilled) {
-            this.game.map.hooks.onKilled(this.game, this);
+        if (this.game.map.onKilled) {
+            this.game.map.onKilled(this.game, this);
         }
         let killer: services.User | undefined;
         if (this.killer && this.killer !== this.id) {

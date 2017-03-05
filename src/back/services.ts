@@ -96,22 +96,18 @@ export type ItemGate = {
 };
 
 export type MapData = {
-    w: number;
-    h: number;
-    floor: number[][];
-    pilla: common.Pilla[];
-    borns: Position[];
-    npcs: NPC[];
-    signs: common.Sign[];
-    doors: common.Door[];
-    itemGates: ItemGate[];
-    hooks: {
-        onKilled: (game: Game, u: User) => void,
-    };
+    w: number; // width of floor
+    h: number; // height of floor
+    floor: number[][]; // should be number[]
+    pilla: common.Pilla[]; // ladder
+    borns: Position[]; // user is born here
+    npcs: NPC[]; // position, name, status of npcs
+    signs: common.Sign[]; // user move to here, then a message appears
+    doors: common.Door[]; // show a door and create npc here
+    itemGates: ItemGate[]; // show a gate and create item here
+    onKilled: OnKilled; // callback
 };
 
 export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
 
-export type Hook = {
-    onKilled?: (game: Game, u: User) => void;
-};
+export type OnKilled = (game: Game, u: User) => void;

@@ -81,11 +81,9 @@ export const map: services.MapData = {
             message: "碰撞的效果取决于双方的姿势，通常下蹲和跳起方可以获得优势",
         },
     ],
-    hooks: {
-        onKilled: (game: services.Game, u: services.User) => {
-            if (u.npc) {
-                game.win(u);
-            }
-        },
+    onKilled: (game: services.Game, u: services.User) => {
+        if (u.npc) {
+            game.win(u);
+        }
     },
 };

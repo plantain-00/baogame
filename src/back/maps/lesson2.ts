@@ -180,14 +180,12 @@ export const map: services.MapData = {
             message: "目标：消灭其他所有人",
         },
     ],
-    hooks: {
-        onKilled: (game: services.Game, u: services.User) => {
-            for (const user of game.users) {
-                if (user.npc === true && !user.dieing && !user.dead) {
-                    return;
-                }
+    onKilled: (game: services.Game, u: services.User) => {
+        for (const user of game.users) {
+            if (user.npc === true && !user.dieing && !user.dead) {
+                return;
             }
-            game.win({ id: 0 });
-        },
+        }
+        game.win({ id: 0 });
     },
 };
