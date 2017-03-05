@@ -432,8 +432,8 @@ export class Game {
         b.fireing = false;
         a.mining = false;
         b.mining = false;
-        a.onPilla = false;
-        b.onPilla = false;
+        a.onLadder = false;
+        b.onLadder = false;
         a.lastTouch = b.id;
         b.lastTouch = a.id;
     }

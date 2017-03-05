@@ -18,13 +18,13 @@ message InitSuccess {
 
 message MapData {
     repeated uint32 floor = 1;
-    repeated Pilla pilla = 2;
+    repeated Ladder ladder = 2;
     repeated Sign signs = 3;
     repeated Door doors = 4;
     repeated ItemGate itemGates = 5;
 }
 
-message Pilla {
+message Ladder {
     required uint32 x = 1;
     required uint32 y1 = 2;
     required uint32 y2 = 3;
@@ -76,7 +76,7 @@ message Tick {
 message User {
     required string carry = 1;
     required uint32 carryCount = 2;
-    required boolean nearPilla = 3;
+    required boolean nearLadder = 3;
     required uint32 faceing = 4;
     required uint32 fireing = 5;
     required uint32 grenadeing = 6;

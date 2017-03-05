@@ -13,28 +13,28 @@ export let lists: (Flare | Toast | Brust | WaterDrops | ItemDead | ItemDead | Sh
 export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
     ctx.clearRect(0, 0, width, height);
     // 绘制柱子
-    for (const pilla of map.pilla) {
+    for (const ladder of map.ladders) {
         ctx.fillStyle = "#888";
-        for (let j = height - pilla.y2 * common.constant.tileHeight + 10; j < height - pilla.y1 * common.constant.tileHeight; j += 20) {
-            ctx.fillRect(pilla.x * common.constant.tileWidth - 10, j, 20, 4);
+        for (let j = height - ladder.y2 * common.constant.tileHeight + 10; j < height - ladder.y1 * common.constant.tileHeight; j += 20) {
+            ctx.fillRect(ladder.x * common.constant.tileWidth - 10, j, 20, 4);
         }
 
         ctx.fillStyle = "#aaa";
         ctx.beginPath();
-        ctx.rect(pilla.x * common.constant.tileHeight - 12, height - pilla.y2 * common.constant.tileHeight, 4, (pilla.y2 - pilla.y1) * common.constant.tileHeight);
+        ctx.rect(ladder.x * common.constant.tileHeight - 12, height - ladder.y2 * common.constant.tileHeight, 4, (ladder.y2 - ladder.y1) * common.constant.tileHeight);
         ctx.stroke();
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(pilla.x * common.constant.tileWidth - 10, height - pilla.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
+        ctx.arc(ladder.x * common.constant.tileWidth - 10, height - ladder.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
 
         ctx.beginPath();
-        ctx.rect(pilla.x * common.constant.tileWidth + 8, height - pilla.y2 * common.constant.tileHeight, 4, (pilla.y2 - pilla.y1) * common.constant.tileHeight);
+        ctx.rect(ladder.x * common.constant.tileWidth + 8, height - ladder.y2 * common.constant.tileHeight, 4, (ladder.y2 - ladder.y1) * common.constant.tileHeight);
         ctx.stroke();
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(pilla.x * common.constant.tileWidth + 10, height - pilla.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
+        ctx.arc(ladder.x * common.constant.tileWidth + 10, height - ladder.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
     }
@@ -186,7 +186,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id:
     // 用户指示器
     if (user.carry !== common.items.hide.id || user.id === p1id) {
         ctx.fillText(user.name, 0, -50);
-        if (user.nearPilla && user.id === p1id) {
+        if (user.nearLadder && user.id === p1id) {
             ctx.fillText("上", 0, -70);
         }
     }

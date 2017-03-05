@@ -6,8 +6,8 @@ export class User {
     id: number;
     name: string;
     onFloor: number | false = false;
-    onPilla = false;
-    nearPilla: boolean | services.Pillar = false;
+    onLadder = false;
+    nearLadder: boolean | common.Ladder = false;
     dead = false;
     rolling = false;
     crawl = false;
@@ -29,7 +29,7 @@ export class User {
     lastTouch: number | null = null;
     rollPoint: number;
     downDown: number;
-    pilla: common.Pilla;
+    ladder: common.Ladder;
     itemPress: boolean;
     doubleJumping: boolean;
     flying: number;
@@ -76,15 +76,15 @@ export class User {
     getStatus(): common.userStatus {
         this.crawl = false;
         if (this.dieing) { return "dieing"; }
-        if ((this.vy <= 0 || this.onPilla) && this.game.checkMine(this)) {
+        if ((this.vy <= 0 || this.onLadder) && this.game.checkMine(this)) {
             return "dieing";
         }
-        if (this.onPilla && this.vx === 0 && this.vy === 0) {
+        if (this.onLadder && this.vx === 0 && this.vy === 0) {
             return "climbing";
         } else {
             const onFloor = this.game.map.onFloor(this.x, this.y);
             this.onFloor = onFloor;
-            this.nearPilla = this.game.map.nearPilla(this);
+            this.nearLadder = this.game.map.nearLadder(this);
             if (onFloor && this.vy <= 0) {
                 if (this.rolling) {
                     this.rollPoint--;
@@ -114,12 +114,12 @@ export class User {
                         return "mining";
                     }
                 }
-                if ((this.upDown || this.downDown) && this.nearPilla) {
-                    this.onPilla = true;
+                if ((this.upDown || this.downDown) && this.nearLadder) {
+                    this.onLadder = true;
                     this.onFloor = false;
                     this.vx = 0;
-                    this.pilla = this.nearPilla;
-                    this.x = this.pilla.x * common.constant.tileWidth;
+                    this.ladder = this.nearLadder;
+                    this.x = this.ladder.x * common.constant.tileWidth;
                     return "climbing";
                 } else if (this.downDown) {
                     this.crawl = true;
@@ -215,9 +215,9 @@ export class User {
             this.vr *= .96;
         }
         if (this.status === "climbing") {
-            if (this.upDown && !this.downDown && this.y < this.pilla.y2 * common.constant.tileHeight - this.game.props.userHeight) {
+            if (this.upDown && !this.downDown && this.y < this.ladder.y2 * common.constant.tileHeight - this.game.props.userHeight) {
                 this.y += 3;
-            } else if (this.downDown && !this.upDown && this.y > this.pilla.y1 * common.constant.tileHeight + 3) {
+            } else if (this.downDown && !this.upDown && this.y > this.ladder.y1 * common.constant.tileHeight + 3) {
                 this.y -= 3;
             }
             if (this.leftPress) {
@@ -225,14 +225,14 @@ export class User {
                     this.faceing = -1;
                 } else {
                     this.vx = -2;
-                    this.onPilla = false;
+                    this.onLadder = false;
                 }
             } else if (this.rightPress) {
                 if (this.faceing !== 1) {
                     this.faceing = 1;
                 } else {
                     this.vx = 2;
-                    this.onPilla = false;
+                    this.onLadder = false;
                 }
             }
         } else if (this.status === "standing") {
@@ -431,7 +431,7 @@ export class User {
         return {
             carry: this.carry,
             carryCount: this.carryCount,
-            nearPilla: this.nearPilla as boolean,
+            nearLadder: this.nearLadder as boolean,
             faceing: this.faceing,
             fireing: this.fireing as number,
             grenadeing: this.grenadeing,

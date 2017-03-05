@@ -72,7 +72,7 @@ export type Entity = {
 export type User = {
     carry: number;
     carryCount: number;
-    nearPilla: boolean;
+    nearLadder: boolean;
     faceing: number;
     fireing: number;
     grenadeing: number;
@@ -160,7 +160,7 @@ export type Props = {
 
 export type MapData = {
     floor: number[][];
-    pilla: Pilla[];
+    ladders: Ladder[];
     signs: Sign[],
     doors: Door[],
     itemGates: ItemGate[],
@@ -273,7 +273,7 @@ export type Protocol = InitProtocol | InitSuccessProtocol | AdminInitProtocol | 
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 
-export type Pilla = { // ladder (x,y1) until (x,y2)
+export type Ladder = { // (x,y1) until (x,y2)
     x: number;
     y1: number;
     y2: number;

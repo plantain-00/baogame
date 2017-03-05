@@ -25,7 +25,7 @@ export class Grenade {
         } else {
             for (let i = 0; i < -this.vy; i++) {
                 if (this.creater.game.map.onFloor(this.x, this.y)) {
-                    if (this.creater.game.map.onPilla(this.x, this.y)) {
+                    if (this.creater.game.map.onLadder(this.x, this.y)) {
                         this.vx *= .7;
                     } else {
                         this.vy *= -.85;

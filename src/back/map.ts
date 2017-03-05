@@ -5,7 +5,7 @@ export class Map {
     w: number;
     h: number;
     floor: number[][];
-    pilla: services.Pillar[];
+    ladders: common.Ladder[];
     borns: services.Born[];
     onKilled: services.OnKilled;
     doors: common.Door[] = [];
@@ -16,7 +16,7 @@ export class Map {
             this.w = game.props.w;
             this.h = game.props.h;
             this.floor = data.floor;
-            this.pilla = data.pilla;
+            this.ladders = data.ladders;
             this.borns = data.borns;
             this.onKilled = data.onKilled;
             this.doors = data.doors;
@@ -39,7 +39,7 @@ export class Map {
             const w = this.w;
             const h = this.h;
             this.floor = [];
-            this.pilla = [];
+            this.ladders = [];
 
             for (let i = 0; i < h; i++) {
                 this.floor[i] = [];
@@ -56,13 +56,13 @@ export class Map {
                 }
             }
 
-            this.pilla.push({
+            this.ladders.push({
                 x: 4.5,
                 y1: 1,
                 y2: h - 1,
             });
 
-            this.pilla.push({
+            this.ladders.push({
                 x: w - 3.5,
                 y1: 1,
                 y2: h - 1,
@@ -84,7 +84,7 @@ export class Map {
                         }
                     }
                     if (end) {
-                        this.pilla.push({
+                        this.ladders.push({
                             x: j + .5,
                             y1: start,
                             y2: end + 1,
@@ -147,21 +147,21 @@ export class Map {
         if (x < 0 || y < 0 || x >= this.w || y >= this.h || !this.floor[y]) { return false; }
         return this.floor[y][x];
     }
-    nearPilla(u: services.User) {
+    nearLadder(u: services.User) {
         if (this.onFloor(u.x, u.y) === false) { return false; }
         if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) { return false; }
         const x = u.x;
         const y = u.y;
-        for (const pilla of this.pilla) {
-            if (Math.abs(x - pilla.x * common.constant.tileWidth) < 8 && y >= pilla.y1 * common.constant.tileHeight && y <= pilla.y2 * common.constant.tileHeight) {
-                return pilla;
+        for (const ladder of this.ladders) {
+            if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
+                return ladder;
             }
         }
         return false;
     }
-    onPilla(x: number, y: number) {
-        for (const pilla of this.pilla) {
-            if (Math.abs(x - pilla.x * common.constant.tileWidth) < 8 && y >= pilla.y1 * common.constant.tileHeight && y <= pilla.y2 * common.constant.tileHeight) {
+    onLadder(x: number, y: number) {
+        for (const ladder of this.ladders) {
+            if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
                 return true;
             }
         }
@@ -179,7 +179,7 @@ export class Map {
         const itemGates = this.itemGates.map(itemGate => services.itemGateService.getData(itemGate));
         return {
             floor: this.floor,
-            pilla: this.pilla,
+            ladders: this.ladders,
             signs: this.signs,
             doors: this.doors,
             itemGates,
