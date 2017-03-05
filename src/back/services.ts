@@ -63,11 +63,6 @@ export interface Mine {
     dead?: boolean;
 }
 
-export interface Born {
-    x: number;
-    y: number;
-}
-
 export type Position = {
     x: number;
     y: number;
@@ -94,7 +89,7 @@ export type MapData = {
     h: number; // height of floor
     floor: number[][]; // should be number[]
     ladders: common.Ladder[];
-    borns: Position[]; // user is born here
+    borns: Position[]; // user is born in one of these positions
     npcs: NPC[]; // position, name, status of npcs
     signs: common.Sign[]; // user move to here, then a message appears
     doors: common.Door[]; // show a door and create npc here

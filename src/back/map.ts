@@ -6,7 +6,7 @@ export class Map {
     h: number;
     floor: number[][];
     ladders: common.Ladder[];
-    borns: services.Born[];
+    borns: services.Position[];
     onKilled: services.OnKilled;
     doors: common.Door[] = [];
     itemGates: services.ItemGate[] = [];
