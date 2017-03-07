@@ -18,13 +18,9 @@ app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 // services.format.start();
 
-services.createGame("大乱斗");
-
 let concount = 0;
 
 wss.on("connection", ws => {
-    const game = services.games[0];
-
     const ip = ws.upgradeReq.connection.remoteAddress;
     const client: services.Client = {
         id: concount++,
@@ -38,9 +34,9 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = game.bodies.map(body => body.getData());
+    const bodiesData = services.game.bodies.map(body => body.getData());
 
-    game.clients.push(client);
+    services.game.clients.push(client);
 
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
@@ -53,20 +49,20 @@ wss.on("connection", ws => {
             const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
-                    props: game.props,
-                    map: game.map.getData(),
+                    props: services.game.props,
+                    map: services.game.map.getData(),
                     bodies: bodiesData,
                 },
             };
             services.emit(ws, outProtocol);
         } else if (protocol.kind === "join") {
             let u = 0;
-            for (const user of game.users) {
+            for (const user of services.game.users) {
                 if (!user.npc) {
                     u++;
                 }
             }
-            if (u >= game.props.maxUser) {
+            if (u >= services.game.props.maxUser) {
                 services.emit(ws, {
                     kind: "joinFail",
                     joinFail: {
@@ -77,7 +73,7 @@ wss.on("connection", ws => {
             }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
             client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
-            const u2 = game.createUser(client);
+            const u2 = services.game.createUser(client);
             if (protocol.join.p1) {
                 client.p1 = u2;
             }
@@ -99,6 +95,6 @@ wss.on("connection", ws => {
     });
 
     ws.on("close", () => {
-        game.removeClient(client.id);
+        services.game.removeClient(client.id);
     });
 });

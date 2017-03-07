@@ -190,8 +190,6 @@ function initDone() {
                     drawer.lists.push(new Toast(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], P.h));
                 }
             }
-        } else if (protocol.kind === "win") {
-            $(".win").css("display", "-webkit-box");
         }
     });
 }

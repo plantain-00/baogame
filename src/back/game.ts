@@ -1,25 +1,7 @@
 import * as services from "./services";
 import * as common from "./common";
 
-let startGameId = 1;
-
-export const games: Game[] = [];
-
 const maxUser = process.env.BAO_MAX_USER | 10;
-
-export function createGame(name: string) {
-    const game = new Game(name, startGameId++);
-    games.push(game);
-    return game;
-}
-function removeGame(game: services.Game) {
-    for (let i = 0; i < games.length; i++) {
-        if (games[i] === game) {
-            games.splice(i, 1);
-            break;
-        }
-    }
-}
 
 export class Game {
     users: services.User[];
@@ -41,7 +23,7 @@ export class Game {
     };
     map: services.Map;
     runningTimer: NodeJS.Timer;
-    constructor(public name: string, public id: number) {
+    constructor(public name: string) {
         this.users = [];
         this.clients = [];
         this.items = [];
@@ -49,23 +31,10 @@ export class Game {
         this.mines = [];
         this.entitys = [];
         this.tick = 0;
-        if (name === "lesson1") {
-            this.props.th = services.map1.h;
-            this.props.tw = services.map1.w;
-        } else if (name === "lesson2") {
-            this.props.th = services.map2.h;
-            this.props.tw = services.map2.w;
-        }
         this.props.w = this.props.tw * common.constant.tileWidth;
         this.props.h = this.props.th * common.constant.tileHeight;
 
-        if (name === "lesson1") {
-            this.map = new services.Map(this, services.map1);
-        } else if (name === "lesson2") {
-            this.map = new services.Map(this, services.map2);
-        } else {
-            this.map = new services.Map(this);
-        }
+        this.map = new services.Map(this);
         this.runningTimer = setInterval(() => {
             this.update();
         }, 17);
@@ -189,13 +158,6 @@ export class Game {
         for (const client of this.clients) {
             services.emit(client.ws, protocol);
         }
-    }
-    win(user: { id: number }) {
-        this.announce({ kind: "win", win: { userId: user.id } });
-        setTimeout(() => {
-            clearInterval(this.runningTimer);
-            removeGame(this);
-        }, 1000);
     }
     update() {
         this.tick++;
@@ -416,3 +378,4 @@ export class Game {
         b.touchUser(a);
     }
 }
+

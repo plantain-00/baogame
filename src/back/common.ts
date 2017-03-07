@@ -216,13 +216,6 @@ export type ExplodeProtocol = {
     };
 };
 
-export type WinProtocol = {
-    kind: "win";
-    win: {
-        userId: number;
-    };
-};
-
 export type UserDeadProtocol = {
     kind: "userDead";
     userDead: {
@@ -234,7 +227,7 @@ export type UserDeadProtocol = {
 
 export type Protocol = InitProtocol | InitSuccessProtocol
     | JoinProtocol | JoinFailProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
-    | TickProtocol | ExplodeProtocol | WinProtocol | UserDeadProtocol;
+    | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 
