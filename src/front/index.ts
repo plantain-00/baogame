@@ -1,4 +1,4 @@
-import { connect, emit, getUrlParameter } from "./socket";
+import { connect, emit } from "./socket";
 import * as pcController from "./pcController";
 import * as mobileController from "./pcController";
 import * as common from "../back/common";
@@ -16,8 +16,6 @@ const p1 = (navigator.userAgent.indexOf("iPhone") === -1
     : mobileController.start(joing, initDone);
 
 (window as any).items = common.items;
-
-const roomId = +getUrlParameter("roomId");
 
 const scoreText = [
     "小试牛刀",
@@ -79,7 +77,7 @@ function joing(p: boolean) {
 let lastControl: string;
 
 function initDone() {
-    connect(roomId, () => {
+    connect(() => {
         emit({ kind: "init", init: { userName: userName! } });
     }, protocol => {
         if (protocol.kind === "initSuccess") {

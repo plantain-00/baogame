@@ -243,10 +243,3 @@ export type Ladder = { // (x,y1) until (x,y2)
     y1: number;
     y2: number;
 };
-
-export type RoomData = {
-    id: number;
-    maxUser: number;
-    users: number;
-    name: string;
-};

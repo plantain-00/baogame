@@ -1,5 +1,5 @@
 import { User } from "./user";
-import { Game, createGame, getGameData, games } from "./game";
+import { Game, createGame, games } from "./game";
 import { playerAI } from "./ai";
 import { Grenade } from "./grenade";
 import { Map } from "./map";
@@ -13,7 +13,7 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, Grenade, Map, Item, map1, map2, doorService, itemGateService, createGame, getGameData, games, format };
+export { User, Game, playerAI, Grenade, Map, Item, map1, map2, doorService, itemGateService, createGame, games, format };
 
 export type Entity = Grenade;
 

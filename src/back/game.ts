@@ -5,14 +5,6 @@ let startGameId = 1;
 
 export const games: Game[] = [];
 
-setInterval(() => {
-    for (let i = 1; i < games.length; i++) {
-        if (games[i].clients.length === 0) {
-            games.splice(i, 1);
-        }
-    }
-}, 1000);
-
 const maxUser = process.env.BAO_MAX_USER | 10;
 
 export function createGame(name: string) {
@@ -27,14 +19,6 @@ function removeGame(game: services.Game) {
             break;
         }
     }
-}
-export function getGameData(): common.RoomData[] {
-    return games.map(r => ({
-        id: r.id,
-        maxUser: r.props.maxUser,
-        users: r.users.filter(u => !u.npc).length,
-        name: r.name,
-    }));
 }
 
 export class Game {

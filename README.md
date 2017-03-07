@@ -31,4 +31,4 @@ h | localhost | host
 
 key | default value | description
 --- | --- | ---
-BAO_MAX_USER | 10 | the max user count of a room
+BAO_MAX_USER | 10 | the max user count

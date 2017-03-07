@@ -18,23 +18,12 @@ app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 // services.format.start();
 
-// 获取房间列表
-app.get("/roomsData", (req, res) => {
-    res.json(services.getGameData());
-});
-
 services.createGame("大乱斗");
 
 let concount = 0;
 
 wss.on("connection", ws => {
-    const location = libs.url.parse(ws.upgradeReq.url!, true);
-    const roomId = +location.query.roomId || 1;
-    const game = services.games.find(r => r.id === roomId);
-    if (!game) {
-        ws.close();
-        return;
-    }
+    const game = services.games[0];
 
     const ip = ws.upgradeReq.connection.remoteAddress;
     const client: services.Client = {
