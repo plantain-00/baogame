@@ -38,8 +38,8 @@ export function update(grenade: Grenade) {
         grenade.y += Math.floor(grenade.vy);
     } else {
         for (let i = 0; i < -grenade.vy; i++) {
-            if (grenade.creater.game.map.onFloor(grenade.x, grenade.y)) {
-                if (grenade.creater.game.map.onLadder(grenade.x, grenade.y)) {
+            if (services.map.onFloor(grenade.creater.game.map, grenade.x, grenade.y)) {
+                if (services.map.onLadder(grenade.creater.game.map, grenade.x, grenade.y)) {
                     grenade.vx *= .7;
                 } else {
                     grenade.vy *= -.85;

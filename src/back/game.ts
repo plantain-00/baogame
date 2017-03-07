@@ -18,7 +18,7 @@ export class Game {
         w: 0,
         h: 0,
     };
-    map: services.Map;
+    map: services.map.Map;
     runningTimer: NodeJS.Timer;
     constructor(public name: string) {
         this.users = [];
@@ -31,7 +31,7 @@ export class Game {
         this.props.w = this.props.tw * common.constant.tileWidth;
         this.props.h = this.props.th * common.constant.tileHeight;
 
-        this.map = new services.Map(this);
+        this.map = services.map.create(this);
         this.runningTimer = setInterval(() => {
             this.update();
         }, 17);
@@ -44,7 +44,7 @@ export class Game {
     }
     createUser(client: services.Client) {
         const u = new services.User(this, client);
-        const place = this.map.born();
+        const place = services.map.born(this.map);
         u.x = place.x;
         u.y = place.y + common.constant.tileHeight / 2;
         this.users.push(u);
@@ -117,7 +117,7 @@ export class Game {
     }
     addMine(user: services.User) {
         const x = user.x + user.faceing * 40;
-        if (this.map.onFloor(x, user.y)) {
+        if (services.map.onFloor(this.map, x, user.y)) {
             this.mines.push({
                 x,
                 y: user.y,
@@ -158,7 +158,7 @@ export class Game {
     }
     update() {
         this.tick++;
-        this.map.update();
+        services.map.update(this.map);
         // 物品更新
         for (const item of this.items) {
             services.item.update(item);

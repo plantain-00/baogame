@@ -50,7 +50,7 @@ wss.on("connection", ws => {
                 kind: "initSuccess",
                 initSuccess: {
                     props: services.game.props,
-                    map: services.game.map.getData(),
+                    map: services.map.getData(services.game.map),
                     bodies: bodiesData,
                 },
             };

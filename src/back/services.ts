@@ -2,7 +2,7 @@ import { User } from "./user";
 import { Game } from "./game";
 import { playerAI } from "./ai";
 import * as grenade from "./grenade";
-import { Map } from "./map";
+import * as map from "./map";
 import * as item from "./item";
 import * as doorService from "./door";
 import * as itemGateService from "./itemGate";
@@ -11,7 +11,7 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, grenade, Map, item, doorService, itemGateService, format };
+export { User, Game, playerAI, grenade, map, item, doorService, itemGateService, format };
 
 export const game = new Game("大乱斗");
 

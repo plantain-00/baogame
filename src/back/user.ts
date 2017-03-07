@@ -82,9 +82,9 @@ export class User {
         if (this.onLadder && this.vx === 0 && this.vy === 0) {
             return "climbing";
         } else {
-            const onFloor = this.game.map.onFloor(this.x, this.y);
+            const onFloor = services.map.onFloor(this.game.map, this.x, this.y);
             this.onFloor = onFloor;
-            this.nearLadder = this.game.map.nearLadder(this);
+            this.nearLadder = services.map.nearLadder(this.game.map, this);
             if (onFloor && this.vy <= 0) {
                 if (this.rolling) {
                     this.rollPoint--;
@@ -338,7 +338,7 @@ export class User {
             } else {
                 for (let i = 0; i < -this.vy; i++) {
                     this.y--;
-                    if (!this.dieing && this.game.map.onFloor(this.x, this.y)) {
+                    if (!this.dieing && services.map.onFloor(this.game.map, this.x, this.y)) {
                         this.vy = 0;
                         break;
                     }
