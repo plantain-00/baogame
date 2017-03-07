@@ -16,10 +16,10 @@ export interface Item {
     dead: boolean;
     x: number;
     y: number;
-    game: services.Game;
+    game: services.game.Game;
 }
 
-export function create(type: number, game: services.Game): Item {
+export function create(type: number, game: services.game.Game): Item {
     if (type === undefined) {
         type = Math.floor(Math.random() * Items.length);
     }

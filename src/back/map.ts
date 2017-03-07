@@ -11,10 +11,10 @@ export interface Map {
     doors: common.Door[];
     itemGates: services.ItemGate[];
     signs: common.Sign[];
-    game: services.Game;
+    game: services.game.Game;
 };
 
-export function create(game: services.Game): Map {
+export function create(game: services.game.Game): Map {
     const w = game.props.tw;
     const h = game.props.th;
     const floor: number[][] = [];

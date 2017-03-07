@@ -34,9 +34,9 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = services.game.bodies.map(body => body.getData());
+    const bodiesData = services.currentGame.bodies.map(body => body.getData());
 
-    services.game.clients.push(client);
+    services.currentGame.clients.push(client);
 
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
@@ -49,22 +49,22 @@ wss.on("connection", ws => {
             const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
-                    props: services.game.props,
-                    map: services.map.getData(services.game.map),
+                    props: services.currentGame.props,
+                    map: services.map.getData(services.currentGame.map!),
                     bodies: bodiesData,
                 },
             };
             services.emit(ws, outProtocol);
         } else if (protocol.kind === "join") {
             let u = 0;
-            for (const user of services.game.users) {
+            for (const user of services.currentGame.users) {
                 if (!user.npc) {
                     u++;
                 }
             }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
             client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
-            const u2 = services.game.createUser(client);
+            const u2 = services.game.createUser(services.currentGame, client);
             if (protocol.join.p1) {
                 client.p1 = u2;
             }
@@ -86,6 +86,6 @@ wss.on("connection", ws => {
     });
 
     ws.on("close", () => {
-        services.game.removeClient(client.id);
+        services.game.removeClient(services.currentGame, client.id);
     });
 });

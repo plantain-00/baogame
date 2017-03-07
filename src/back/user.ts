@@ -52,7 +52,7 @@ export class User {
     goleft: boolean;
     goright: boolean;
     facing: boolean;
-    constructor(public game: services.Game, public client: services.Client) {
+    constructor(public game: services.game.Game, public client: services.Client) {
         this.id = userCount++;
         this.name = client.name;
         this.x = Math.random() * (game.props.w - 300) + 150;
@@ -76,15 +76,15 @@ export class User {
     getStatus(): common.userStatus {
         this.crawl = false;
         if (this.dieing) { return "dieing"; }
-        if ((this.vy <= 0 || this.onLadder) && this.game.checkMine(this)) {
+        if ((this.vy <= 0 || this.onLadder) && services.game.checkMine(this.game, this)) {
             return "dieing";
         }
         if (this.onLadder && this.vx === 0 && this.vy === 0) {
             return "climbing";
         } else {
-            const onFloor = services.map.onFloor(this.game.map, this.x, this.y);
+            const onFloor = services.map.onFloor(this.game.map!, this.x, this.y);
             this.onFloor = onFloor;
-            this.nearLadder = services.map.nearLadder(this.game.map, this);
+            this.nearLadder = services.map.nearLadder(this.game.map!, this);
             if (onFloor && this.vy <= 0) {
                 if (this.rolling) {
                     this.rollPoint--;
@@ -107,7 +107,7 @@ export class User {
                 if (typeof this.mining === "number" && this.mining > 0) {
                     this.mining--;
                     if (this.mining === 0) {
-                        if (this.game.addMine(this)) {
+                        if (services.game.addMine(this.game, this)) {
                             this.carryCount--;
                         }
                     } else {
@@ -159,7 +159,7 @@ export class User {
             this.carryCount--;
             if (this.carryCount <= 0) {
                 if (this.carry === common.items.bomb.id) {
-                    this.game.explode(this.x + this.faceing * 20, this.y + this.game.props.userHeight / 2, this, 120);
+                    services.game.explode(this.game, this.x + this.faceing * 20, this.y + this.game.props.userHeight / 2, this, 120);
                 }
                 this.carry = 0;
                 this.carryCount = 0;
@@ -179,7 +179,7 @@ export class User {
                     if (this.carryCount === 0) {
                         this.carry = 0;
                     }
-                    this.game.checkShot(this);
+                    services.game.checkShot(this.game, this);
                 }
             } else if (this.itemPress && this.carry === common.items.gun.id && this.carryCount > 0) {
                 this.fireing = 25;
@@ -338,7 +338,7 @@ export class User {
             } else {
                 for (let i = 0; i < -this.vy; i++) {
                     this.y--;
-                    if (!this.dieing && services.map.onFloor(this.game.map, this.x, this.y)) {
+                    if (!this.dieing && services.map.onFloor(this.game.map!, this.x, this.y)) {
                         this.vy = 0;
                         break;
                     }
@@ -352,8 +352,8 @@ export class User {
         if (this.score > this.client.highestKill) {
             this.client.highestKill = this.score;
         }
-        if (this.game.map.onKilled) {
-            this.game.map.onKilled(this.game, this);
+        if (this.game.map!.onKilled) {
+            this.game.map!.onKilled!(this.game, this);
         }
     }
     killed(action: services.KillReason, byUser?: services.User) {
@@ -380,12 +380,12 @@ export class User {
             this.killer = this.lastTouch;
         }
 
-        if (this.game.map.onKilled) {
-            this.game.map.onKilled(this.game, this);
+        if (this.game.map!.onKilled) {
+            this.game.map!.onKilled!(this.game, this);
         }
         let killer: services.User | undefined;
         if (this.killer && this.killer !== this.id) {
-            killer = this.game.getUser(this.killer);
+            killer = services.game.getUser(this.game, this.killer);
             if (killer) {
                 killer.scoreing();
             }
@@ -418,7 +418,7 @@ export class User {
             }
         }
 
-        this.game.announce({
+        services.game.announce(this.game, {
             kind: "userDead",
             userDead: {
                 user: this.getData(),

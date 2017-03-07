@@ -1,5 +1,5 @@
 import { User } from "./user";
-import { Game } from "./game";
+import * as game from "./game";
 import { playerAI } from "./ai";
 import * as grenade from "./grenade";
 import * as map from "./map";
@@ -11,9 +11,9 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, grenade, map, item, doorService, itemGateService, format };
+export { User, playerAI, grenade, map, item, doorService, itemGateService, format, game };
 
-export const game = new Game("大乱斗");
+export const currentGame = game.create("大乱斗");
 
 export interface Client {
     id: number;
@@ -93,4 +93,4 @@ export type MapData = {
 
 export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
 
-export type OnKilled = (game: Game, u: User) => void;
+export type OnKilled = (game: game.Game, u: User) => void;
