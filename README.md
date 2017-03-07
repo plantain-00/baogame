@@ -26,9 +26,3 @@ key | default value | description
 --- | --- | ---
 p | 8030 | port
 h | localhost | host
-
-#### environment variables
-
-key | default value | description
---- | --- | ---
-BAO_MAX_USER | 10 | the max user count

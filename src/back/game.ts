@@ -1,8 +1,6 @@
 import * as services from "./services";
 import * as common from "./common";
 
-const maxUser = process.env.BAO_MAX_USER | 10;
-
 export class Game {
     users: services.User[];
     clients: services.Client[];
@@ -17,7 +15,6 @@ export class Game {
         itemSize: 15,
         tw: 28,
         th: 15,
-        maxUser,
         w: 0,
         h: 0,
     };

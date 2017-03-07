@@ -141,7 +141,6 @@ export type Props = {
     itemSize: number;
     tw: number;
     th: number;
-    maxUser: number;
     w: number;
     h: number;
 };
@@ -170,13 +169,6 @@ export type JoinProtocol = {
     join: {
         p1: boolean;
         userName: string;
-    };
-};
-
-export type JoinFailProtocol = {
-    kind: "joinFail";
-    joinFail: {
-        message: string;
     };
 };
 
@@ -226,7 +218,7 @@ export type UserDeadProtocol = {
 };
 
 export type Protocol = InitProtocol | InitSuccessProtocol
-    | JoinProtocol | JoinFailProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
+    | JoinProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
     | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";

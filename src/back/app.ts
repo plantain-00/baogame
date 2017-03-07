@@ -62,15 +62,6 @@ wss.on("connection", ws => {
                     u++;
                 }
             }
-            if (u >= services.game.props.maxUser) {
-                services.emit(ws, {
-                    kind: "joinFail",
-                    joinFail: {
-                        message: "加入失败，服务器已满",
-                    },
-                });
-                return;
-            }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
             client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
             const u2 = services.game.createUser(client);

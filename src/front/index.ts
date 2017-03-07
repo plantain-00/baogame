@@ -42,7 +42,6 @@ let P: common.Props;
 let t = 0;
 let cdx = 0;
 let cdy = 0;
-let canJoin = false;
 const game: {
     signs: common.Sign[],
     doors: common.Door[],
@@ -58,7 +57,6 @@ if (userName) {
     $("#name").val(userName);
 }
 function joing(p: boolean) {
-    if (!canJoin) { return; }
     userName = $("#name").val() || "无名小卒";
     if ($("#name").val()) {
         localStorage.setItem("userName", userName!);
@@ -119,8 +117,6 @@ function initDone() {
             $(".joining").show();
         } else if (protocol.kind === "joinSuccess") {
             $(".joining").hide();
-        } else if (protocol.kind === "joinFail") {
-            alert(protocol.joinFail.message);
         } else if (protocol.kind === "tick") {
             t++;
             p1.id = protocol.tick.p1;
@@ -157,15 +153,6 @@ function initDone() {
                 if (!user.npc) {
                     userCount++;
                 }
-            }
-            if (userCount < P.maxUser && canJoin !== true) {
-                canJoin = true;
-                $(".joining .joinBtn").removeAttr("disabled");
-                $(".joining .joinBtn").removeAttr("disabledText");
-            } else if (userCount >= P.maxUser && canJoin !== false) {
-                canJoin = false;
-                $(".joining .joinBtn").attr("disabled", "disabled");
-                $(".joining .joinBtn").attr("disabledText", "：房间已满");
             }
             p1.leftPress = false;
             p1.rightPress = false;
