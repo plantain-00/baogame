@@ -375,4 +375,3 @@ export class Game {
         b.touchUser(a);
     }
 }
-

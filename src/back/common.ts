@@ -192,13 +192,6 @@ export type ControlProtocol = {
     };
 };
 
-export type CreateItemProtocol = {
-    kind: "createItem";
-    createItem: {
-        type: number;
-    };
-};
-
 export type ExplodeProtocol = {
     kind: "explode";
     explode: {
@@ -217,9 +210,7 @@ export type UserDeadProtocol = {
     };
 };
 
-export type Protocol = InitProtocol | InitSuccessProtocol
-    | JoinProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
-    | TickProtocol | ExplodeProtocol | UserDeadProtocol;
+export type Protocol = InitProtocol | InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 
