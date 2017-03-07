@@ -58,7 +58,7 @@ export class User {
         this.x = Math.random() * (game.props.w - 300) + 150;
     }
     throwGrenade() {
-        const g = new services.Grenade(this);
+        const g = services.grenade.create(this);
         const vx = this.faceing * (15 + this.grenadeing) / 5;
         let vy = this.grenadeing / 3;
 

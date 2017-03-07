@@ -1,7 +1,7 @@
 import { User } from "./user";
 import { Game } from "./game";
 import { playerAI } from "./ai";
-import { Grenade } from "./grenade";
+import * as grenade from "./grenade";
 import { Map } from "./map";
 import * as item from "./item";
 import * as doorService from "./door";
@@ -11,11 +11,9 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, Grenade, Map, item, doorService, itemGateService, format };
+export { User, Game, playerAI, grenade, Map, item, doorService, itemGateService, format };
 
 export const game = new Game("大乱斗");
-
-export type Entity = Grenade;
 
 export interface Client {
     id: number;

@@ -7,7 +7,7 @@ export class Game {
     items: services.item.Item[];
     bodies: services.User[];
     mines: services.Mine[];
-    entitys: services.Entity[];
+    entitys: services.grenade.Grenade[];
     tick: number;
     props = {
         userHeight: 40,
@@ -165,7 +165,7 @@ export class Game {
         }
         // 实体更新
         for (const entity of this.entitys) {
-            entity.update();
+            services.grenade.update(entity);
         }
         // 碰撞检测
         for (let i = 0; i < this.users.length; i++) {
