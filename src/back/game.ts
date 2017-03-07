@@ -15,8 +15,8 @@ setInterval(() => {
 
 const maxUser = process.env.BAO_MAX_USER | 10;
 
-export function createGame(name: string, adminCode: string) {
-    const game = new services.Game(name, adminCode, startGameId++);
+export function createGame(name: string) {
+    const game = new Game(name, startGameId++);
     games.push(game);
     return game;
 }
@@ -57,7 +57,7 @@ export class Game {
     };
     map: services.Map;
     runningTimer: NodeJS.Timer;
-    constructor(public name: string, public adminCode: string, public id: number) {
+    constructor(public name: string, public id: number) {
         this.users = [];
         this.clients = [];
         this.items = [];
@@ -275,7 +275,6 @@ export class Game {
     sendTick() {
         const itemdata = this.items.map(item => item.getData());
         const userdata = this.users.map(user => user.getData());
-        const clientsdata = this.clients.map(client => services.getClientData(client));
         const entitydata = this.entitys.map(e => ({
             x: e.x,
             y: e.y,
@@ -288,30 +287,16 @@ export class Game {
                 y: mine.y,
                 dead: mine.dead!,
             }));
-            if (client.admin) {
-                if (this.tick % 60 === 0) {
-                    services.emit(client.ws, {
-                        kind: "adminTick",
-                        adminTick: {
-                            users: userdata,
-                            items: itemdata,
-                            mines: minedata,
-                            clients: clientsdata,
-                        },
-                    });
-                }
-            } else {
-                services.emit(client.ws, {
-                    kind: "tick",
-                    tick: {
-                        users: userdata,
-                        items: itemdata,
-                        mines: minedata,
-                        entitys: entitydata,
-                        p1,
-                    },
-                });
-            }
+            services.emit(client.ws, {
+                kind: "tick",
+                tick: {
+                    users: userdata,
+                    items: itemdata,
+                    mines: minedata,
+                    entitys: entitydata,
+                    p1,
+                },
+            });
         }
     }
     userCollide(a: services.User, b: services.User) {

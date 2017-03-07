@@ -6,8 +6,6 @@ const app = libs.express();
 const server = libs.http.createServer(app);
 const wss = new libs.WebSocketServer({ server });
 
-const adminCode = process.env.BAO_DEFAULT_ROOM_ADMIN_CODE || "admin";
-
 const argv = libs.minimist(process.argv.slice(2));
 const port = argv["p"] || 8030;
 const host = argv["h"] || "localhost";
@@ -20,23 +18,13 @@ app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 // services.format.start();
 
-// 游戏地址
-app.get("/createRoom", (req, res) => {
-    const name = req.query.name || "new room";
-    const code = req.query.code;
-    const room = services.createGame(name, code);
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end(room.id.toString());
-});
-
 // 获取房间列表
 app.get("/roomsData", (req, res) => {
     res.json(services.getGameData());
 });
 
-services.createGame("大乱斗", adminCode);
+services.createGame("大乱斗");
 
-const banedip: { [ip: string]: boolean } = {};
 let concount = 0;
 
 wss.on("connection", ws => {
@@ -52,14 +40,12 @@ wss.on("connection", ws => {
     const client: services.Client = {
         id: concount++,
         p1: null,
-        admin: false,
         name: "无名小卒",
         joinTime: Date.now(),
         ip,
         kill: 0,
         death: 0,
         highestKill: 0,
-        banned: banedip[ip],
         leaveTime: undefined,
         ws,
     };
@@ -84,23 +70,7 @@ wss.on("connection", ws => {
                 },
             };
             services.emit(ws, outProtocol);
-        } else if (protocol.kind === "adminInit") {
-            if (protocol.adminInit.code === game.adminCode) {
-                client.admin = true;
-            } else {
-                services.emit(ws, { kind: "adminInitFail" });
-                ws.close();
-            }
         } else if (protocol.kind === "join") {
-            if (client.banned) {
-                services.emit(ws, {
-                    kind: "joinFail",
-                    joinFail: {
-                        message: "you are banned",
-                    },
-                });
-                return;
-            }
             let u = 0;
             for (const user of game.users) {
                 if (!user.npc) {
@@ -135,28 +105,6 @@ wss.on("connection", ws => {
                 client.p1.upPress = protocol.control.upPress;
                 client.p1.downPress = protocol.control.downPress;
                 client.p1.itemPress = protocol.control.itemPress;
-            }
-        } else if (protocol.kind === "createItem") {
-            if (client.admin) {
-                const item = game.createItem(protocol.createItem.type);
-                item.x = Math.random() * common.constant.tileWidth;
-                item.y = Math.random() * common.constant.tileHeight;
-            }
-        } else if (protocol.kind === "ban") {
-            if (client.admin) {
-                const target = game.getClient(protocol.ban.clientId);
-                if (target) {
-                    target.banned = true;
-                    banedip[target.ip] = true;
-                }
-            }
-        } else if (protocol.kind === "unban") {
-            if (client.admin) {
-                const target = game.getClient(protocol.unban.clientId);
-                if (target) {
-                    target.banned = false;
-                    banedip[target.ip] = false;
-                }
             }
         }
     });

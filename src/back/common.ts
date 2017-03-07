@@ -93,9 +93,7 @@ export type User = {
 export type Client = {
     p1: number | null;
     id: number;
-    admin: boolean;
     name: string;
-    banned: boolean;
     joinTime: number;
     ip: string;
     kill: number;
@@ -127,16 +125,6 @@ export type TickProtocol = {
         mines: Mine[];
         entitys: Entity[];
         p1: number | null | undefined;
-    };
-};
-
-export type AdminTickProtocol = {
-    kind: "adminTick";
-    adminTick: {
-        users: User[];
-        items: Item[];
-        mines: Mine[];
-        clients: Client[];
     };
 };
 
@@ -175,17 +163,6 @@ export type InitSuccessProtocol = {
         map: MapData;
         bodies: User[];
     }
-};
-
-export type AdminInitProtocol = {
-    kind: "adminInit";
-    adminInit: {
-        code: string;
-    };
-};
-
-export type AdminInitFailProtocol = {
-    kind: "adminInitFail";
 };
 
 export type JoinProtocol = {
@@ -230,20 +207,6 @@ export type CreateItemProtocol = {
     };
 };
 
-export type BanProtocol = {
-    kind: "ban";
-    ban: {
-        clientId: number;
-    };
-};
-
-export type UnbanProtocol = {
-    kind: "unban";
-    unban: {
-        clientId: number;
-    };
-};
-
 export type ExplodeProtocol = {
     kind: "explode";
     explode: {
@@ -269,9 +232,9 @@ export type UserDeadProtocol = {
     };
 };
 
-export type Protocol = InitProtocol | InitSuccessProtocol | AdminInitProtocol | AdminInitFailProtocol
+export type Protocol = InitProtocol | InitSuccessProtocol
     | JoinProtocol | JoinFailProtocol | JoinSuccessProtocol | ControlProtocol | CreateItemProtocol
-    | BanProtocol | UnbanProtocol | TickProtocol | AdminTickProtocol | ExplodeProtocol | WinProtocol | UserDeadProtocol;
+    | TickProtocol | ExplodeProtocol | WinProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 

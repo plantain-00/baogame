@@ -20,14 +20,12 @@ export type Entity = Grenade;
 export interface Client {
     id: number;
     p1: User | null;
-    admin: boolean;
     name: string;
     joinTime: number;
     ip: string;
     kill: number;
     death: number;
     highestKill: number;
-    banned: boolean;
     leaveTime: number | undefined;
     ws: libs.WebSocket;
 }
@@ -36,9 +34,7 @@ export function getClientData(client: Client): common.Client {
     return {
         p1: client.p1 && client.p1.id,
         id: client.id,
-        admin: client.admin,
         name: client.name,
-        banned: client.banned,
         joinTime: client.joinTime,
         ip: client.ip,
         kill: client.kill,
