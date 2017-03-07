@@ -3,7 +3,7 @@ import { Game } from "./game";
 import { playerAI } from "./ai";
 import { Grenade } from "./grenade";
 import { Map } from "./map";
-import { Item } from "./item";
+import * as item from "./item";
 import * as doorService from "./door";
 import * as itemGateService from "./itemGate";
 import * as common from "./common";
@@ -11,7 +11,7 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, Game, playerAI, Grenade, Map, Item, doorService, itemGateService, format };
+export { User, Game, playerAI, Grenade, Map, item, doorService, itemGateService, format };
 
 export const game = new Game("大乱斗");
 
@@ -77,7 +77,7 @@ export type ItemGate = {
     x: number;
     y: number;
     itemType?: number;
-    targetItem?: Item;
+    targetItem?: item.Item;
 };
 
 export type MapData = {

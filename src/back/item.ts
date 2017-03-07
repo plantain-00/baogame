@@ -1,12 +1,12 @@
 import * as services from "./services";
 import * as common from "./common";
 
-const Items: services.Item[] = [];
+const Items: Item[] = [];
 for (const key in common.items) {
     Items.push((common.items as any)[key]);
 }
 
-export class Item {
+export interface Item {
     id: number;
     count: number;
     lifetime: number;
@@ -16,55 +16,63 @@ export class Item {
     dead: boolean;
     x: number;
     y: number;
-    constructor(public game: services.Game, type: number) {
-        if (type === undefined) {
-            type = Math.floor(Math.random() * Items.length);
-        }
-        this.id = Items[type].id;
-        this.count = Items[type].count || 0;
-        this.lifetime = 3000;
-        this.slowdown = 0;
-        this.vx = Math.random() + .5;
-        this.vy = Math.random() + .5;
-        this.dead = false;
-    }
-    update() {
-        this.slowdown++;
-        if (this.x >= this.game.props.w - this.game.props.itemSize || this.x <= this.game.props.itemSize) {
-            this.vx *= -1;
-        }
+    game: services.Game;
+}
 
-        if (this.y >= this.game.props.h - this.game.props.itemSize || this.y <= this.game.props.itemSize) {
-            this.vy *= -1;
-        }
-        this.lifetime--;
-        if (this.lifetime < 0) {
-            this.dead = true;
-        }
-        if (this.slowdown < 100) {
-            this.x += this.vx * this.slowdown / 100;
-            this.y += this.vy * this.slowdown / 100;
-        } else {
-            this.x += this.vx;
-            this.y += this.vy;
-        }
+export function create(type: number, game: services.Game): Item {
+    if (type === undefined) {
+        type = Math.floor(Math.random() * Items.length);
     }
-    touchUser(u: services.User) {
-        if (this.id === common.items.drug.id) {
-            this.dead = true;
-            u.killed("drug");
-        } else {
-            this.dead = true;
-            u.carry = this.id;
-            u.carryCount = this.count;
-        }
+    return {
+        id: Items[type].id,
+        count: Items[type].count || 0,
+        lifetime: 3000,
+        slowdown: 0,
+        vx: Math.random() + .5,
+        vy: Math.random() + .5,
+        dead: false,
+        game,
+        x: 0,
+        y: 0,
+    };
+}
+
+export function update(item: Item) {
+    item.slowdown++;
+    if (item.x >= item.game.props.w - item.game.props.itemSize || item.x <= item.game.props.itemSize) {
+        item.vx *= -1;
     }
-    getData(): common.Item {
-        return {
-            x: this.x,
-            y: this.y,
-            id: this.id,
-            dead: this.dead,
-        };
+
+    if (item.y >= item.game.props.h - item.game.props.itemSize || item.y <= item.game.props.itemSize) {
+        item.vy *= -1;
     }
+    item.lifetime--;
+    if (item.lifetime < 0) {
+        item.dead = true;
+    }
+    if (item.slowdown < 100) {
+        item.x += item.vx * item.slowdown / 100;
+        item.y += item.vy * item.slowdown / 100;
+    } else {
+        item.x += item.vx;
+        item.y += item.vy;
+    }
+}
+export function touchUser(item: Item, u: services.User) {
+    if (item.id === common.items.drug.id) {
+        item.dead = true;
+        u.killed("drug");
+    } else {
+        item.dead = true;
+        u.carry = item.id;
+        u.carryCount = item.count;
+    }
+}
+export function getData(item: Item): common.Item {
+    return {
+        x: item.x,
+        y: item.y,
+        id: item.id,
+        dead: item.dead,
+    };
 }

@@ -4,7 +4,7 @@ import * as common from "./common";
 export class Game {
     users: services.User[];
     clients: services.Client[];
-    items: services.Item[];
+    items: services.item.Item[];
     bodies: services.User[];
     mines: services.Mine[];
     entitys: services.Entity[];
@@ -72,7 +72,7 @@ export class Game {
         return undefined;
     }
     createItem(type?: number) {
-        const item = new services.Item(this, type!);
+        const item = services.item.create(type!, this);
         this.items.push(item);
         return item;
     }
@@ -161,7 +161,7 @@ export class Game {
         this.map.update();
         // 物品更新
         for (const item of this.items) {
-            item.update();
+            services.item.update(item);
         }
         // 实体更新
         for (const entity of this.entitys) {
@@ -216,7 +216,7 @@ export class Game {
         }
     }
     sendTick() {
-        const itemdata = this.items.map(item => item.getData());
+        const itemdata = this.items.map(item => services.item.getData(item));
         const userdata = this.users.map(user => user.getData());
         const entitydata = this.entitys.map(e => ({
             x: e.x,
@@ -365,13 +365,13 @@ export class Game {
         a.lastTouch = b.id;
         b.lastTouch = a.id;
     }
-    eatItem(a: services.User, b: services.Item) {
+    eatItem(a: services.User, b: services.item.Item) {
         if (a.dead || b.dead) { return; }
         if (a.carry === common.items.bomb.id) { return; }
         if ((a.x - b.x) * (a.x - b.x) + (a.y + this.props.userHeight / 2 - b.y) * (a.y + this.props.userHeight / 2 - b.y) >
             (this.props.userWidth + common.constant.itemSize) * (this.props.userWidth + common.constant.itemSize) / 4) {
             return;
         }
-        b.touchUser(a);
+        services.item.touchUser(b, a);
     }
 }
