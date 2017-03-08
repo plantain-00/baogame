@@ -2,12 +2,35 @@ import * as common from "../back/common";
 import * as images from "./images";
 import { Flare } from "./effects/flare";
 import { Toast } from "./effects/toast";
-import { Brust } from "./effects/brust";
+import * as brust from "./effects/brust";
 import { WaterDrops } from "./effects/waterDrops";
 import { ItemDead } from "./effects/itemDead";
 import { ShotLine } from "./effects/shotLine";
 
-export let lists: (Flare | Toast | Brust | WaterDrops | ItemDead | ItemDead | ShotLine)[] = [];
+export let lists: (Flare | Toast | WaterDrops | ItemDead | ItemDead | ShotLine)[] = [];
+export let brusts: brust.Brust[] = [];
+
+export function draw(ctx: CanvasRenderingContext2D) {
+    for (let i = lists.length - 1; i >= 0; i--) {
+        const eff = lists[i];
+        if (eff.life < 0) {
+            lists.splice(i, 1);
+        } else {
+            eff.draw(ctx);
+            eff.life--;
+        }
+    }
+
+    for (let i = brusts.length - 1; i >= 0; i--) {
+        const eff = brusts[i];
+        if (eff.life < 0) {
+            brusts.splice(i, 1);
+        } else {
+            brust.draw(ctx, eff);
+            eff.life--;
+        }
+    }
+}
 
 // 绘制背景
 export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
@@ -153,7 +176,7 @@ export function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
 
 export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number, p1id: number | null | undefined) {
     if (user.doubleJumping) {
-        lists.push(new Brust(user.x, user.y, 10, 40, height));
+        brusts.push(brust.create(user.x, user.y, 10, 40, height));
     }
 
     ctx.save();
@@ -224,7 +247,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id:
 
         ctx.drawImage(images.jet, wPadding - 16, -bottleHeight - 10, 40, bottleHeight + 20);
         if (user.flying) {
-            lists.push(new Brust(user.x, user.y, 1, 5, height, user.faceing * (wPadding + bottleWidth / 2), -10));
+            brusts.push(brust.create(user.x, user.y, 1, 5, height, user.faceing * (wPadding + bottleWidth / 2), -10));
         }
     }
     if (user.carry === common.items.bomb.id) {

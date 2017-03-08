@@ -91,13 +91,13 @@ function initDone() {
             cdomBg.id = "bg";
             cdomBody.width = P.w;
             cdomBody.height = P.h;
-            context = cdom.getContext("2d")!;
+            context = cdom.getContext("2d") !;
             context.font = "14px 宋体";
             context.textBaseline = "middle"; // 设置文本的垂直对齐方式
             context.textAlign = "center"; // 设置文本的水平对对齐方式
 
             ctxBg = cdomBg.getContext("2d");
-            ctxBody = cdomBody.getContext("2d")!;
+            ctxBody = cdomBody.getContext("2d") !;
             ctxBody.font = "14px 宋体";
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
@@ -240,15 +240,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
         drawer.drawEntity(ctx, entity, P.h);
     }
 
-    for (let i = drawer.lists.length - 1; i >= 0; i--) {
-        const eff = drawer.lists[i];
-        if (eff.life < 0) {
-            drawer.lists.splice(i, 1);
-        } else {
-            eff.draw(ctx);
-            eff.life--;
-        }
-    }
+    drawer.draw(ctx);
 
     ctx.restore();
 }
