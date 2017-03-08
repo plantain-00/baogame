@@ -5,12 +5,13 @@ import { Toast } from "./effects/toast";
 import * as brust from "./effects/brust";
 import { WaterDrops } from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
-import { ShotLine } from "./effects/shotLine";
+import * as shotLine from "./effects/shotLine";
 
-export const lists: (Toast | WaterDrops | ShotLine)[] = [];
+export const lists: (Toast | WaterDrops)[] = [];
 export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
 export const itemDeads: itemDead.ItemDead[] = [];
+export const shotLines: shotLine.ShotLine[] = [];
 
 export function draw(ctx: CanvasRenderingContext2D) {
     for (let i = lists.length - 1; i >= 0; i--) {
@@ -49,6 +50,16 @@ export function draw(ctx: CanvasRenderingContext2D) {
             itemDeads.splice(i, 1);
         } else {
             itemDead.draw(ctx, eff);
+            eff.life--;
+        }
+    }
+
+    for (let i = shotLines.length - 1; i >= 0; i--) {
+        const eff = shotLines[i];
+        if (eff.life < 0) {
+            shotLines.splice(i, 1);
+        } else {
+            shotLine.draw(ctx, eff);
             eff.life--;
         }
     }
@@ -240,7 +251,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id:
 
     if (user.fireing) {
         if (user.fireing === 5) {
-            lists.push(new ShotLine(user.x, user.y + 25, user.faceing, height, width));
+            shotLines.push(shotLine.create(user.x, user.y + 25, user.faceing, height, width));
         }
         ctx.save();
         ctx.translate(0, -userWidth / 2);
