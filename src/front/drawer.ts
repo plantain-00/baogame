@@ -1,17 +1,18 @@
 import * as common from "../back/common";
 import * as images from "./images";
 import * as flare from "./effects/flare";
-import { Toast } from "./effects/toast";
+import * as toast from "./effects/toast";
 import * as brust from "./effects/brust";
 import { WaterDrops } from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as shotLine from "./effects/shotLine";
 
-export const lists: (Toast | WaterDrops)[] = [];
+export const lists: WaterDrops[] = [];
 export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
 export const itemDeads: itemDead.ItemDead[] = [];
 export const shotLines: shotLine.ShotLine[] = [];
+export const toasts: toast.Toast[] = [];
 
 export function draw(ctx: CanvasRenderingContext2D) {
     for (let i = lists.length - 1; i >= 0; i--) {
@@ -60,6 +61,16 @@ export function draw(ctx: CanvasRenderingContext2D) {
             shotLines.splice(i, 1);
         } else {
             shotLine.draw(ctx, eff);
+            eff.life--;
+        }
+    }
+
+    for (let i = toasts.length - 1; i >= 0; i--) {
+        const eff = toasts[i];
+        if (eff.life < 0) {
+            toasts.splice(i, 1);
+        } else {
+            toast.draw(ctx, eff);
             eff.life--;
         }
     }

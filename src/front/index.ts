@@ -4,7 +4,7 @@ import * as mobileController from "./pcController";
 import * as common from "../back/common";
 import * as images from "./images";
 import * as flare from "./effects/flare";
-import { Toast } from "./effects/toast";
+import * as toast from "./effects/toast";
 import { WaterDrops } from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
@@ -174,7 +174,7 @@ function initDone() {
             if (protocol.userDead.killer) {
                 const killer = protocol.userDead.killer;
                 if (killer.score <= 10) {
-                    drawer.lists.push(new Toast(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], P.h));
+                    drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], P.h));
                 }
             }
         }
