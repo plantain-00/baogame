@@ -34,7 +34,7 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = services.currentGame.bodies.map(body => body.getData());
+    const bodiesData = services.currentGame.bodies.map(body => services.user.getData(body));
 
     services.currentGame.clients.push(client);
 

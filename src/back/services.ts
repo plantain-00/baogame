@@ -1,4 +1,4 @@
-import { User } from "./user";
+import * as user from "./user";
 import * as game from "./game";
 import { playerAI } from "./ai";
 import * as grenade from "./grenade";
@@ -11,13 +11,13 @@ import * as format from "./format";
 
 import * as libs from "./libs";
 
-export { User, playerAI, grenade, map, item, doorService, itemGateService, format, game };
+export { user, playerAI, grenade, map, item, doorService, itemGateService, format, game };
 
 export const currentGame = game.create("大乱斗");
 
 export interface Client {
     id: number;
-    p1: User | null;
+    p1: user.User | null;
     name: string;
     joinTime: number;
     ip: string;
@@ -53,7 +53,7 @@ export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
 export interface Mine {
     x: number;
     y: number;
-    creater: User;
+    creater: user.User;
     dead?: boolean;
 }
 
@@ -93,4 +93,4 @@ export type MapData = {
 
 export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
 
-export type OnKilled = (game: game.Game, u: User) => void;
+export type OnKilled = (game: game.Game, u: user.User) => void;

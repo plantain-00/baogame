@@ -8,10 +8,10 @@ export interface Grenade {
     life: number;
     r: number;
     dead: boolean;
-    creater: services.User;
+    creater: services.user.User;
 }
 
-export function create(creater: services.User) {
+export function create(creater: services.user.User) {
     return {
         x: 0,
         y: 0,

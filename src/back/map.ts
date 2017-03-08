@@ -147,7 +147,7 @@ export function onFloor(map: Map, x: number, y: number) {
     if (x < 0 || y < 0 || x >= map.w || y >= map.h || !map.floor[y]) { return false; }
     return map.floor[y][x];
 }
-export function nearLadder(map: Map, u: services.User) {
+export function nearLadder(map: Map, u: services.user.User) {
     if (onFloor(map, u.x, u.y) === false) { return false; }
     if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) { return false; }
     const x = u.x;

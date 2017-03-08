@@ -2,10 +2,10 @@ import * as services from "./services";
 import * as common from "./common";
 
 export interface Game {
-    users: services.User[];
+    users: services.user.User[];
     clients: services.Client[];
     items: services.item.Item[];
-    bodies: services.User[];
+    bodies: services.user.User[];
     mines: services.Mine[];
     entitys: services.grenade.Grenade[];
     tick: number;
@@ -52,13 +52,13 @@ export function create(name: string) {
     return result;
 }
 export function createNPC(game: Game, data: any) {
-    const u = new services.User(game, data);
+    const u = services.user.create(game, data);
     u.npc = true;
     game.users.push(u);
     return u;
 }
 export function createUser(game: Game, client: services.Client) {
-    const u = new services.User(game, client);
+    const u = services.user.create(game, client);
     const place = services.map.born(game.map!);
     u.x = place.x;
     u.y = place.y + common.constant.tileHeight / 2;
@@ -91,13 +91,13 @@ export function createItem(game: Game, type?: number) {
     game.items.push(item);
     return item;
 }
-export function explode(game: Game, x: number, y: number, byUser: services.User, power: number) {
+export function explode(game: Game, x: number, y: number, byUser: services.user.User, power: number) {
     for (const user of game.users) {
         const ux = user.x;
         const uy = user.y + game.props.userHeight;
         const dist = (ux - x) * (ux - x) + (uy - y) * (uy - y);
         if (dist < power * power) {
-            user.killed("bomb", byUser);
+            services.user.killed(user, "bomb", byUser);
         }
         if (dist < 2.25 * power * power) {
             const r = Math.atan2(uy - y, ux - x);
@@ -109,7 +109,7 @@ export function explode(game: Game, x: number, y: number, byUser: services.User,
     }
     announce(game, { kind: "explode", explode: { x, y, power } });
 }
-export function checkShot(game: Game, u: services.User) {
+export function checkShot(game: Game, u: services.user.User) {
     const x = u.x;
     const y = u.y + game.props.userHeight * 2 / 3;
     const f = u.faceing;
@@ -120,17 +120,17 @@ export function checkShot(game: Game, u: services.User) {
             uh /= 2;
         }
         if (f < 0 && x > user.x && user.y <= y && user.y + uh >= y) {
-            user.killed("gun", u);
+            services.user.killed(user, "gun", u);
             user.vx = 6 * f;
         }
 
         if (f > 0 && x < user.x && user.y <= y && user.y + uh >= y) {
-            user.killed("gun", u);
+            services.user.killed(user, "gun", u);
             user.vx = 6 * f;
         }
     }
 }
-export function addMine(game: Game, user: services.User) {
+export function addMine(game: Game, user: services.user.User) {
     const x = user.x + user.faceing * 40;
     if (services.map.onFloor(game.map!, x, user.y)) {
         game.mines.push({
@@ -142,11 +142,11 @@ export function addMine(game: Game, user: services.User) {
     }
     return false;
 }
-export function checkMine(game: Game, user: services.User) {
+export function checkMine(game: Game, user: services.user.User) {
     for (let i = game.mines.length - 1; i >= 0; i--) {
         const mine = game.mines[i];
         if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {
-            user.killed("mine", mine.creater);
+            services.user.killed(user, "mine", mine.creater);
             mine.dead = true;
             return true;
         }
@@ -193,7 +193,7 @@ export function update(game: Game) {
     }
     // user更新
     for (const user of game.users) {
-        user.update();
+        services.user.update(user);
     }
     // 分发状态
     sendTick(game);
@@ -232,7 +232,7 @@ export function clean(game: Game) {
 }
 export function sendTick(game: Game) {
     const itemdata = game.items.map(item => services.item.getData(item));
-    const userdata = game.users.map(user => user.getData());
+    const userdata = game.users.map(user => services.user.getData(user));
     const entitydata = game.entitys.map(e => ({
         x: e.x,
         y: e.y,
@@ -257,7 +257,7 @@ export function sendTick(game: Game) {
         });
     }
 }
-export function userCollide(game: Game, a: services.User, b: services.User) {
+export function userCollide(game: Game, a: services.user.User, b: services.user.User) {
     // 不碰撞情况
     if (a.dead || b.dead) {
         return;
@@ -268,7 +268,7 @@ export function userCollide(game: Game, a: services.User, b: services.User) {
 
     // 带电情况
     if (a.carry === common.items.power.id && b.carry !== common.items.power.id) {
-        b.killed("power", a);
+        services.user.killed(b, "power", a);
         b.vx = (b.x - a.x) / 2;
         if (b.carry === common.items.bomb.id) {
             a.carry = b.carry;
@@ -277,7 +277,7 @@ export function userCollide(game: Game, a: services.User, b: services.User) {
         }
         return;
     } else if (a.carry !== common.items.power.id && b.carry === common.items.power.id) {
-        a.killed("power", b);
+        services.user.killed(a, "power", b);
         a.vx = (a.x - b.x) / 2;
         if (a.carry === common.items.bomb.id) {
             b.carry = a.carry;
@@ -380,7 +380,7 @@ export function userCollide(game: Game, a: services.User, b: services.User) {
     a.lastTouch = b.id;
     b.lastTouch = a.id;
 }
-export function eatItem(game: Game, a: services.User, b: services.item.Item) {
+export function eatItem(game: Game, a: services.user.User, b: services.item.Item) {
     if (a.dead || b.dead) { return; }
     if (a.carry === common.items.bomb.id) { return; }
     if ((a.x - b.x) * (a.x - b.x) + (a.y + game.props.userHeight / 2 - b.y) * (a.y + game.props.userHeight / 2 - b.y) >

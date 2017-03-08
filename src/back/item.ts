@@ -58,10 +58,10 @@ export function update(item: Item) {
         item.y += item.vy;
     }
 }
-export function touchUser(item: Item, u: services.User) {
+export function touchUser(item: Item, u: services.user.User) {
     if (item.id === common.items.drug.id) {
         item.dead = true;
-        u.killed("drug");
+        services.user.killed(u, "drug");
     } else {
         item.dead = true;
         u.carry = item.id;
