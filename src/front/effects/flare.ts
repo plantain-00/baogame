@@ -1,4 +1,4 @@
-import { Smoke } from "./smoke";
+import { draw as drawSmoke, Smoke, create as createSmoke } from "./smoke";
 
 export interface Flare {
     txt: string;
@@ -23,7 +23,7 @@ export function create(x: number, y: number, power: number, height: number, larg
             const r = j / 3 - .8 + Math.random() * .5 - .25;
             const len = Math.random() * 30 + 15;
             for (let i = 0; i < len; i++) {
-                flare.smokes.push(new Smoke(
+                flare.smokes.push(createSmoke(
                     i * .04 * power * Math.sin(r),
                     -i * .04 * power * Math.cos(r) + i * i * power / 3000,
                     5 * Math.pow((len - i) / len, .6) * (Math.random() + 2),
@@ -36,7 +36,7 @@ export function create(x: number, y: number, power: number, height: number, larg
             const r = j / 3 - .8 + Math.random() * .5 - .25;
             const len = Math.random() * 20 + 10;
             for (let i = 0; i < len; i++) {
-                flare.smokes.push(new Smoke(
+                flare.smokes.push(createSmoke(
                     i * 5 * Math.sin(r),
                     -i * 5 * Math.cos(r) + i * i / 10,
                     3 * Math.pow((len - i) / len, .8) * (Math.random() + 2),
@@ -57,7 +57,7 @@ export function draw(ctx: CanvasRenderingContext2D, flare: Flare) {
     for (const smoke of flare.smokes) {
         smoke.life++;
         if (smoke.life > 0 && smoke.life < smoke.totalLife) {
-            smoke.draw(ctx, 70 - flare.life);
+            drawSmoke(ctx, 70 - flare.life, smoke);
         }
     }
     ctx.restore();
