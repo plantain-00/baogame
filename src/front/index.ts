@@ -6,7 +6,7 @@ import * as images from "./images";
 import * as flare from "./effects/flare";
 import { Toast } from "./effects/toast";
 import { WaterDrops } from "./effects/waterDrops";
-import { ItemDead } from "./effects/itemDead";
+import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 
 const p1 = (navigator.userAgent.indexOf("iPhone") === -1
@@ -232,7 +232,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
                     itemName = (common.items as any)[key].name;
                 }
             }
-            drawer.lists.push(new ItemDead(item.x, item.y, itemName, P.h, P.itemSize));
+            drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, P.h, P.itemSize));
         }
     }
 

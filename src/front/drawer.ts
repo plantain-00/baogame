@@ -4,12 +4,13 @@ import * as flare from "./effects/flare";
 import { Toast } from "./effects/toast";
 import * as brust from "./effects/brust";
 import { WaterDrops } from "./effects/waterDrops";
-import { ItemDead } from "./effects/itemDead";
+import * as itemDead from "./effects/itemDead";
 import { ShotLine } from "./effects/shotLine";
 
-export const lists: (Toast | WaterDrops | ItemDead | ItemDead | ShotLine)[] = [];
-const brusts: brust.Brust[] = [];
+export const lists: (Toast | WaterDrops | ShotLine)[] = [];
+export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
+export const itemDeads: itemDead.ItemDead[] = [];
 
 export function draw(ctx: CanvasRenderingContext2D) {
     for (let i = lists.length - 1; i >= 0; i--) {
@@ -38,6 +39,16 @@ export function draw(ctx: CanvasRenderingContext2D) {
             flares.splice(i, 1);
         } else {
             flare.draw(ctx, eff);
+            eff.life--;
+        }
+    }
+
+    for (let i = itemDeads.length - 1; i >= 0; i--) {
+        const eff = itemDeads[i];
+        if (eff.life < 0) {
+            itemDeads.splice(i, 1);
+        } else {
+            itemDead.draw(ctx, eff);
             eff.life--;
         }
     }
