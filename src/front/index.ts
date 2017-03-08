@@ -3,7 +3,7 @@ import * as pcController from "./pcController";
 import * as mobileController from "./pcController";
 import * as common from "../back/common";
 import * as images from "./images";
-import { Flare } from "./effects/flare";
+import * as flare from "./effects/flare";
 import { Toast } from "./effects/toast";
 import { WaterDrops } from "./effects/waterDrops";
 import { ItemDead } from "./effects/itemDead";
@@ -162,7 +162,7 @@ function initDone() {
         } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
-            drawer.lists.push(new Flare(protocol.explode.x, protocol.explode.y, protocol.explode.power, P.h, true));
+            drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, P.h, true));
         } else if (protocol.kind === "userDead") {
             notice(protocol.userDead.message);
             // p1 dead
@@ -208,7 +208,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
         if (mine.dead) {
             cdx = 3;
             cdy = 11;
-            drawer.lists.push(new Flare(mine.x, mine.y, 0, P.h));
+            drawer.flares.push(flare.create(mine.x, mine.y, 0, P.h));
         }
     }
 
