@@ -3,28 +3,18 @@ import * as images from "./images";
 import * as flare from "./effects/flare";
 import * as toast from "./effects/toast";
 import * as brust from "./effects/brust";
-import { WaterDrops } from "./effects/waterDrops";
+import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as shotLine from "./effects/shotLine";
 
-export const lists: WaterDrops[] = [];
 export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
 export const itemDeads: itemDead.ItemDead[] = [];
 export const shotLines: shotLine.ShotLine[] = [];
 export const toasts: toast.Toast[] = [];
+export const waterDrops: waterDrop.WaterDrops[] = [];
 
 export function draw(ctx: CanvasRenderingContext2D) {
-    for (let i = lists.length - 1; i >= 0; i--) {
-        const eff = lists[i];
-        if (eff.life < 0) {
-            lists.splice(i, 1);
-        } else {
-            eff.draw(ctx);
-            eff.life--;
-        }
-    }
-
     for (let i = brusts.length - 1; i >= 0; i--) {
         const eff = brusts[i];
         if (eff.life < 0) {
@@ -71,6 +61,16 @@ export function draw(ctx: CanvasRenderingContext2D) {
             toasts.splice(i, 1);
         } else {
             toast.draw(ctx, eff);
+            eff.life--;
+        }
+    }
+
+    for (let i = waterDrops.length - 1; i >= 0; i--) {
+        const eff = waterDrops[i];
+        if (eff.life < 0) {
+            waterDrops.splice(i, 1);
+        } else {
+            waterDrop.draw(ctx, eff);
             eff.life--;
         }
     }

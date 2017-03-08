@@ -5,7 +5,7 @@ import * as common from "../back/common";
 import * as images from "./images";
 import * as flare from "./effects/flare";
 import * as toast from "./effects/toast";
-import { WaterDrops } from "./effects/waterDrops";
+import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 
@@ -214,7 +214,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
 
     for (const user of protocol.tick.users) {
         if (user.dead === true) {
-            drawer.lists.push(new WaterDrops(user.x, user.y, user.vy, P.h));
+            drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, P.h));
             drawer.drawUser(ctxBody, user, undefined, P.h, P.w, P.userWidth, P.userHeight, p1.id);
         } else {
             drawer.drawUser(ctx, user, protocol.tick.p1, P.h, P.w, P.userWidth, P.userHeight, p1.id);
