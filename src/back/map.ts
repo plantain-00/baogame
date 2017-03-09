@@ -134,56 +134,44 @@ export function create(game: services.game.Game): Map {
         game,
     };
 }
-export function born(map: Map) {
-    const i = Math.floor(Math.random() * map.borns.length);
-    const x = map.borns[i].x;
-    const y = map.borns[i].y;
+export function born() {
+    const i = Math.floor(Math.random() * services.currentMap.borns.length);
+    const x = services.currentMap.borns[i].x;
+    const y = services.currentMap.borns[i].y;
     return { x: (x + .5) * common.constant.tileWidth, y: y * common.constant.tileHeight };
 }
-export function onFloor(map: Map, x: number, y: number) {
+export function onFloor(x: number, y: number) {
     x = Math.floor(x / common.constant.tileWidth);
     if (y % common.constant.tileHeight !== 0) { return false; }
     y = y / common.constant.tileHeight;
-    if (x < 0 || y < 0 || x >= map.w || y >= map.h || !map.floor[y]) { return false; }
-    return map.floor[y][x];
+    if (x < 0 || y < 0 || x >= services.currentMap.w || y >= services.currentMap.h || !services.currentMap.floor[y]) { return false; }
+    return services.currentMap.floor[y][x];
 }
-export function nearLadder(map: Map, u: services.user.User) {
-    if (onFloor(map, u.x, u.y) === false) { return false; }
+export function nearLadder(u: services.user.User) {
+    if (onFloor(u.x, u.y) === false) { return false; }
     if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) { return false; }
     const x = u.x;
     const y = u.y;
-    for (const ladder of map.ladders) {
+    for (const ladder of services.currentMap.ladders) {
         if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
             return ladder;
         }
     }
     return false;
 }
-export function onLadder(map: Map, x: number, y: number) {
-    for (const ladder of map.ladders) {
+export function onLadder(x: number, y: number) {
+    for (const ladder of services.currentMap.ladders) {
         if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
             return true;
         }
     }
     return false;
 }
-export function update(map: Map) {
-    for (const door of map.doors) {
-        services.doorService.update(map.game, door);
+export function update() {
+    for (const door of services.currentMap.doors) {
+        services.doorService.update(services.currentMap.game, door);
     }
-    for (const itemGate of map.itemGates) {
-        services.itemGateService.update(map.game, itemGate);
+    for (const itemGate of services.currentMap.itemGates) {
+        services.itemGateService.update(services.currentMap.game, itemGate);
     }
-}
-export function getData(map: Map): common.MapData {
-    const itemGates = map.itemGates.map(itemGate => services.itemGateService.getData(itemGate));
-    return {
-        w: map.w,
-        h: map.h,
-        floor: map.floor.reduce((acc, f) => acc.concat(f), []),
-        ladders: map.ladders,
-        signs: map.signs,
-        doors: map.doors,
-        itemGates,
-    };
 }

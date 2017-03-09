@@ -137,9 +137,9 @@ export function getStatus(user: User): common.userStatus {
     if (user.onLadder && user.vx === 0 && user.vy === 0) {
         return "climbing";
     } else {
-        const onFloor = services.map.onFloor(user.game.map!, user.x, user.y);
+        const onFloor = services.map.onFloor(user.x, user.y);
         user.onFloor = onFloor;
-        user.nearLadder = services.map.nearLadder(user.game.map!, user);
+        user.nearLadder = services.map.nearLadder(user);
         if (onFloor && user.vy <= 0) {
             if (user.rolling) {
                 user.rollPoint--;
@@ -393,7 +393,7 @@ export function update(user: User) {
         } else {
             for (let i = 0; i < -user.vy; i++) {
                 user.y--;
-                if (!user.dieing && services.map.onFloor(user.game.map!, user.x, user.y)) {
+                if (!user.dieing && services.map.onFloor(user.x, user.y)) {
                     user.vy = 0;
                     break;
                 }
@@ -407,8 +407,8 @@ export function scoreing(user: User) {
     if (user.score > user.client.highestKill) {
         user.client.highestKill = user.score;
     }
-    if (user.game.map!.onKilled) {
-        user.game.map!.onKilled!(user.game, user);
+    if (services.currentMap.onKilled) {
+        services.currentMap.onKilled!(user.game, user);
     }
 }
 export function killed(user: User, action: services.KillReason, byUser?: User) {
@@ -435,8 +435,8 @@ export function killed(user: User, action: services.KillReason, byUser?: User) {
         user.killer = user.lastTouch;
     }
 
-    if (user.game.map!.onKilled) {
-        user.game.map!.onKilled!(user.game, user);
+    if (services.currentMap.onKilled) {
+        services.currentMap.onKilled!(user.game, user);
     }
     let killer: User | undefined;
     if (user.killer && user.killer !== user.id) {

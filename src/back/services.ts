@@ -14,6 +14,16 @@ import * as libs from "./libs";
 export { user, playerAI, grenade, map, item, doorService, itemGateService, format, game };
 
 export const currentGame = game.create("大乱斗");
+export const currentMap = map.create(currentGame);
+export const currentMapData: common.MapData = {
+    w: currentMap.w,
+    h: currentMap.h,
+    floor: currentMap.floor.reduce((acc, f) => acc.concat(f), []),
+    ladders: currentMap.ladders,
+    signs: currentMap.signs,
+    doors: currentMap.doors,
+    itemGates: currentMap.itemGates.map(itemGate => itemGateService.getData(itemGate)),
+};
 
 export interface Client {
     id: number;

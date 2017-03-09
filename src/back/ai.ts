@@ -1,15 +1,15 @@
 import * as services from "./services";
 import * as common from "./common";
 
-function userCanGoLeft(user: services.user.User, map?: services.map.Map) {
+function userCanGoLeft(user: services.user.User) {
     const x = Math.floor((user.x - 5) / common.constant.tileWidth);
     const y = Math.floor(user.y / common.constant.tileHeight);
-    return user.game.map!.floor[y][x];
+    return services.currentMap.floor[y][x];
 }
-function userCanGoRight(user: services.user.User, map?: services.map.Map) {
+function userCanGoRight(user: services.user.User) {
     const x = Math.floor((user.x + 5) / common.constant.tileWidth);
     const y = Math.floor(user.y / common.constant.tileHeight);
-    return user.game.map!.floor[y][x];
+    return services.currentMap.floor[y][x];
 }
 export function playerAI(user: services.user.User) {
     if (user.status === "standing") {

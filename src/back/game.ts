@@ -18,12 +18,11 @@ export interface Game {
         w: number;
         h: number;
     };
-    map?: services.map.Map;
     runningTimer?: NodeJS.Timer;
     name?: string;
 }
 
-export function create(name: string) {
+export function create(name: string): Game {
     const result: Game = {
         users: [],
         clients: [],
@@ -45,7 +44,6 @@ export function create(name: string) {
     result.props.w = result.props.tw * common.constant.tileWidth;
     result.props.h = result.props.th * common.constant.tileHeight;
 
-    result.map = services.map.create(result);
     result.runningTimer = setInterval(() => {
         update(result);
     }, 17);
@@ -59,7 +57,7 @@ export function createNPC(game: Game, data: any) {
 }
 export function createUser(game: Game, client: services.Client) {
     const u = services.user.create(game, client);
-    const place = services.map.born(game.map!);
+    const place = services.map.born();
     u.x = place.x;
     u.y = place.y + common.constant.tileHeight / 2;
     game.users.push(u);
@@ -132,7 +130,7 @@ export function checkShot(game: Game, u: services.user.User) {
 }
 export function addMine(game: Game, user: services.user.User) {
     const x = user.x + user.faceing * 40;
-    if (services.map.onFloor(game.map!, x, user.y)) {
+    if (services.map.onFloor(x, user.y)) {
         game.mines.push({
             x,
             y: user.y,
@@ -173,7 +171,7 @@ export function announce(game: Game, protocol: common.Protocol) {
 }
 export function update(game: Game) {
     game.tick++;
-    services.map.update(game.map!);
+    services.map.update();
     // 物品更新
     for (const item of game.items) {
         services.item.update(item);
