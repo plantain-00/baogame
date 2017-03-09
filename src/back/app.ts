@@ -64,7 +64,7 @@ wss.on("connection", ws => {
             }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
             client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
-            const u2 = services.game.createUser(services.currentGame, client);
+            const u2 = services.game.createUser(client);
             if (protocol.join.p1) {
                 client.p1 = u2;
             }
@@ -86,6 +86,6 @@ wss.on("connection", ws => {
     });
 
     ws.on("close", () => {
-        services.game.removeClient(services.currentGame, client.id);
+        services.game.removeClient(client.id);
     });
 });

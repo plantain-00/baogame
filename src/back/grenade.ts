@@ -27,7 +27,7 @@ export function create(creater: services.user.User) {
 export function update(grenade: Grenade) {
     grenade.x += grenade.vx;
     grenade.r += grenade.vx / 5;
-    if (grenade.x < 0 || grenade.x > grenade.creater.game.props.w) {
+    if (grenade.x < 0 || grenade.x > services.currentGame.props.w) {
         grenade.vx *= -1;
     }
 
@@ -55,6 +55,6 @@ export function update(grenade: Grenade) {
     grenade.life--;
     if (grenade.life < 0) {
         grenade.dead = true;
-        services.game.explode(grenade.creater.game, grenade.x, grenade.y, grenade.creater, 100);
+        services.game.explode(grenade.x, grenade.y, grenade.creater, 100);
     }
 }

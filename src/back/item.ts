@@ -16,10 +16,9 @@ export interface Item {
     dead: boolean;
     x: number;
     y: number;
-    game: services.game.Game;
 }
 
-export function create(type: number, game: services.game.Game): Item {
+export function create(type: number): Item {
     if (type === undefined) {
         type = Math.floor(Math.random() * Items.length);
     }
@@ -31,7 +30,6 @@ export function create(type: number, game: services.game.Game): Item {
         vx: Math.random() + .5,
         vy: Math.random() + .5,
         dead: false,
-        game,
         x: 0,
         y: 0,
     };
@@ -39,11 +37,11 @@ export function create(type: number, game: services.game.Game): Item {
 
 export function update(item: Item) {
     item.slowdown++;
-    if (item.x >= item.game.props.w - item.game.props.itemSize || item.x <= item.game.props.itemSize) {
+    if (item.x >= services.currentGame.props.w - services.currentGame.props.itemSize || item.x <= services.currentGame.props.itemSize) {
         item.vx *= -1;
     }
 
-    if (item.y >= item.game.props.h - item.game.props.itemSize || item.y <= item.game.props.itemSize) {
+    if (item.y >= services.currentGame.props.h - services.currentGame.props.itemSize || item.y <= services.currentGame.props.itemSize) {
         item.vy *= -1;
     }
     item.lifetime--;

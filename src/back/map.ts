@@ -11,12 +11,11 @@ export interface Map {
     doors: common.Door[];
     itemGates: services.ItemGate[];
     signs: common.Sign[];
-    game: services.game.Game;
 };
 
-export function create(game: services.game.Game): Map {
-    const w = game.props.tw;
-    const h = game.props.th;
+export function create(): Map {
+    const w = services.currentGame.props.tw;
+    const h = services.currentGame.props.th;
     const floor: number[][] = [];
     const ladders: common.Ladder[] = [];
 
@@ -103,14 +102,14 @@ export function create(game: services.game.Game): Map {
 
     const borns: services.Position[] = [];
     for (let i = 0; i < 20; i++) {
-        const x = Math.floor(Math.random() * (game.props.tw - 2)) + 1;
-        const y = Math.floor(Math.random() * (game.props.th - 2)) + 1;
+        const x = Math.floor(Math.random() * (services.currentGame.props.tw - 2)) + 1;
+        const y = Math.floor(Math.random() * (services.currentGame.props.th - 2)) + 1;
         if (floor[y][x]) {
             borns.push({ x, y });
         }
     }
     for (const f of floor) {
-        for (let i = 0; i < game.props.tw; i++) {
+        for (let i = 0; i < services.currentGame.props.tw; i++) {
             if (f[i] !== 0 && f[i] !== 1) {
                 f[i] = 0;
             }
@@ -118,20 +117,19 @@ export function create(game: services.game.Game): Map {
     }
 
     const itemGates: services.ItemGate[] = [];
-    itemGates.push({ x: 0, y: game.props.th / 2 });
-    itemGates.push({ x: game.props.tw - 1, y: game.props.th / 2 });
-    itemGates.push({ x: game.props.tw / 2, y: game.props.th - 1 });
+    itemGates.push({ x: 0, y: services.currentGame.props.th / 2 });
+    itemGates.push({ x: services.currentGame.props.tw - 1, y: services.currentGame.props.th / 2 });
+    itemGates.push({ x: services.currentGame.props.tw / 2, y: services.currentGame.props.th - 1 });
 
     return {
-        w: game.props.tw,
-        h: game.props.th,
+        w: services.currentGame.props.tw,
+        h: services.currentGame.props.th,
         floor,
         ladders,
         borns,
         doors: [],
         itemGates,
         signs: [],
-        game,
     };
 }
 export function born() {
@@ -169,9 +167,9 @@ export function onLadder(x: number, y: number) {
 }
 export function update() {
     for (const door of services.currentMap.doors) {
-        services.doorService.update(services.currentMap.game, door);
+        services.doorService.update(door);
     }
     for (const itemGate of services.currentMap.itemGates) {
-        services.itemGateService.update(services.currentMap.game, itemGate);
+        services.itemGateService.update(itemGate);
     }
 }

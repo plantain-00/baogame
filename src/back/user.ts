@@ -53,11 +53,10 @@ export interface User {
     goleft: boolean;
     goright: boolean;
     facing: boolean;
-    game: services.game.Game;
     client: services.Client;
 }
 
-export function create(game: services.game.Game, client: services.Client): User {
+export function create(client: services.Client): User {
     return {
         id: userCount++,
         name: client.name,
@@ -67,7 +66,7 @@ export function create(game: services.game.Game, client: services.Client): User 
         dead: false,
         rolling: false,
         crawl: false,
-        x: Math.random() * (game.props.w - 300) + 150,
+        x: Math.random() * (services.currentGame.props.w - 300) + 150,
         y: 380,
         vx: 0,
         vy: 0,
@@ -108,7 +107,6 @@ export function create(game: services.game.Game, client: services.Client): User 
         goleft: false,
         goright: false,
         facing: false,
-        game,
         client,
     };
 }
@@ -122,16 +120,16 @@ export function throwGrenade(user: User) {
     }
 
     g.x = user.x - user.faceing * 20;
-    g.y = user.y + user.game.props.userHeight;
+    g.y = user.y + services.currentGame.props.userHeight;
     g.vx = user.vx + vx;
     g.vy = user.vy + vy;
 
-    user.game.entitys.push(g);
+    services.currentGame.entitys.push(g);
 }
 export function getStatus(user: User): common.userStatus {
     user.crawl = false;
     if (user.dieing) { return "dieing"; }
-    if ((user.vy <= 0 || user.onLadder) && services.game.checkMine(user.game, user)) {
+    if ((user.vy <= 0 || user.onLadder) && services.game.checkMine(user)) {
         return "dieing";
     }
     if (user.onLadder && user.vx === 0 && user.vy === 0) {
@@ -162,7 +160,7 @@ export function getStatus(user: User): common.userStatus {
             if (typeof user.mining === "number" && user.mining > 0) {
                 user.mining--;
                 if (user.mining === 0) {
-                    if (services.game.addMine(user.game, user)) {
+                    if (services.game.addMine(user)) {
                         user.carryCount--;
                     }
                 } else {
@@ -214,7 +212,7 @@ export function update(user: User) {
         user.carryCount--;
         if (user.carryCount <= 0) {
             if (user.carry === common.items.bomb.id) {
-                services.game.explode(user.game, user.x + user.faceing * 20, user.y + user.game.props.userHeight / 2, user, 120);
+                services.game.explode(user.x + user.faceing * 20, user.y + services.currentGame.props.userHeight / 2, user, 120);
             }
             user.carry = 0;
             user.carryCount = 0;
@@ -234,7 +232,7 @@ export function update(user: User) {
                 if (user.carryCount === 0) {
                     user.carry = 0;
                 }
-                services.game.checkShot(user.game, user);
+                services.game.checkShot(user);
             }
         } else if (user.itemPress && user.carry === common.items.gun.id && user.carryCount > 0) {
             user.fireing = 25;
@@ -270,7 +268,7 @@ export function update(user: User) {
         user.vr *= .96;
     }
     if (user.status === "climbing") {
-        if (user.upDown && !user.downDown && user.y < user.ladder!.y2 * common.constant.tileHeight - user.game.props.userHeight) {
+        if (user.upDown && !user.downDown && user.y < user.ladder!.y2 * common.constant.tileHeight - services.currentGame.props.userHeight) {
             user.y += 3;
         } else if (user.downDown && !user.upDown && user.y > user.ladder!.y1 * common.constant.tileHeight + 3) {
             user.y -= 3;
@@ -381,7 +379,7 @@ export function update(user: User) {
     // final process
     user.x += user.vx;
     if (user.x <= 0) { user.vx = Math.abs(user.vx); }
-    if (user.x >= user.game.props.w) { user.vx = -Math.abs(user.vx); }
+    if (user.x >= services.currentGame.props.w) { user.vx = -Math.abs(user.vx); }
     if (user.y < 0) {
         user.dead = true;
         if (!user.dieing) {
@@ -408,7 +406,7 @@ export function scoreing(user: User) {
         user.client.highestKill = user.score;
     }
     if (services.currentMap.onKilled) {
-        services.currentMap.onKilled!(user.game, user);
+        services.currentMap.onKilled(user);
     }
 }
 export function killed(user: User, action: services.KillReason, byUser?: User) {
@@ -436,11 +434,11 @@ export function killed(user: User, action: services.KillReason, byUser?: User) {
     }
 
     if (services.currentMap.onKilled) {
-        services.currentMap.onKilled!(user.game, user);
+        services.currentMap.onKilled(user);
     }
     let killer: User | undefined;
     if (user.killer && user.killer !== user.id) {
-        killer = services.game.getUser(user.game, user.killer);
+        killer = services.game.getUser(user.killer);
         if (killer) {
             scoreing(killer);
         }
@@ -473,7 +471,7 @@ export function killed(user: User, action: services.KillReason, byUser?: User) {
         }
     }
 
-    services.game.announce(user.game, {
+    services.game.announce({
         kind: "userDead",
         userDead: {
             user: getData(user),

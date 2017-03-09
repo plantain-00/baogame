@@ -14,7 +14,10 @@ import * as libs from "./libs";
 export { user, playerAI, grenade, map, item, doorService, itemGateService, format, game };
 
 export const currentGame = game.create("大乱斗");
-export const currentMap = map.create(currentGame);
+currentGame.runningTimer = setInterval(() => {
+    game.update();
+}, 17);
+export const currentMap = map.create();
 export const currentMapData: common.MapData = {
     w: currentMap.w,
     h: currentMap.h,
@@ -103,4 +106,4 @@ export type MapData = {
 
 export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
 
-export type OnKilled = (game: game.Game, u: user.User) => void;
+export type OnKilled = (u: user.User) => void;
