@@ -67,9 +67,9 @@ wss.on("connection", ws => {
             }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
             client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
-            const u2 = services.game.createUser(client);
+            const user = services.game.createUser(client);
             if (protocol.join.p1) {
-                client.p1 = u2;
+                client.p1 = user;
             }
             core.emit(ws, { kind: "joinSuccess" });
         } else if (protocol.kind === "control") {

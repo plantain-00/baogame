@@ -54,32 +54,18 @@ export function createNPC(data: any) {
 }
 export function createUser(client: core.Client) {
     const u = services.user.create(client);
-    const place = services.map.born();
-    u.x = place.x;
-    u.y = place.y + common.constant.tileHeight / 2;
+    const {x, y} = services.map.born();
+    u.x = x;
+    u.y = y + common.constant.tileHeight / 2;
     core.game.users.push(u);
     return u;
 }
 export function getUser(uid: number) {
-    for (const user of core.game.users) {
-        if (user.id === uid) {
-            return user;
-        }
+    const user = core.game.users.find(u => u.id === uid);
+    if (user) {
+        return user;
     }
-    for (const user of core.game.bodies) {
-        if (user.id === uid) {
-            return user;
-        }
-    }
-    return undefined;
-}
-export function getClient(cid: number) {
-    for (const client of core.game.clients) {
-        if (client.id === cid) {
-            return client;
-        }
-    }
-    return undefined;
+    return core.game.bodies.find(u => u.id === uid);
 }
 export function createItem(type?: number) {
     const item = services.item.create(type!);
@@ -90,13 +76,12 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
     for (const user of core.game.users) {
         const ux = user.x;
         const uy = user.y + core.game.props.userHeight;
-        const dist = (ux - x) * (ux - x) + (uy - y) * (uy - y);
-        if (dist < power * power) {
+        const distance = (ux - x) ** 2 + (uy - y) ** 2;
+        if (distance < power * power) {
             services.user.killed(user, "bomb", byUser);
-        }
-        if (dist < 2.25 * power * power) {
+        } else if (distance < 2.25 * power * power) {
             const r = Math.atan2(uy - y, ux - x);
-            const force = 450 * power / (dist + 2500);
+            const force = 450 * power / (distance + 2500);
             user.vx += force * Math.cos(r);
             user.vy += force * Math.sin(r);
             user.danger = true;

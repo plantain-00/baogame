@@ -134,9 +134,11 @@ export function create(): Map {
 }
 export function born() {
     const i = Math.floor(Math.random() * core.map.borns.length);
-    const x = core.map.borns[i].x;
-    const y = core.map.borns[i].y;
-    return { x: (x + .5) * common.constant.tileWidth, y: y * common.constant.tileHeight };
+    const {x, y} = core.map.borns[i];
+    return {
+        x: (x + .5) * common.constant.tileWidth,
+        y: y * common.constant.tileHeight,
+    };
 }
 export function onFloor(x: number, y: number) {
     x = Math.floor(x / common.constant.tileWidth);
