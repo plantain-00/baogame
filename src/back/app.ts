@@ -19,6 +19,8 @@ app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 // services.format.start();
 
+core.init();
+
 let concount = 0;
 
 wss.on("connection", ws => {

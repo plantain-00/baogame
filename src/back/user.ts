@@ -406,9 +406,6 @@ export function scoreing(user: User) {
     if (user.score > user.client.highestKill) {
         user.client.highestKill = user.score;
     }
-    if (core.map.onKilled) {
-        core.map.onKilled(user);
-    }
 }
 export function killed(user: User, action: core.KillReason, byUser?: User) {
     if (user.dieing) { return; }
@@ -434,9 +431,6 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
         user.killer = user.lastTouch;
     }
 
-    if (core.map.onKilled) {
-        core.map.onKilled(user);
-    }
     let killer: User | undefined;
     if (user.killer && user.killer !== user.id) {
         killer = services.game.getUser(user.killer);

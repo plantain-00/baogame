@@ -8,7 +8,6 @@ export interface Map {
     floor: number[][];
     ladders: common.Ladder[];
     borns: core.Position[];
-    onKilled?: core.OnKilled;
     doors: common.Door[];
     itemGates: core.ItemGate[];
     signs: common.Sign[];

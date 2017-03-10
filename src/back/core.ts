@@ -2,20 +2,26 @@ import * as libs from "./libs";
 import * as common from "./common";
 import * as services from "./services";
 
-export const game = services.game.create("大乱斗");
-game.runningTimer = setInterval(() => {
-    services.game.update();
-}, 17);
-export const map = services.map.create();
-export const mapData: common.MapData = {
-    w: map.w,
-    h: map.h,
-    floor: map.floor.reduce((acc, f) => acc.concat(f), []),
-    ladders: map.ladders,
-    signs: map.signs,
-    doors: map.doors,
-    itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
-};
+export let game: services.game.Game;
+export let map: services.map.Map;
+export let mapData: common.MapData;
+
+export function init() {
+    game = services.game.create("大乱斗");
+    game.runningTimer = setInterval(() => {
+        services.game.update();
+    }, 17);
+    map = services.map.create();
+    mapData = {
+        w: map.w,
+        h: map.h,
+        floor: map.floor.reduce((acc, f) => acc.concat(f), []),
+        ladders: map.ladders,
+        signs: map.signs,
+        doors: map.doors,
+        itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
+    };
+}
 
 export interface Client {
     id: number;
@@ -90,9 +96,6 @@ export type MapData = {
     signs: common.Sign[]; // user move to here, then a message appears
     doors: common.Door[]; // show a door and create npc here
     itemGates: ItemGate[]; // show a gate and create item here
-    onKilled: OnKilled; // callback
 };
 
 export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
-
-export type OnKilled = (u: services.user.User) => void;
