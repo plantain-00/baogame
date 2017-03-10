@@ -3,7 +3,7 @@ import * as common from "./common";
 import * as core from "./core";
 
 export function update(door: common.Door) {
-    for (const user of core.game.users) {
+    for (const user of core.users) {
         if (user.name === "王二狗") {
             return;
         }

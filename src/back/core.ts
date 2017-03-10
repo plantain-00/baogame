@@ -5,6 +5,8 @@ import * as services from "./services";
 export let game: services.game.Game;
 export let map: services.map.Map;
 export let mapData: common.MapData;
+export const items: services.item.Item[] = [];
+export const users: services.user.User[] = [];
 
 export function init() {
     game = services.game.create("大乱斗");

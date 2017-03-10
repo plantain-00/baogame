@@ -60,7 +60,7 @@ wss.on("connection", ws => {
             core.emit(ws, outProtocol);
         } else if (protocol.kind === "join") {
             let u = 0;
-            for (const user of core.game.users) {
+            for (const user of core.users) {
                 if (!user.npc) {
                     u++;
                 }

@@ -19,7 +19,7 @@ export interface Item {
     y: number;
 }
 
-export function create(type: number): Item {
+export function create(type?: number): Item {
     if (type === undefined) {
         type = Math.floor(Math.random() * Items.length);
     }

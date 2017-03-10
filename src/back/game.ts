@@ -3,9 +3,7 @@ import * as common from "./common";
 import * as core from "./core";
 
 export interface Game {
-    users: services.user.User[];
     clients: core.Client[];
-    items: services.item.Item[];
     bodies: services.user.User[];
     mines: core.Mine[];
     entitys: services.grenade.Grenade[];
@@ -25,9 +23,7 @@ export interface Game {
 
 export function create(name: string): Game {
     const result: Game = {
-        users: [],
         clients: [],
-        items: [],
         bodies: [],
         mines: [],
         entitys: [],
@@ -49,7 +45,7 @@ export function create(name: string): Game {
 export function createNPC(data: any) {
     const u = services.user.create(data);
     u.npc = true;
-    core.game.users.push(u);
+    core.users.push(u);
     return u;
 }
 export function createUser(client: core.Client) {
@@ -57,23 +53,18 @@ export function createUser(client: core.Client) {
     const {x, y} = services.map.born();
     u.x = x;
     u.y = y + common.constant.tileHeight / 2;
-    core.game.users.push(u);
+    core.users.push(u);
     return u;
 }
 export function getUser(uid: number) {
-    const user = core.game.users.find(u => u.id === uid);
+    const user = core.users.find(u => u.id === uid);
     if (user) {
         return user;
     }
     return core.game.bodies.find(u => u.id === uid);
 }
-export function createItem(type?: number) {
-    const item = services.item.create(type!);
-    core.game.items.push(item);
-    return item;
-}
 export function explode(x: number, y: number, byUser: services.user.User, power: number) {
-    for (const user of core.game.users) {
+    for (const user of core.users) {
         const ux = user.x;
         const uy = user.y + core.game.props.userHeight;
         const distance = (ux - x) ** 2 + (uy - y) ** 2;
@@ -94,7 +85,7 @@ export function checkShot(u: services.user.User) {
     const y = u.y + core.game.props.userHeight * 2 / 3;
     const f = u.faceing;
 
-    for (const user of core.game.users) {
+    for (const user of core.users) {
         let uh = core.game.props.userHeight;
         if (user.crawl) {
             uh /= 2;
@@ -155,7 +146,7 @@ export function update() {
     core.game.tick++;
     services.map.update();
     // 物品更新
-    for (const item of core.game.items) {
+    for (const item of core.items) {
         services.item.update(item);
     }
     // 实体更新
@@ -163,16 +154,16 @@ export function update() {
         services.grenade.update(entity);
     }
     // 碰撞检测
-    for (let i = 0; i < core.game.users.length; i++) {
-        for (let j = i + 1; j < core.game.users.length; j++) {
-            userCollide(core.game.users[i], core.game.users[j]);
+    for (let i = 0; i < core.users.length; i++) {
+        for (let j = i + 1; j < core.users.length; j++) {
+            userCollide(core.users[i], core.users[j]);
         }
-        for (const item of core.game.items) {
-            eatItem(core.game.users[i], item);
+        for (const item of core.items) {
+            eatItem(core.users[i], item);
         }
     }
     // user更新
-    for (const user of core.game.users) {
+    for (const user of core.users) {
         services.user.update(user);
     }
     // 分发状态
@@ -181,10 +172,10 @@ export function update() {
     clean();
 }
 export function clean() {
-    for (let i = core.game.items.length - 1; i >= 0; i--) {
-        const item = core.game.items[i];
+    for (let i = core.items.length - 1; i >= 0; i--) {
+        const item = core.items[i];
         if (item.dead) {
-            core.game.items.splice(i, 1);
+            core.items.splice(i, 1);
         }
     }
     for (let i = core.game.mines.length - 1; i >= 0; i--) {
@@ -199,10 +190,10 @@ export function clean() {
             core.game.entitys.splice(i, 1);
         }
     }
-    for (let i = core.game.users.length - 1; i >= 0; i--) {
-        const user = core.game.users[i];
+    for (let i = core.users.length - 1; i >= 0; i--) {
+        const user = core.users[i];
         if (user.dead) {
-            core.game.users.splice(i, 1);
+            core.users.splice(i, 1);
             core.game.bodies.push(user);
             if (core.game.bodies.length > 100) {
                 core.game.bodies = core.game.bodies.slice(0, 50);
@@ -211,8 +202,8 @@ export function clean() {
     }
 }
 export function sendTick() {
-    const itemdata = core.game.items.map(item => services.item.getData(item));
-    const userdata = core.game.users.map(user => services.user.getData(user));
+    const itemdata = core.items.map(item => services.item.getData(item));
+    const userdata = core.users.map(user => services.user.getData(user));
     const entitydata = core.game.entitys.map(e => ({
         x: e.x,
         y: e.y,

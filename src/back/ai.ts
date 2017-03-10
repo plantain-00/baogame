@@ -36,7 +36,7 @@ export function playerAI(user: services.user.User) {
             }
         } else if (user.carry === 2) {
             let find = false;
-            for (const other of core.game.users) {
+            for (const other of core.users) {
                 if (user === other || other.dieing) { continue; }
                 if (Math.abs(other.y - user.y) < 10 && other.carry !== common.items.hide.id) {
                     if (user.facing && other.x < user.x || !user.facing && other.x > user.x) {
