@@ -28,7 +28,7 @@ export function create(creater: services.user.User) {
 export function update(grenade: Grenade) {
     grenade.x += grenade.vx;
     grenade.r += grenade.vx / 5;
-    if (grenade.x < 0 || grenade.x > core.currentGame.props.w) {
+    if (grenade.x < 0 || grenade.x > core.game.props.w) {
         grenade.vx *= -1;
     }
 

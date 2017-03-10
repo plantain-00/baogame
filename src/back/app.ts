@@ -35,9 +35,9 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = core.currentGame.bodies.map(body => services.user.getData(body));
+    const bodiesData = core.game.bodies.map(body => services.user.getData(body));
 
-    core.currentGame.clients.push(client);
+    core.game.clients.push(client);
 
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
@@ -50,15 +50,15 @@ wss.on("connection", ws => {
             const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
-                    props: core.currentGame.props,
-                    map: core.currentMapData,
+                    props: core.game.props,
+                    map: core.mapData,
                     bodies: bodiesData,
                 },
             };
             core.emit(ws, outProtocol);
         } else if (protocol.kind === "join") {
             let u = 0;
-            for (const user of core.currentGame.users) {
+            for (const user of core.game.users) {
                 if (!user.npc) {
                     u++;
                 }

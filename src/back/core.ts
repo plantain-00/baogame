@@ -2,19 +2,19 @@ import * as libs from "./libs";
 import * as common from "./common";
 import * as services from "./services";
 
-export const currentGame = services.game.create("大乱斗");
-currentGame.runningTimer = setInterval(() => {
+export const game = services.game.create("大乱斗");
+game.runningTimer = setInterval(() => {
     services.game.update();
 }, 17);
-export const currentMap = services.map.create();
-export const currentMapData: common.MapData = {
-    w: currentMap.w,
-    h: currentMap.h,
-    floor: currentMap.floor.reduce((acc, f) => acc.concat(f), []),
-    ladders: currentMap.ladders,
-    signs: currentMap.signs,
-    doors: currentMap.doors,
-    itemGates: currentMap.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
+export const map = services.map.create();
+export const mapData: common.MapData = {
+    w: map.w,
+    h: map.h,
+    floor: map.floor.reduce((acc, f) => acc.concat(f), []),
+    ladders: map.ladders,
+    signs: map.signs,
+    doors: map.doors,
+    itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
 };
 
 export interface Client {

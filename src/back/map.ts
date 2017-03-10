@@ -15,8 +15,8 @@ export interface Map {
 };
 
 export function create(): Map {
-    const w = core.currentGame.props.tw;
-    const h = core.currentGame.props.th;
+    const w = core.game.props.tw;
+    const h = core.game.props.th;
     const floor: number[][] = [];
     const ladders: common.Ladder[] = [];
 
@@ -103,14 +103,14 @@ export function create(): Map {
 
     const borns: core.Position[] = [];
     for (let i = 0; i < 20; i++) {
-        const x = Math.floor(Math.random() * (core.currentGame.props.tw - 2)) + 1;
-        const y = Math.floor(Math.random() * (core.currentGame.props.th - 2)) + 1;
+        const x = Math.floor(Math.random() * (core.game.props.tw - 2)) + 1;
+        const y = Math.floor(Math.random() * (core.game.props.th - 2)) + 1;
         if (floor[y][x]) {
             borns.push({ x, y });
         }
     }
     for (const f of floor) {
-        for (let i = 0; i < core.currentGame.props.tw; i++) {
+        for (let i = 0; i < core.game.props.tw; i++) {
             if (f[i] !== 0 && f[i] !== 1) {
                 f[i] = 0;
             }
@@ -118,13 +118,13 @@ export function create(): Map {
     }
 
     const itemGates: core.ItemGate[] = [];
-    itemGates.push({ x: 0, y: core.currentGame.props.th / 2 });
-    itemGates.push({ x: core.currentGame.props.tw - 1, y: core.currentGame.props.th / 2 });
-    itemGates.push({ x: core.currentGame.props.tw / 2, y: core.currentGame.props.th - 1 });
+    itemGates.push({ x: 0, y: core.game.props.th / 2 });
+    itemGates.push({ x: core.game.props.tw - 1, y: core.game.props.th / 2 });
+    itemGates.push({ x: core.game.props.tw / 2, y: core.game.props.th - 1 });
 
     return {
-        w: core.currentGame.props.tw,
-        h: core.currentGame.props.th,
+        w: core.game.props.tw,
+        h: core.game.props.th,
         floor,
         ladders,
         borns,
@@ -134,24 +134,24 @@ export function create(): Map {
     };
 }
 export function born() {
-    const i = Math.floor(Math.random() * core.currentMap.borns.length);
-    const x = core.currentMap.borns[i].x;
-    const y = core.currentMap.borns[i].y;
+    const i = Math.floor(Math.random() * core.map.borns.length);
+    const x = core.map.borns[i].x;
+    const y = core.map.borns[i].y;
     return { x: (x + .5) * common.constant.tileWidth, y: y * common.constant.tileHeight };
 }
 export function onFloor(x: number, y: number) {
     x = Math.floor(x / common.constant.tileWidth);
     if (y % common.constant.tileHeight !== 0) { return false; }
     y = y / common.constant.tileHeight;
-    if (x < 0 || y < 0 || x >= core.currentMap.w || y >= core.currentMap.h || !core.currentMap.floor[y]) { return false; }
-    return core.currentMap.floor[y][x];
+    if (x < 0 || y < 0 || x >= core.map.w || y >= core.map.h || !core.map.floor[y]) { return false; }
+    return core.map.floor[y][x];
 }
 export function nearLadder(u: services.user.User) {
     if (onFloor(u.x, u.y) === false) { return false; }
     if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) { return false; }
     const x = u.x;
     const y = u.y;
-    for (const ladder of core.currentMap.ladders) {
+    for (const ladder of core.map.ladders) {
         if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
             return ladder;
         }
@@ -159,7 +159,7 @@ export function nearLadder(u: services.user.User) {
     return false;
 }
 export function onLadder(x: number, y: number) {
-    for (const ladder of core.currentMap.ladders) {
+    for (const ladder of core.map.ladders) {
         if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
             return true;
         }
@@ -167,10 +167,10 @@ export function onLadder(x: number, y: number) {
     return false;
 }
 export function update() {
-    for (const door of core.currentMap.doors) {
+    for (const door of core.map.doors) {
         services.door.update(door);
     }
-    for (const itemGate of core.currentMap.itemGates) {
+    for (const itemGate of core.map.itemGates) {
         services.itemGate.update(itemGate);
     }
 }

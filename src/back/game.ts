@@ -49,7 +49,7 @@ export function create(name: string): Game {
 export function createNPC(data: any) {
     const u = services.user.create(data);
     u.npc = true;
-    core.currentGame.users.push(u);
+    core.game.users.push(u);
     return u;
 }
 export function createUser(client: core.Client) {
@@ -57,16 +57,16 @@ export function createUser(client: core.Client) {
     const place = services.map.born();
     u.x = place.x;
     u.y = place.y + common.constant.tileHeight / 2;
-    core.currentGame.users.push(u);
+    core.game.users.push(u);
     return u;
 }
 export function getUser(uid: number) {
-    for (const user of core.currentGame.users) {
+    for (const user of core.game.users) {
         if (user.id === uid) {
             return user;
         }
     }
-    for (const user of core.currentGame.bodies) {
+    for (const user of core.game.bodies) {
         if (user.id === uid) {
             return user;
         }
@@ -74,7 +74,7 @@ export function getUser(uid: number) {
     return undefined;
 }
 export function getClient(cid: number) {
-    for (const client of core.currentGame.clients) {
+    for (const client of core.game.clients) {
         if (client.id === cid) {
             return client;
         }
@@ -83,13 +83,13 @@ export function getClient(cid: number) {
 }
 export function createItem(type?: number) {
     const item = services.item.create(type!);
-    core.currentGame.items.push(item);
+    core.game.items.push(item);
     return item;
 }
 export function explode(x: number, y: number, byUser: services.user.User, power: number) {
-    for (const user of core.currentGame.users) {
+    for (const user of core.game.users) {
         const ux = user.x;
-        const uy = user.y + core.currentGame.props.userHeight;
+        const uy = user.y + core.game.props.userHeight;
         const dist = (ux - x) * (ux - x) + (uy - y) * (uy - y);
         if (dist < power * power) {
             services.user.killed(user, "bomb", byUser);
@@ -106,11 +106,11 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
 }
 export function checkShot(u: services.user.User) {
     const x = u.x;
-    const y = u.y + core.currentGame.props.userHeight * 2 / 3;
+    const y = u.y + core.game.props.userHeight * 2 / 3;
     const f = u.faceing;
 
-    for (const user of core.currentGame.users) {
-        let uh = core.currentGame.props.userHeight;
+    for (const user of core.game.users) {
+        let uh = core.game.props.userHeight;
         if (user.crawl) {
             uh /= 2;
         }
@@ -128,7 +128,7 @@ export function checkShot(u: services.user.User) {
 export function addMine(user: services.user.User) {
     const x = user.x + user.faceing * 40;
     if (services.map.onFloor(x, user.y)) {
-        core.currentGame.mines.push({
+        core.game.mines.push({
             x,
             y: user.y,
             creater: user,
@@ -138,8 +138,8 @@ export function addMine(user: services.user.User) {
     return false;
 }
 export function checkMine(user: services.user.User) {
-    for (let i = core.currentGame.mines.length - 1; i >= 0; i--) {
-        const mine = core.currentGame.mines[i];
+    for (let i = core.game.mines.length - 1; i >= 0; i--) {
+        const mine = core.game.mines[i];
         if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {
             services.user.killed(user, "mine", mine.creater);
             mine.dead = true;
@@ -149,45 +149,45 @@ export function checkMine(user: services.user.User) {
     return false;
 }
 export function removeClient(id: number) {
-    for (let i = 0; i < core.currentGame.clients.length; i++) {
-        if (core.currentGame.clients[i].id === id) {
-            const client = core.currentGame.clients[i];
+    for (let i = 0; i < core.game.clients.length; i++) {
+        if (core.game.clients[i].id === id) {
+            const client = core.game.clients[i];
             client.leaveTime = new Date().getTime();
             console.log("User <" + client.name + "> "
                 + " [" + client.joinTime + ":" + client.leaveTime + ":" + Math.floor((client.joinTime - client.leaveTime) / 60) + "]"
                 + " [" + client.kill + "," + client.death + "," + client.highestKill + "]");
-            core.currentGame.clients.splice(i, 1);
+            core.game.clients.splice(i, 1);
             return;
         }
     }
 }
 export function announce(protocol: common.Protocol) {
-    for (const client of core.currentGame.clients) {
+    for (const client of core.game.clients) {
         core.emit(client.ws, protocol);
     }
 }
 export function update() {
-    core.currentGame.tick++;
+    core.game.tick++;
     services.map.update();
     // 物品更新
-    for (const item of core.currentGame.items) {
+    for (const item of core.game.items) {
         services.item.update(item);
     }
     // 实体更新
-    for (const entity of core.currentGame.entitys) {
+    for (const entity of core.game.entitys) {
         services.grenade.update(entity);
     }
     // 碰撞检测
-    for (let i = 0; i < core.currentGame.users.length; i++) {
-        for (let j = i + 1; j < core.currentGame.users.length; j++) {
-            userCollide(core.currentGame.users[i], core.currentGame.users[j]);
+    for (let i = 0; i < core.game.users.length; i++) {
+        for (let j = i + 1; j < core.game.users.length; j++) {
+            userCollide(core.game.users[i], core.game.users[j]);
         }
-        for (const item of core.currentGame.items) {
-            eatItem(core.currentGame.users[i], item);
+        for (const item of core.game.items) {
+            eatItem(core.game.users[i], item);
         }
     }
     // user更新
-    for (const user of core.currentGame.users) {
+    for (const user of core.game.users) {
         services.user.update(user);
     }
     // 分发状态
@@ -196,46 +196,46 @@ export function update() {
     clean();
 }
 export function clean() {
-    for (let i = core.currentGame.items.length - 1; i >= 0; i--) {
-        const item = core.currentGame.items[i];
+    for (let i = core.game.items.length - 1; i >= 0; i--) {
+        const item = core.game.items[i];
         if (item.dead) {
-            core.currentGame.items.splice(i, 1);
+            core.game.items.splice(i, 1);
         }
     }
-    for (let i = core.currentGame.mines.length - 1; i >= 0; i--) {
-        const mine = core.currentGame.mines[i];
+    for (let i = core.game.mines.length - 1; i >= 0; i--) {
+        const mine = core.game.mines[i];
         if (mine.dead) {
-            core.currentGame.mines.splice(i, 1);
+            core.game.mines.splice(i, 1);
         }
     }
-    for (let i = core.currentGame.entitys.length - 1; i >= 0; i--) {
-        const entity = core.currentGame.entitys[i];
+    for (let i = core.game.entitys.length - 1; i >= 0; i--) {
+        const entity = core.game.entitys[i];
         if (entity.dead) {
-            core.currentGame.entitys.splice(i, 1);
+            core.game.entitys.splice(i, 1);
         }
     }
-    for (let i = core.currentGame.users.length - 1; i >= 0; i--) {
-        const user = core.currentGame.users[i];
+    for (let i = core.game.users.length - 1; i >= 0; i--) {
+        const user = core.game.users[i];
         if (user.dead) {
-            core.currentGame.users.splice(i, 1);
-            core.currentGame.bodies.push(user);
-            if (core.currentGame.bodies.length > 100) {
-                core.currentGame.bodies = core.currentGame.bodies.slice(0, 50);
+            core.game.users.splice(i, 1);
+            core.game.bodies.push(user);
+            if (core.game.bodies.length > 100) {
+                core.game.bodies = core.game.bodies.slice(0, 50);
             }
         }
     }
 }
 export function sendTick() {
-    const itemdata = core.currentGame.items.map(item => services.item.getData(item));
-    const userdata = core.currentGame.users.map(user => services.user.getData(user));
-    const entitydata = core.currentGame.entitys.map(e => ({
+    const itemdata = core.game.items.map(item => services.item.getData(item));
+    const userdata = core.game.users.map(user => services.user.getData(user));
+    const entitydata = core.game.entitys.map(e => ({
         x: e.x,
         y: e.y,
         r: e.r,
     }));
-    for (const client of core.currentGame.clients) {
+    for (const client of core.game.clients) {
         const p1 = client.p1 && client.p1.id;
-        const minedata: common.Mine[] = core.currentGame.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
+        const minedata: common.Mine[] = core.game.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
             x: mine.x,
             y: mine.y,
             dead: mine.dead!,
@@ -257,7 +257,7 @@ export function userCollide(a: services.user.User, b: services.user.User) {
     if (a.dead || b.dead) {
         return;
     }
-    if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > core.currentGame.props.userWidth * core.currentGame.props.userWidth) {
+    if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > core.game.props.userWidth * core.game.props.userWidth) {
         return;
     }
 
@@ -378,8 +378,8 @@ export function userCollide(a: services.user.User, b: services.user.User) {
 export function eatItem(a: services.user.User, b: services.item.Item) {
     if (a.dead || b.dead) { return; }
     if (a.carry === common.items.bomb.id) { return; }
-    if ((a.x - b.x) * (a.x - b.x) + (a.y + core.currentGame.props.userHeight / 2 - b.y) * (a.y + core.currentGame.props.userHeight / 2 - b.y) >
-        (core.currentGame.props.userWidth + common.constant.itemSize) * (core.currentGame.props.userWidth + common.constant.itemSize) / 4) {
+    if ((a.x - b.x) * (a.x - b.x) + (a.y + core.game.props.userHeight / 2 - b.y) * (a.y + core.game.props.userHeight / 2 - b.y) >
+        (core.game.props.userWidth + common.constant.itemSize) * (core.game.props.userWidth + common.constant.itemSize) / 4) {
         return;
     }
     services.item.touchUser(b, a);

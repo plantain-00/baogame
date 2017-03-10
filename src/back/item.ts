@@ -38,11 +38,11 @@ export function create(type: number): Item {
 
 export function update(item: Item) {
     item.slowdown++;
-    if (item.x >= core.currentGame.props.w - core.currentGame.props.itemSize || item.x <= core.currentGame.props.itemSize) {
+    if (item.x >= core.game.props.w - core.game.props.itemSize || item.x <= core.game.props.itemSize) {
         item.vx *= -1;
     }
 
-    if (item.y >= core.currentGame.props.h - core.currentGame.props.itemSize || item.y <= core.currentGame.props.itemSize) {
+    if (item.y >= core.game.props.h - core.game.props.itemSize || item.y <= core.game.props.itemSize) {
         item.vy *= -1;
     }
     item.lifetime--;
