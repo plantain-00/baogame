@@ -1,9 +1,10 @@
 import * as services from "./services";
 import * as common from "./common";
+import * as core from "./core";
 
-export function update(data: services.ItemGate) {
+export function update(data: core.ItemGate) {
     if (data.itemType !== undefined) {
-        if ((services.currentGame.tick + 120) % 150 === 0 && (!data.targetItem || data.targetItem.dead)) {
+        if ((core.currentGame.tick + 120) % 150 === 0 && (!data.targetItem || data.targetItem.dead)) {
             const item = services.game.createItem(data.itemType);
             item.x = (data.x + .5) * common.constant.tileWidth;
             item.y = (data.y + .5) * common.constant.tileHeight;
@@ -13,7 +14,7 @@ export function update(data: services.ItemGate) {
         }
     } else {
         // 生成物品（如果需要）
-        if (services.currentGame.items.length < services.currentGame.users.length && Math.random() * 100 < services.currentGame.users.length) {
+        if (core.currentGame.items.length < core.currentGame.users.length && Math.random() * 100 < core.currentGame.users.length) {
             const item = services.game.createItem();
             item.x = (data.x + .5) * common.constant.tileWidth;
             item.y = (data.y + .5) * common.constant.tileHeight;
@@ -21,7 +22,7 @@ export function update(data: services.ItemGate) {
     }
 }
 
-export function getData(data: services.ItemGate): common.ItemGate {
+export function getData(data: core.ItemGate): common.ItemGate {
     return {
         x: data.x,
         y: data.y,

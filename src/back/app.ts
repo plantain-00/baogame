@@ -1,6 +1,7 @@
 import * as libs from "./libs";
 import * as common from "./common";
 import * as services from "./services";
+import * as core from "./core";
 
 const app = libs.express();
 const server = libs.http.createServer(app);
@@ -22,7 +23,7 @@ let concount = 0;
 
 wss.on("connection", ws => {
     const ip = ws.upgradeReq.connection.remoteAddress;
-    const client: services.Client = {
+    const client: core.Client = {
         id: concount++,
         p1: null,
         name: "无名小卒",
@@ -34,9 +35,9 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = services.currentGame.bodies.map(body => services.user.getData(body));
+    const bodiesData = core.currentGame.bodies.map(body => services.user.getData(body));
 
-    services.currentGame.clients.push(client);
+    core.currentGame.clients.push(client);
 
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
@@ -49,15 +50,15 @@ wss.on("connection", ws => {
             const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
-                    props: services.currentGame.props,
-                    map: services.currentMapData,
+                    props: core.currentGame.props,
+                    map: core.currentMapData,
                     bodies: bodiesData,
                 },
             };
-            services.emit(ws, outProtocol);
+            core.emit(ws, outProtocol);
         } else if (protocol.kind === "join") {
             let u = 0;
-            for (const user of services.currentGame.users) {
+            for (const user of core.currentGame.users) {
                 if (!user.npc) {
                     u++;
                 }
@@ -68,7 +69,7 @@ wss.on("connection", ws => {
             if (protocol.join.p1) {
                 client.p1 = u2;
             }
-            services.emit(ws, { kind: "joinSuccess" });
+            core.emit(ws, { kind: "joinSuccess" });
         } else if (protocol.kind === "control") {
             if (client.p1 && protocol.control) {
                 client.p1.leftDown = protocol.control.leftDown;

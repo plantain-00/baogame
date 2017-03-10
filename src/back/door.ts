@@ -1,8 +1,9 @@
 import * as services from "./services";
 import * as common from "./common";
+import * as core from "./core";
 
 export function update(door: common.Door) {
-    for (const user of services.currentGame.users) {
+    for (const user of core.currentGame.users) {
         if (user.name === "王二狗") {
             return;
         }

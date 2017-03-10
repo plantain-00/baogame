@@ -1,5 +1,6 @@
 import * as services from "./services";
 import * as common from "./common";
+import * as core from "./core";
 
 const Items: Item[] = [];
 for (const key in common.items) {
@@ -37,11 +38,11 @@ export function create(type: number): Item {
 
 export function update(item: Item) {
     item.slowdown++;
-    if (item.x >= services.currentGame.props.w - services.currentGame.props.itemSize || item.x <= services.currentGame.props.itemSize) {
+    if (item.x >= core.currentGame.props.w - core.currentGame.props.itemSize || item.x <= core.currentGame.props.itemSize) {
         item.vx *= -1;
     }
 
-    if (item.y >= services.currentGame.props.h - services.currentGame.props.itemSize || item.y <= services.currentGame.props.itemSize) {
+    if (item.y >= core.currentGame.props.h - core.currentGame.props.itemSize || item.y <= core.currentGame.props.itemSize) {
         item.vy *= -1;
     }
     item.lifetime--;
