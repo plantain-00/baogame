@@ -42,25 +42,7 @@ wss.on("connection", ws => {
             core.emit(ws, { kind: "joinSuccess" });
         } else if (protocol.kind === "control") {
             if (user && protocol.control) {
-                user.leftDown = protocol.control.leftDown;
-                user.rightDown = protocol.control.rightDown;
-                user.upDown = protocol.control.upDown;
-                user.downDown = protocol.control.downDown;
-                user.itemDown = protocol.control.itemDown;
-                user.leftPress = protocol.control.leftPress;
-                user.rightPress = protocol.control.rightPress;
-                user.upPress = protocol.control.upPress;
-                user.downPress = protocol.control.downPress;
-                user.itemPress = protocol.control.itemPress;
-            }
-        }
-    });
-
-    ws.on("close", () => {
-        if (user) {
-            const index = core.users.findIndex(u => u.id === user!.id);
-            if (index > -1) {
-                core.users.splice(index, 1);
+                user.control = protocol.control;
             }
         }
     });

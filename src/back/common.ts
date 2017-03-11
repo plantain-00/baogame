@@ -157,20 +157,22 @@ export type JoinSuccessProtocol = {
     kind: "joinSuccess";
 };
 
+export type Control = {
+    leftDown: number;
+    rightDown: number;
+    upDown: number;
+    downDown: number;
+    itemDown: number;
+    leftPress: boolean;
+    rightPress: boolean;
+    upPress: boolean;
+    downPress: boolean;
+    itemPress: boolean;
+};
+
 export type ControlProtocol = {
     kind: "control";
-    control: {
-        leftDown: number;
-        rightDown: number;
-        upDown: number;
-        downDown: number;
-        itemDown: number;
-        leftPress: boolean;
-        rightPress: boolean;
-        upPress: boolean;
-        downPress: boolean;
-        itemPress: boolean;
-    };
+    control: Control;
 };
 
 export type ExplodeProtocol = {

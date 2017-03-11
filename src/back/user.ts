@@ -31,24 +31,15 @@ export interface User {
     canDoubleJump: boolean;
     lastTouch: number | null;
     rollPoint: number;
-    downDown: number;
     ladder: common.Ladder | undefined;
-    itemPress: boolean;
     doubleJumping: boolean;
     flying: number;
     status: common.userStatus;
     npc: boolean;
     AI: string;
-    itemDown: number;
     r: number;
     vr: number;
-    leftPress: boolean;
-    rightPress: boolean;
-    upPress: boolean;
-    downPress: boolean;
-    leftDown: number;
-    rightDown: number;
-    upDown: number;
+    control: common.Control;
     flypackActive: boolean;
     killer: number | null;
     killedBy: core.KillReason | undefined;
@@ -85,24 +76,27 @@ export function create(name: string, ws?: libs.WebSocket): User {
         canDoubleJump: false,
         lastTouch: null,
         rollPoint: 0,
-        downDown: 0,
+        control: {
+            leftDown: 0,
+            rightDown: 0,
+            upDown: 0,
+            downDown: 0,
+            itemDown: 0,
+            leftPress: false,
+            rightPress: false,
+            upPress: false,
+            downPress: false,
+            itemPress: false,
+        },
         ladder: undefined,
-        itemPress: false,
+
         doubleJumping: false,
         flying: 0,
         status: "standing",
         npc: false,
         AI: "",
-        itemDown: 0,
         r: 0,
         vr: 0,
-        leftPress: false,
-        rightPress: false,
-        upPress: false,
-        downPress: false,
-        leftDown: 0,
-        rightDown: 0,
-        upDown: 0,
         flypackActive: false,
         killer: null,
         killedBy: undefined,
@@ -169,14 +163,14 @@ export function getStatus(user: User): common.userStatus {
                     return "mining";
                 }
             }
-            if ((user.upDown || user.downDown) && user.nearLadder) {
+            if ((user.control.upDown || user.control.downDown) && user.nearLadder) {
                 user.onLadder = true;
                 user.onFloor = false;
                 user.vx = 0;
                 user.ladder = user.nearLadder;
                 user.x = user.ladder.x * common.constant.tileWidth;
                 return "climbing";
-            } else if (user.downDown) {
+            } else if (user.control.downDown) {
                 user.crawl = true;
                 if (Math.abs(user.vx) < .2) {
                     return "crawling";
@@ -187,7 +181,7 @@ export function getStatus(user: User): common.userStatus {
                     if (user.vx < 0) { user.vx -= 2; }
                     return "rolling2";
                 }
-            } else if (user.itemPress && user.vx === 0 && user.carry === common.items.mine.id && user.carryCount > 0) {
+            } else if (user.control.itemPress && user.vx === 0 && user.carry === common.items.mine.id && user.carryCount > 0) {
                 user.mining = 20;
                 return "mining";
             } else {
@@ -236,7 +230,7 @@ export function update(user: User) {
                 }
                 services.game.checkShot(user);
             }
-        } else if (user.itemPress && user.carry === common.items.gun.id && user.carryCount > 0) {
+        } else if (user.control.itemPress && user.carry === common.items.gun.id && user.carryCount > 0) {
             user.fireing = 25;
         }
     } else {
@@ -245,17 +239,17 @@ export function update(user: User) {
 
     if (user.status === "falling" || user.status === "standing" || user.status === "climbing" || user.status === "crawling") {
         // grenade
-        if (user.grenadeing > 0 && user.itemDown) {
+        if (user.grenadeing > 0 && user.control.itemDown) {
             user.grenadeing++;
             user.grenadeing = Math.min(25, user.grenadeing);
-        } else if (user.grenadeing > 0 && !user.itemDown) {
+        } else if (user.grenadeing > 0 && !user.control.itemDown) {
             throwGrenade(user);
             user.grenadeing = 0;
             user.carryCount--;
             if (user.carryCount === 0) {
                 user.carry = 0;
             }
-        } else if (user.grenadeing === 0 && user.itemPress && user.carry === common.items.grenade.id && user.carryCount > 0) {
+        } else if (user.grenadeing === 0 && user.control.itemPress && user.carry === common.items.grenade.id && user.carryCount > 0) {
             user.grenadeing = 1;
         }
     } else {
@@ -270,19 +264,19 @@ export function update(user: User) {
         user.vr *= .96;
     }
     if (user.status === "climbing") {
-        if (user.upDown && !user.downDown && user.y < user.ladder!.y2 * common.constant.tileHeight - core.game.props.userHeight) {
+        if (user.control.upDown && !user.control.downDown && user.y < user.ladder!.y2 * common.constant.tileHeight - core.game.props.userHeight) {
             user.y += 3;
-        } else if (user.downDown && !user.upDown && user.y > user.ladder!.y1 * common.constant.tileHeight + 3) {
+        } else if (user.control.downDown && !user.control.upDown && user.y > user.ladder!.y1 * common.constant.tileHeight + 3) {
             user.y -= 3;
         }
-        if (user.leftPress) {
+        if (user.control.leftPress) {
             if (user.faceing !== -1) {
                 user.faceing = -1;
             } else {
                 user.vx = -2;
                 user.onLadder = false;
             }
-        } else if (user.rightPress) {
+        } else if (user.control.rightPress) {
             if (user.faceing !== 1) {
                 user.faceing = 1;
             } else {
@@ -291,7 +285,7 @@ export function update(user: User) {
             }
         }
     } else if (user.status === "standing") {
-        if (user.leftDown && !user.rightDown) {
+        if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
                 if (user.carry === common.items.power.id) {
                     user.vx = -.4;
@@ -306,8 +300,8 @@ export function update(user: User) {
                 }
             }
             user.faceing = -1;
-            user.vx = Math.max(user.vx, -4, -user.leftDown / 20);
-        } else if (!user.leftDown && user.rightDown) {
+            user.vx = Math.max(user.vx, -4, -user.control.leftDown / 20);
+        } else if (!user.control.leftDown && user.control.rightDown) {
             if (user.vx < 0) {
                 if (user.carry === common.items.power.id) {
                     user.vx = .4;
@@ -322,11 +316,11 @@ export function update(user: User) {
                 }
             }
             user.faceing = 1;
-            user.vx = Math.min(user.vx, 4, user.rightDown / 20);
+            user.vx = Math.min(user.vx, 4, user.control.rightDown / 20);
         } else {
             user.vx = 0;
         }
-        if (user.upDown > 60 && !user.downDown) {
+        if (user.control.upDown > 60 && !user.control.downDown) {
             user.vy = 5;
             user.flypackActive = false;
         } else {
@@ -337,31 +331,31 @@ export function update(user: User) {
     } else if (user.status === "rolling") {
         user.vx *= .9;
     } else if (user.status === "falling") {
-        if (user.upPress && user.canDoubleJump) {
+        if (user.control.upPress && user.canDoubleJump) {
             user.doubleJumping = true;
             user.canDoubleJump = false;
             user.vy = 5;
         }
-        if (user.upPress && user.carry === common.items.flypack.id) {
+        if (user.control.upPress && user.carry === common.items.flypack.id) {
             user.flypackActive = true;
         }
-        if (user.upDown && user.carry === common.items.flypack.id && user.carryCount > 0 && user.flypackActive) {
+        if (user.control.upDown && user.carry === common.items.flypack.id && user.carryCount > 0 && user.flypackActive) {
             user.vy += .3;
             user.flying += 1;
             user.carryCount--;
         }
-        if (user.leftPress && user.faceing === 1) {
+        if (user.control.leftPress && user.faceing === 1) {
             user.faceing = -1;
         }
-        if (user.rightPress && user.faceing === -1) {
+        if (user.control.rightPress && user.faceing === -1) {
             user.faceing = 1;
         }
-        if (user.leftDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
+        if (user.control.leftDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
             user.vx -= .15;
             user.flying += 2;
             user.carryCount -= .2;
         }
-        if (user.rightDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
+        if (user.control.rightDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
             user.vx += .15;
             user.flying += 4;
             user.carryCount -= .2;

@@ -18,20 +18,20 @@ export function playerAI(user: services.user.User) {
             if (user.goleft || !user.goright) {
                 user.goleft = true;
                 if (userCanGoLeft(user)) {
-                    user.leftDown = 200;
+                    user.control.leftDown = 200;
                 } else {
                     user.goleft = false;
                     user.goright = true;
-                    user.leftDown = 0;
+                    user.control.leftDown = 0;
                 }
             }
             if (user.goright) {
                 if (userCanGoRight(user)) {
-                    user.rightDown = 200;
+                    user.control.rightDown = 200;
                 } else {
                     user.goleft = true;
                     user.goright = false;
-                    user.rightDown = 0;
+                    user.control.rightDown = 0;
                 }
             }
         } else if (user.carry === 2) {
@@ -45,7 +45,7 @@ export function playerAI(user: services.user.User) {
                     }
                 }
             }
-            user.itemPress = find;
+            user.control.itemPress = find;
         }
     }
 }
