@@ -107,7 +107,7 @@ export function create(name: string, ws?: libs.WebSocket): User {
     };
 }
 export function throwGrenade(user: User) {
-    const g = services.grenade.create(user);
+    const grenade = services.grenade.create(user);
     const vx = user.faceing * (15 + user.grenadeing) / 5;
     let vy = user.grenadeing / 3;
 
@@ -115,12 +115,12 @@ export function throwGrenade(user: User) {
         vy = 0;
     }
 
-    g.x = user.x - user.faceing * 20;
-    g.y = user.y + core.game.props.userHeight;
-    g.vx = user.vx + vx;
-    g.vy = user.vy + vy;
+    grenade.x = user.x - user.faceing * 20;
+    grenade.y = user.y + core.game.props.userHeight;
+    grenade.vx = user.vx + vx;
+    grenade.vy = user.vy + vy;
 
-    core.game.entitys.push(g);
+    core.grenades.push(grenade);
 }
 export function getStatus(user: User): common.userStatus {
     user.crawl = false;

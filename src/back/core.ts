@@ -7,10 +7,12 @@ export let map: services.map.Map;
 export let mapData: common.MapData;
 export const items: services.item.Item[] = [];
 export const users: services.user.User[] = [];
+export const grenades: services.grenade.Grenade[] = [];
+export const mines: Mine[] = [];
 
 export function init() {
     game = services.game.create("大乱斗");
-    game.runningTimer = setInterval(() => {
+    setInterval(() => {
         services.game.update();
     }, 17);
     map = services.map.create();

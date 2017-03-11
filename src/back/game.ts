@@ -4,8 +4,6 @@ import * as core from "./core";
 import * as libs from "./libs";
 
 export interface Game {
-    mines: core.Mine[];
-    entitys: services.grenade.Grenade[];
     tick: number;
     props: {
         userHeight: number;
@@ -16,14 +14,11 @@ export interface Game {
         w: number;
         h: number;
     };
-    runningTimer?: NodeJS.Timer;
     name?: string;
 }
 
 export function create(name: string): Game {
     const result: Game = {
-        mines: [],
-        entitys: [],
         tick: 0,
         props: {
             userHeight: 40,
@@ -92,7 +87,7 @@ export function checkShot(u: services.user.User) {
 export function addMine(user: services.user.User) {
     const x = user.x + user.faceing * 40;
     if (services.map.onFloor(x, user.y)) {
-        core.game.mines.push({
+        core.mines.push({
             x,
             y: user.y,
             creater: user,
@@ -102,8 +97,8 @@ export function addMine(user: services.user.User) {
     return false;
 }
 export function checkMine(user: services.user.User) {
-    for (let i = core.game.mines.length - 1; i >= 0; i--) {
-        const mine = core.game.mines[i];
+    for (let i = core.mines.length - 1; i >= 0; i--) {
+        const mine = core.mines[i];
         if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {
             services.user.killed(user, "mine", mine.creater);
             mine.dead = true;
@@ -127,8 +122,8 @@ export function update() {
         services.item.update(item);
     }
     // 实体更新
-    for (const entity of core.game.entitys) {
-        services.grenade.update(entity);
+    for (const grenade of core.grenades) {
+        services.grenade.update(grenade);
     }
     // 碰撞检测
     for (let i = 0; i < core.users.length; i++) {
@@ -155,16 +150,16 @@ export function clean() {
             core.items.splice(i, 1);
         }
     }
-    for (let i = core.game.mines.length - 1; i >= 0; i--) {
-        const mine = core.game.mines[i];
+    for (let i = core.mines.length - 1; i >= 0; i--) {
+        const mine = core.mines[i];
         if (mine.dead) {
-            core.game.mines.splice(i, 1);
+            core.mines.splice(i, 1);
         }
     }
-    for (let i = core.game.entitys.length - 1; i >= 0; i--) {
-        const entity = core.game.entitys[i];
-        if (entity.dead) {
-            core.game.entitys.splice(i, 1);
+    for (let i = core.grenades.length - 1; i >= 0; i--) {
+        const grenade = core.grenades[i];
+        if (grenade.dead) {
+            core.grenades.splice(i, 1);
         }
     }
     for (let i = core.users.length - 1; i >= 0; i--) {
@@ -177,14 +172,14 @@ export function clean() {
 export function sendTick() {
     const itemdata = core.items.map(item => services.item.getData(item));
     const userdata = core.users.map(user => services.user.getData(user));
-    const entitydata = core.game.entitys.map(e => ({
+    const entitydata = core.grenades.map(e => ({
         x: e.x,
         y: e.y,
         r: e.r,
     }));
     for (const user of core.users) {
         if (user.ws) {
-            const minedata: common.Mine[] = core.game.mines.filter(mine => mine.creater.id === user.id || mine.dead).map(mine => ({
+            const minedata: common.Mine[] = core.mines.filter(mine => mine.creater.id === user.id || mine.dead).map(mine => ({
                 x: mine.x,
                 y: mine.y,
                 dead: mine.dead!,
