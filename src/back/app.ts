@@ -21,17 +21,7 @@ app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
 core.init();
 
-let concount = 0;
-
 wss.on("connection", ws => {
-    const client: core.Client = {
-        id: concount++,
-        p1: null,
-        ws,
-    };
-
-    core.game.clients.push(client);
-
     const outProtocol: common.Protocol = {
         kind: "initSuccess",
         initSuccess: {
@@ -40,41 +30,38 @@ wss.on("connection", ws => {
         },
     };
     core.emit(ws, outProtocol);
+    let user: services.user.User | undefined;
 
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
         const protocol: common.Protocol = JSON.parse(message);
 
         if (protocol.kind === "join") {
-            let u = 0;
-            for (const user of core.users) {
-                if (!user.npc) {
-                    u++;
-                }
-            }
-            if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
-            const user = services.game.createUser(client, protocol.join.userName.replace(/[<>]/g, "").substring(0, 8));
-            if (protocol.join.p1) {
-                client.p1 = user;
-            }
+            user = services.game.createUser(protocol.join.userName.replace(/[<>]/g, "").substring(0, 8), ws);
+            core.users.push(user);
             core.emit(ws, { kind: "joinSuccess" });
         } else if (protocol.kind === "control") {
-            if (client.p1 && protocol.control) {
-                client.p1.leftDown = protocol.control.leftDown;
-                client.p1.rightDown = protocol.control.rightDown;
-                client.p1.upDown = protocol.control.upDown;
-                client.p1.downDown = protocol.control.downDown;
-                client.p1.itemDown = protocol.control.itemDown;
-                client.p1.leftPress = protocol.control.leftPress;
-                client.p1.rightPress = protocol.control.rightPress;
-                client.p1.upPress = protocol.control.upPress;
-                client.p1.downPress = protocol.control.downPress;
-                client.p1.itemPress = protocol.control.itemPress;
+            if (user && protocol.control) {
+                user.leftDown = protocol.control.leftDown;
+                user.rightDown = protocol.control.rightDown;
+                user.upDown = protocol.control.upDown;
+                user.downDown = protocol.control.downDown;
+                user.itemDown = protocol.control.itemDown;
+                user.leftPress = protocol.control.leftPress;
+                user.rightPress = protocol.control.rightPress;
+                user.upPress = protocol.control.upPress;
+                user.downPress = protocol.control.downPress;
+                user.itemPress = protocol.control.itemPress;
             }
         }
     });
 
     ws.on("close", () => {
-        services.game.removeClient(client.id);
+        if (user) {
+            const index = core.users.findIndex(u => u.id === user!.id);
+            if (index > -1) {
+                core.users.splice(index, 1);
+            }
+        }
     });
 });

@@ -1,9 +1,9 @@
 import * as services from "./services";
 import * as common from "./common";
 import * as core from "./core";
+import * as libs from "./libs";
 
 export interface Game {
-    clients: core.Client[];
     mines: core.Mine[];
     entitys: services.grenade.Grenade[];
     tick: number;
@@ -22,7 +22,6 @@ export interface Game {
 
 export function create(name: string): Game {
     const result: Game = {
-        clients: [],
         mines: [],
         entitys: [],
         tick: 0,
@@ -40,18 +39,16 @@ export function create(name: string): Game {
     result.props.h = result.props.th * common.constant.tileHeight;
     return result;
 }
-export function createNPC(data: any, name: string) {
-    const u = services.user.create(data, name);
+export function createNPC(name: string) {
+    const u = services.user.create(name);
     u.npc = true;
-    core.users.push(u);
     return u;
 }
-export function createUser(client: core.Client, name: string) {
-    const u = services.user.create(client, name);
-    const {x, y} = services.map.born();
+export function createUser(name: string, ws?: libs.WebSocket) {
+    const u = services.user.create(name, ws);
+    const { x, y } = services.map.born();
     u.x = x;
     u.y = y + common.constant.tileHeight / 2;
-    core.users.push(u);
     return u;
 }
 export function explode(x: number, y: number, byUser: services.user.User, power: number) {
@@ -115,17 +112,11 @@ export function checkMine(user: services.user.User) {
     }
     return false;
 }
-export function removeClient(id: number) {
-    for (let i = 0; i < core.game.clients.length; i++) {
-        if (core.game.clients[i].id === id) {
-            core.game.clients.splice(i, 1);
-            return;
-        }
-    }
-}
 export function announce(protocol: common.Protocol) {
-    for (const client of core.game.clients) {
-        core.emit(client.ws, protocol);
+    for (const user of core.users) {
+        if (user.ws) {
+            core.emit(user.ws, protocol);
+        }
     }
 }
 export function update() {
@@ -191,23 +182,24 @@ export function sendTick() {
         y: e.y,
         r: e.r,
     }));
-    for (const client of core.game.clients) {
-        const p1 = client.p1 && client.p1.id;
-        const minedata: common.Mine[] = core.game.mines.filter(mine => mine.creater.id === p1 || mine.dead).map(mine => ({
-            x: mine.x,
-            y: mine.y,
-            dead: mine.dead!,
-        }));
-        core.emit(client.ws, {
-            kind: "tick",
-            tick: {
-                users: userdata,
-                items: itemdata,
-                mines: minedata,
-                entitys: entitydata,
-                p1,
-            },
-        });
+    for (const user of core.users) {
+        if (user.ws) {
+            const minedata: common.Mine[] = core.game.mines.filter(mine => mine.creater.id === user.id || mine.dead).map(mine => ({
+                x: mine.x,
+                y: mine.y,
+                dead: mine.dead!,
+            }));
+            core.emit(user.ws, {
+                kind: "tick",
+                tick: {
+                    users: userdata,
+                    items: itemdata,
+                    mines: minedata,
+                    entitys: entitydata,
+                    p1: user.id,
+                },
+            });
+        }
     }
 }
 export function userCollide(a: services.user.User, b: services.user.User) {

@@ -1,6 +1,7 @@
 import * as services from "./services";
 import * as common from "./common";
 import * as core from "./core";
+import * as libs from "./libs";
 
 let userCount = 0;
 
@@ -54,10 +55,10 @@ export interface User {
     goleft: boolean;
     goright: boolean;
     facing: boolean;
-    client: core.Client;
+    ws?: libs.WebSocket;
 }
 
-export function create(client: core.Client, name: string): User {
+export function create(name: string, ws?: libs.WebSocket): User {
     return {
         id: userCount++,
         name,
@@ -108,7 +109,7 @@ export function create(client: core.Client, name: string): User {
         goleft: false,
         goright: false,
         facing: false,
-        client,
+        ws,
     };
 }
 export function throwGrenade(user: User) {

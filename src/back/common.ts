@@ -90,10 +90,6 @@ export type User = {
     flying: number;
 };
 
-export type Client = {
-    p1: number | null;
-};
-
 export type Sign = {
     x: number;
     y: number;

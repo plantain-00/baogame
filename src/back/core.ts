@@ -25,12 +25,6 @@ export function init() {
     };
 }
 
-export interface Client {
-    id: number;
-    p1: services.user.User | null;
-    ws: libs.WebSocket;
-}
-
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     try {
         // ws.send(format.encode(protocol), { binary: true });

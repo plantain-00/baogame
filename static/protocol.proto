@@ -37,10 +37,6 @@ message Props {
     required uint32 h = 7;
 }
 
-message Client {
-    required uint32 p1 = 1;
-}
-
 message Tick {
     repeated User users = 1;
     repeated Item items = 2;
