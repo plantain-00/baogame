@@ -28,17 +28,7 @@ export function init() {
 export interface Client {
     id: number;
     p1: services.user.User | null;
-    kill: number;
-    highestKill: number;
     ws: libs.WebSocket;
-}
-
-export function getClientData(client: Client): common.Client {
-    return {
-        p1: client.p1 && client.p1.id,
-        kill: client.kill,
-        highestKill: client.highestKill,
-    };
 }
 
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {

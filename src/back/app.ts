@@ -27,8 +27,6 @@ wss.on("connection", ws => {
     const client: core.Client = {
         id: concount++,
         p1: null,
-        kill: 0,
-        highestKill: 0,
         ws,
     };
 

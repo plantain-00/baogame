@@ -39,8 +39,6 @@ message Props {
 
 message Client {
     required uint32 p1 = 1;
-    required uint32 kill = 2;
-    required uint32 highestKill = 3;
 }
 
 message Tick {

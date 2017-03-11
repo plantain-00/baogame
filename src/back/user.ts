@@ -402,10 +402,6 @@ export function update(user: User) {
 }
 export function scoreing(user: User) {
     user.score++;
-    user.client.kill++;
-    if (user.score > user.client.highestKill) {
-        user.client.highestKill = user.score;
-    }
 }
 export function killed(user: User, action: core.KillReason, byUser?: User) {
     if (user.dieing) { return; }

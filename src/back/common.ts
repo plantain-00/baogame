@@ -92,8 +92,6 @@ export type User = {
 
 export type Client = {
     p1: number | null;
-    kill: number;
-    highestKill: number;
 };
 
 export type Sign = {
