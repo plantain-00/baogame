@@ -28,11 +28,8 @@ wss.on("connection", ws => {
         id: concount++,
         p1: null,
         name: "无名小卒",
-        joinTime: Date.now(),
         kill: 0,
-        death: 0,
         highestKill: 0,
-        leaveTime: undefined,
         ws,
     };
 

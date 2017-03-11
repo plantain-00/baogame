@@ -46,10 +46,8 @@ message Client {
     required uint32 p1 = 1;
     required uint32 id = 2;
     required string name = 3;
-    required uint32 joinTime = 4;
-    required uint32 kill = 5;
-    required uint32 death = 6;
-    required uint32 highestKill = 7;
+    required uint32 kill = 4;
+    required uint32 highestKill = 5;
 }
 
 message Tick {

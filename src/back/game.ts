@@ -118,11 +118,6 @@ export function checkMine(user: services.user.User) {
 export function removeClient(id: number) {
     for (let i = 0; i < core.game.clients.length; i++) {
         if (core.game.clients[i].id === id) {
-            const client = core.game.clients[i];
-            client.leaveTime = new Date().getTime();
-            console.log("User <" + client.name + "> "
-                + " [" + client.joinTime + ":" + client.leaveTime + ":" + Math.floor((client.joinTime - client.leaveTime) / 60) + "]"
-                + " [" + client.kill + "," + client.death + "," + client.highestKill + "]");
             core.game.clients.splice(i, 1);
             return;
         }

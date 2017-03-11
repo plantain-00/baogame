@@ -414,7 +414,6 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
     }
 
     user.killedBy = action;
-    user.client.death++;
 
     if (action === "power") {
         user.vy = 10;

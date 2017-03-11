@@ -29,11 +29,8 @@ export interface Client {
     id: number;
     p1: services.user.User | null;
     name: string;
-    joinTime: number;
     kill: number;
-    death: number;
     highestKill: number;
-    leaveTime: number | undefined;
     ws: libs.WebSocket;
 }
 
@@ -42,9 +39,7 @@ export function getClientData(client: Client): common.Client {
         p1: client.p1 && client.p1.id,
         id: client.id,
         name: client.name,
-        joinTime: client.joinTime,
         kill: client.kill,
-        death: client.death,
         highestKill: client.highestKill,
     };
 }
