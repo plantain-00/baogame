@@ -123,10 +123,6 @@ export type TickProtocol = {
     };
 };
 
-export type InitProtocol = {
-    kind: "init";
-};
-
 export type Props = {
     userHeight: number;
     userWidth: number;
@@ -201,7 +197,7 @@ export type UserDeadProtocol = {
     };
 };
 
-export type Protocol = InitProtocol | InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
+export type Protocol = InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
 export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
 

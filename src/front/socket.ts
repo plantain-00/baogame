@@ -2,12 +2,9 @@ import * as common from "../back/common";
 
 let ws: WebSocket | undefined;
 
-export function connect(onsuccess: () => void, onmessage: (protocol: common.Protocol) => void) {
+export function connect(onmessage: (protocol: common.Protocol) => void) {
     const protocol = location.protocol === "https:" ? "wss:" : "ws:";
     ws = new WebSocket(`${protocol}//${location.host}/ws/`);
-    ws.onopen = () => {
-        onsuccess();
-    };
     ws.onmessage = evt => {
         onmessage(JSON.parse(evt.data));
     };

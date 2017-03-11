@@ -34,20 +34,20 @@ wss.on("connection", ws => {
 
     core.game.clients.push(client);
 
+    const outProtocol: common.Protocol = {
+        kind: "initSuccess",
+        initSuccess: {
+            props: core.game.props,
+            map: core.mapData,
+        },
+    };
+    core.emit(ws, outProtocol);
+
     ws.on("message", message => {
         // const protocol = services.format.decode(message);
         const protocol: common.Protocol = JSON.parse(message);
 
-        if (protocol.kind === "init") {
-            const outProtocol: common.Protocol = {
-                kind: "initSuccess",
-                initSuccess: {
-                    props: core.game.props,
-                    map: core.mapData,
-                },
-            };
-            core.emit(ws, outProtocol);
-        } else if (protocol.kind === "join") {
+        if (protocol.kind === "join") {
             let u = 0;
             for (const user of core.users) {
                 if (!user.npc) {

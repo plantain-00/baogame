@@ -75,9 +75,7 @@ function joing(p: boolean) {
 let lastControl: string;
 
 function initDone() {
-    connect(() => {
-        emit({ kind: "init" });
-    }, protocol => {
+    connect(protocol => {
         if (protocol.kind === "initSuccess") {
             P = protocol.initSuccess.props;	// 常量
             const cdom = document.createElement("canvas");	// 玩家层
