@@ -1,5 +1,5 @@
 import * as services from "./services";
-import * as core from "./core";
+import * as common from "./common";
 
 export interface Grenade {
     x: number;
@@ -28,7 +28,7 @@ export function create(creater: services.user.User) {
 export function update(grenade: Grenade) {
     grenade.x += grenade.vx;
     grenade.r += grenade.vx / 5;
-    if (grenade.x < 0 || grenade.x > core.game.props.w) {
+    if (grenade.x < 0 || grenade.x > common.w) {
         grenade.vx *= -1;
     }
 

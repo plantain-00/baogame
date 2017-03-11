@@ -82,26 +82,26 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
     // 绘制柱子
     for (const ladder of map.ladders) {
         ctx.fillStyle = "#888";
-        for (let j = height - ladder.y2 * common.constant.tileHeight + 10; j < height - ladder.y1 * common.constant.tileHeight; j += 20) {
-            ctx.fillRect(ladder.x * common.constant.tileWidth - 10, j, 20, 4);
+        for (let j = height - ladder.y2 * common.tileHeight + 10; j < height - ladder.y1 * common.tileHeight; j += 20) {
+            ctx.fillRect(ladder.x * common.tileWidth - 10, j, 20, 4);
         }
 
         ctx.fillStyle = "#aaa";
         ctx.beginPath();
-        ctx.rect(ladder.x * common.constant.tileHeight - 12, height - ladder.y2 * common.constant.tileHeight, 4, (ladder.y2 - ladder.y1) * common.constant.tileHeight);
+        ctx.rect(ladder.x * common.tileHeight - 12, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
         ctx.stroke();
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(ladder.x * common.constant.tileWidth - 10, height - ladder.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
+        ctx.arc(ladder.x * common.tileWidth - 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
 
         ctx.beginPath();
-        ctx.rect(ladder.x * common.constant.tileWidth + 8, height - ladder.y2 * common.constant.tileHeight, 4, (ladder.y2 - ladder.y1) * common.constant.tileHeight);
+        ctx.rect(ladder.x * common.tileWidth + 8, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
         ctx.stroke();
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(ladder.x * common.constant.tileWidth + 10, height - ladder.y2 * common.constant.tileHeight - 4, 4, 0, 2 * Math.PI);
+        ctx.arc(ladder.x * common.tileWidth + 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
     }
@@ -110,21 +110,21 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
     for (let i = 0; i < map.h; i++) {
         for (let j = 0; j < map.w; j++) {
             if (map.floor[i * map.w + j]) {
-                const x = j * common.constant.tileWidth;
-                const y = height - i * common.constant.tileHeight;
+                const x = j * common.tileWidth;
+                const y = height - i * common.tileHeight;
                 ctx.beginPath();
                 ctx.fillStyle = "#aa8";
                 ctx.moveTo(x + 1, y);
-                ctx.lineTo(x + common.constant.tileWidth - 1, y);
-                ctx.lineTo(x + common.constant.tileWidth - 1, y + 4);
-                ctx.lineTo(x + common.constant.tileWidth - 5, y + 8);
+                ctx.lineTo(x + common.tileWidth - 1, y);
+                ctx.lineTo(x + common.tileWidth - 1, y + 4);
+                ctx.lineTo(x + common.tileWidth - 5, y + 8);
                 ctx.lineTo(x + 5, y + 8);
                 ctx.lineTo(x + 1, y + 4);
                 ctx.fill();
 
                 ctx.fillStyle = "#982";
                 ctx.beginPath();
-                ctx.fillRect(x + 1, y, common.constant.tileWidth - 2, 4);
+                ctx.fillRect(x + 1, y, common.tileWidth - 2, 4);
                 ctx.fill();
             }
         }
@@ -135,14 +135,14 @@ export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.Sign[], h
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const sign of signs) {
-        ctx.drawImage(images.sign, sign.x * common.constant.tileWidth, height - (sign.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+        ctx.drawImage(images.sign, sign.x * common.tileWidth, height - (sign.y + 1) * common.tileHeight, common.tileWidth, common.tileHeight);
     }
     if (p1Data) {
-        const ux = Math.floor(p1Data.x / common.constant.tileWidth);
-        const uy = Math.floor(p1Data.y / common.constant.tileHeight);
+        const ux = Math.floor(p1Data.x / common.tileWidth);
+        const uy = Math.floor(p1Data.y / common.tileHeight);
         for (const sign of signs) {
             if (ux === sign.x && uy === sign.y) {
-                ctx.fillText(sign.message, sign.x * common.constant.tileWidth, height - (sign.y + 1) * common.constant.tileHeight - 30);
+                ctx.fillText(sign.message, sign.x * common.tileWidth, height - (sign.y + 1) * common.tileHeight - 30);
                 break;
             }
         }
@@ -154,7 +154,7 @@ export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.Door[], h
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const door of doors) {
-        ctx.drawImage(images.door, door.x * common.constant.tileWidth, height - (door.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+        ctx.drawImage(images.door, door.x * common.tileWidth, height - (door.y + 1) * common.tileHeight, common.tileWidth, common.tileHeight);
     }
     ctx.font = "14px 宋体";
 }
@@ -163,7 +163,7 @@ export function drawItemGates(ctx: CanvasRenderingContext2D, itemGates: common.I
     ctx.fillStyle = "#fff";
     ctx.font = "20px 宋体";
     for (const itemGate of itemGates) {
-        ctx.drawImage(images.itemGate, itemGate.x * common.constant.tileWidth, height - (itemGate.y + 1) * common.constant.tileHeight, common.constant.tileWidth, common.constant.tileHeight);
+        ctx.drawImage(images.itemGate, itemGate.x * common.tileWidth, height - (itemGate.y + 1) * common.tileHeight, common.tileWidth, common.tileHeight);
     }
     ctx.font = "14px 宋体";
 }
@@ -321,7 +321,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id:
 }
 
 export function drawItem(ctx: CanvasRenderingContext2D, item: common.Item, t: number, height: number) {
-    const s = common.constant.itemSize;
+    const s = common.itemSize;
     ctx.strokeStyle = "rgba(255,255,255," + Math.abs((t % 300) / 150 - 1) + ")";
     ctx.lineWidth = 3;
     ctx.save();

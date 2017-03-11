@@ -25,7 +25,6 @@ wss.on("connection", ws => {
     const outProtocol: common.Protocol = {
         kind: "initSuccess",
         initSuccess: {
-            props: core.game.props,
             map: core.mapData,
         },
     };

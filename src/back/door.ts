@@ -10,7 +10,7 @@ export function update(door: common.Door) {
     }
     const npc = services.game.createNPC("王二狗");
     npc.npc = true;
-    npc.x = (door.x + .5) * common.constant.tileWidth;
-    npc.y = (door.y + .5) * common.constant.tileHeight;
+    npc.x = (door.x + .5) * common.tileWidth;
+    npc.y = (door.y + .5) * common.tileHeight;
     core.users.push(npc);
 }

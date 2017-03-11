@@ -3,37 +3,6 @@ import * as common from "./common";
 import * as core from "./core";
 import * as libs from "./libs";
 
-export interface Game {
-    tick: number;
-    props: {
-        userHeight: number;
-        userWidth: number;
-        itemSize: number;
-        tw: number;
-        th: number;
-        w: number;
-        h: number;
-    };
-    name?: string;
-}
-
-export function create(name: string): Game {
-    const result: Game = {
-        tick: 0,
-        props: {
-            userHeight: 40,
-            userWidth: 40,
-            itemSize: 15,
-            tw: 28,
-            th: 15,
-            w: 0,
-            h: 0,
-        },
-    };
-    result.props.w = result.props.tw * common.constant.tileWidth;
-    result.props.h = result.props.th * common.constant.tileHeight;
-    return result;
-}
 export function createNPC(name: string) {
     const u = services.user.create(name);
     u.npc = true;
@@ -43,13 +12,13 @@ export function createUser(name: string, ws?: libs.WebSocket) {
     const u = services.user.create(name, ws);
     const { x, y } = services.map.born();
     u.x = x;
-    u.y = y + common.constant.tileHeight / 2;
+    u.y = y + common.tileHeight / 2;
     return u;
 }
 export function explode(x: number, y: number, byUser: services.user.User, power: number) {
     for (const user of core.users) {
         const ux = user.x;
-        const uy = user.y + core.game.props.userHeight;
+        const uy = user.y + common.userHeight;
         const distance = (ux - x) ** 2 + (uy - y) ** 2;
         if (distance < power * power) {
             services.user.killed(user, "bomb", byUser);
@@ -65,11 +34,11 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
 }
 export function checkShot(u: services.user.User) {
     const x = u.x;
-    const y = u.y + core.game.props.userHeight * 2 / 3;
+    const y = u.y + common.userHeight * 2 / 3;
     const f = u.faceing;
 
     for (const user of core.users) {
-        let uh = core.game.props.userHeight;
+        let uh = common.userHeight;
         if (user.crawl) {
             uh /= 2;
         }
@@ -115,13 +84,11 @@ export function announce(protocol: common.Protocol) {
     }
 }
 export function update() {
-    core.game.tick++;
+    core.updateTick();
     services.map.update();
-    // 物品更新
     for (const item of core.items) {
         services.item.update(item);
     }
-    // 实体更新
     for (const grenade of core.grenades) {
         services.grenade.update(grenade);
     }
@@ -202,7 +169,7 @@ export function userCollide(a: services.user.User, b: services.user.User) {
     if (a.dead || b.dead) {
         return;
     }
-    if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > core.game.props.userWidth * core.game.props.userWidth) {
+    if ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) > common.userWidth * common.userWidth) {
         return;
     }
 
@@ -323,8 +290,8 @@ export function userCollide(a: services.user.User, b: services.user.User) {
 export function eatItem(a: services.user.User, b: services.item.Item) {
     if (a.dead || b.dead) { return; }
     if (a.carry === common.items.bomb.id) { return; }
-    if ((a.x - b.x) * (a.x - b.x) + (a.y + core.game.props.userHeight / 2 - b.y) * (a.y + core.game.props.userHeight / 2 - b.y) >
-        (core.game.props.userWidth + common.constant.itemSize) * (core.game.props.userWidth + common.constant.itemSize) / 4) {
+    if ((a.x - b.x) * (a.x - b.x) + (a.y + common.userHeight / 2 - b.y) * (a.y + common.userHeight / 2 - b.y) >
+        (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
         return;
     }
     services.item.touchUser(b, a);

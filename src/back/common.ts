@@ -1,8 +1,12 @@
-export const constant = {
-    tileWidth: 40,
-    tileHeight: 40,
-    itemSize: 15,
-};
+export const tileWidth = 40;
+export const tileHeight = 40;
+export const itemSize = 15;
+export const userWidth = 40;
+export const userHeight = 40;
+export const tw = 28;
+export const th = 15;
+export const w = tw * tileWidth;
+export const h = th * tileHeight;
 
 export const items = {
     power: {
@@ -117,16 +121,6 @@ export type TickProtocol = {
     };
 };
 
-export type Props = {
-    userHeight: number;
-    userWidth: number;
-    itemSize: number;
-    tw: number;
-    th: number;
-    w: number;
-    h: number;
-};
-
 export type MapData = {
     w: number;
     h: number;
@@ -140,7 +134,6 @@ export type MapData = {
 export type InitSuccessProtocol = {
     kind: "initSuccess";
     initSuccess: {
-        props: Props;
         map: MapData;
     }
 };

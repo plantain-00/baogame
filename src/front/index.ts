@@ -38,7 +38,6 @@ let cdomBody: HTMLCanvasElement;
 let ctxBody: CanvasRenderingContext2D;
 let context: CanvasRenderingContext2D;
 let ctxBg;
-let P: common.Props;
 let t = 0;
 let cdx = 0;
 let cdy = 0;
@@ -77,18 +76,17 @@ let lastControl: string;
 function initDone() {
     connect(protocol => {
         if (protocol.kind === "initSuccess") {
-            P = protocol.initSuccess.props;	// 常量
             const cdom = document.createElement("canvas");	// 玩家层
             const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
             cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
-            cdom.width = P.w;
-            cdom.height = P.h;
+            cdom.width = common.w;
+            cdom.height = common.h;
             cdom.id = "fg";
-            cdomBg.width = P.w;
-            cdomBg.height = P.h;
+            cdomBg.width = common.w;
+            cdomBg.height = common.h;
             cdomBg.id = "bg";
-            cdomBody.width = P.w;
-            cdomBody.height = P.h;
+            cdomBody.width = common.w;
+            cdomBody.height = common.h;
             context = cdom.getContext("2d") !;
             context.font = "14px 宋体";
             context.textBaseline = "middle"; // 设置文本的垂直对齐方式
@@ -100,7 +98,7 @@ function initDone() {
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
-            drawer.drawBg(ctxBg!, protocol.initSuccess.map, P.w, P.h);
+            drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
             game.itemGates = protocol.initSuccess.map.itemGates;
             game.doors = protocol.initSuccess.map.doors;
             game.signs = protocol.initSuccess.map.signs;
@@ -156,7 +154,7 @@ function initDone() {
         } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
-            drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, P.h, true));
+            drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
         } else if (protocol.kind === "userDead") {
             notice(protocol.userDead.message);
             // p1 dead
@@ -168,7 +166,7 @@ function initDone() {
             if (protocol.userDead.killer) {
                 const killer = protocol.userDead.killer;
                 if (killer.score <= 10) {
-                    drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], P.h));
+                    drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], common.h));
                 }
             }
         }
@@ -176,7 +174,7 @@ function initDone() {
 }
 
 function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
-    ctx.clearRect(0, 0, P.w, P.h);
+    ctx.clearRect(0, 0, common.w, common.h);
     ctx.save();
     ctx.translate(cdx, cdy);
     if (cdx > .5) {
@@ -189,36 +187,36 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
     } else {
         cdy = 0;
     }
-    drawer.drawWater(ctx, 20, "#758", P.h, P.w, t);
+    drawer.drawWater(ctx, 20, "#758", common.h, common.w, t);
 
     ctx.drawImage(cdomBody, 0, 0);
 
-    drawer.drawDoors(context, game.doors, P.h);
-    drawer.drawSigns(context, game.signs, P.h, p1.data);
-    drawer.drawItemGates(context, game.itemGates, P.h);
+    drawer.drawDoors(context, game.doors, common.h);
+    drawer.drawSigns(context, game.signs, common.h, p1.data);
+    drawer.drawItemGates(context, game.itemGates, common.h);
 
     for (const mine of protocol.tick.mines) {
-        ctx.drawImage(images.mine, mine.x - 12, P.h - mine.y - 3, 23, 5);
+        ctx.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
         if (mine.dead) {
             cdx = 3;
             cdy = 11;
-            drawer.flares.push(flare.create(mine.x, mine.y, 0, P.h));
+            drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
         }
     }
 
     for (const user of protocol.tick.users) {
         if (user.dead === true) {
-            drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, P.h));
-            drawer.drawUser(ctxBody, user, undefined, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+            drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
+            drawer.drawUser(ctxBody, user, undefined, common.h, common.w, common.userWidth, common.userHeight, p1.id);
         } else {
-            drawer.drawUser(ctx, user, protocol.tick.p1, P.h, P.w, P.userWidth, P.userHeight, p1.id);
+            drawer.drawUser(ctx, user, protocol.tick.p1, common.h, common.w, common.userWidth, common.userHeight, p1.id);
         }
     }
 
-    drawer.drawWater(ctx, 10, "#95a", P.h, P.w, t);
+    drawer.drawWater(ctx, 10, "#95a", common.h, common.w, t);
 
     for (const item of protocol.tick.items) {
-        drawer.drawItem(ctx, item, t, P.h);
+        drawer.drawItem(ctx, item, t, common.h);
         if (item.dead) {
             let itemName = "";
             for (const key in common.items) {
@@ -226,12 +224,12 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
                     itemName = (common.items as any)[key].name;
                 }
             }
-            drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, P.h, P.itemSize));
+            drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
         }
     }
 
     for (const entity of protocol.tick.entitys) {
-        drawer.drawEntity(ctx, entity, P.h);
+        drawer.drawEntity(ctx, entity, common.h);
     }
 
     drawer.draw(ctx);

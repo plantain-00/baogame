@@ -36,7 +36,6 @@ export interface User {
     flying: number;
     status: common.userStatus;
     npc: boolean;
-    AI: string;
     r: number;
     vr: number;
     control: common.Control;
@@ -59,7 +58,7 @@ export function create(name: string, ws?: libs.WebSocket): User {
         dead: false,
         rolling: false,
         crawl: false,
-        x: Math.random() * (core.game.props.w - 300) + 150,
+        x: Math.random() * (common.w - 300) + 150,
         y: 380,
         vx: 0,
         vy: 0,
@@ -94,7 +93,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         flying: 0,
         status: "standing",
         npc: false,
-        AI: "",
         r: 0,
         vr: 0,
         flypackActive: false,
@@ -116,7 +114,7 @@ export function throwGrenade(user: User) {
     }
 
     grenade.x = user.x - user.faceing * 20;
-    grenade.y = user.y + core.game.props.userHeight;
+    grenade.y = user.y + common.userHeight;
     grenade.vx = user.vx + vx;
     grenade.vy = user.vy + vy;
 
@@ -168,7 +166,7 @@ export function getStatus(user: User): common.userStatus {
                 user.onFloor = false;
                 user.vx = 0;
                 user.ladder = user.nearLadder;
-                user.x = user.ladder.x * common.constant.tileWidth;
+                user.x = user.ladder.x * common.tileWidth;
                 return "climbing";
             } else if (user.control.downDown) {
                 user.crawl = true;
@@ -208,7 +206,7 @@ export function update(user: User) {
         user.carryCount--;
         if (user.carryCount <= 0) {
             if (user.carry === common.items.bomb.id) {
-                services.game.explode(user.x + user.faceing * 20, user.y + core.game.props.userHeight / 2, user, 120);
+                services.game.explode(user.x + user.faceing * 20, user.y + common.userHeight / 2, user, 120);
             }
             user.carry = 0;
             user.carryCount = 0;
@@ -216,7 +214,7 @@ export function update(user: User) {
     }
     user.status = getStatus(user);
 
-    if (user.npc && user.AI) {
+    if (user.npc) {
         services.playerAI(user);
     }
     if (user.status === "falling" || user.status === "standing" || user.status === "climbing") {
@@ -264,9 +262,9 @@ export function update(user: User) {
         user.vr *= .96;
     }
     if (user.status === "climbing") {
-        if (user.control.upDown && !user.control.downDown && user.y < user.ladder!.y2 * common.constant.tileHeight - core.game.props.userHeight) {
+        if (user.control.upDown && !user.control.downDown && user.y < user.ladder!.y2 * common.tileHeight - common.userHeight) {
             user.y += 3;
-        } else if (user.control.downDown && !user.control.upDown && user.y > user.ladder!.y1 * common.constant.tileHeight + 3) {
+        } else if (user.control.downDown && !user.control.upDown && user.y > user.ladder!.y1 * common.tileHeight + 3) {
             user.y -= 3;
         }
         if (user.control.leftPress) {
@@ -375,7 +373,7 @@ export function update(user: User) {
     // final process
     user.x += user.vx;
     if (user.x <= 0) { user.vx = Math.abs(user.vx); }
-    if (user.x >= core.game.props.w) { user.vx = -Math.abs(user.vx); }
+    if (user.x >= common.w) { user.vx = -Math.abs(user.vx); }
     if (user.y < 0) {
         user.dead = true;
         if (!user.dieing) {

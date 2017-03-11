@@ -4,11 +4,11 @@ import * as core from "./core";
 
 export function update(data: core.ItemGate) {
     if (data.itemType !== undefined) {
-        if ((core.game.tick + 120) % 150 === 0 && (!data.targetItem || data.targetItem.dead)) {
+        if ((core.tick + 120) % 150 === 0 && (!data.targetItem || data.targetItem.dead)) {
             const item = services.item.create(data.itemType);
             core.items.push(item);
-            item.x = (data.x + .5) * common.constant.tileWidth;
-            item.y = (data.y + .5) * common.constant.tileHeight;
+            item.x = (data.x + .5) * common.tileWidth;
+            item.y = (data.y + .5) * common.tileHeight;
             item.vx = 0;
             item.vy = 0;
             data.targetItem = item;
@@ -18,8 +18,8 @@ export function update(data: core.ItemGate) {
         if (core.items.length < core.users.length && Math.random() * 100 < core.users.length) {
             const item = services.item.create();
             core.items.push(item);
-            item.x = (data.x + .5) * common.constant.tileWidth;
-            item.y = (data.y + .5) * common.constant.tileHeight;
+            item.x = (data.x + .5) * common.tileWidth;
+            item.y = (data.y + .5) * common.tileHeight;
         }
     }
 }

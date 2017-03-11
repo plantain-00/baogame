@@ -14,8 +14,8 @@ export interface Map {
 };
 
 export function create(): Map {
-    const w = core.game.props.tw;
-    const h = core.game.props.th;
+    const w = common.tw;
+    const h = common.th;
     const floor: number[][] = [];
     const ladders: common.Ladder[] = [];
 
@@ -102,14 +102,14 @@ export function create(): Map {
 
     const borns: core.Position[] = [];
     for (let i = 0; i < 20; i++) {
-        const x = Math.floor(Math.random() * (core.game.props.tw - 2)) + 1;
-        const y = Math.floor(Math.random() * (core.game.props.th - 2)) + 1;
+        const x = Math.floor(Math.random() * (common.tw - 2)) + 1;
+        const y = Math.floor(Math.random() * (common.th - 2)) + 1;
         if (floor[y][x]) {
             borns.push({ x, y });
         }
     }
     for (const f of floor) {
-        for (let i = 0; i < core.game.props.tw; i++) {
+        for (let i = 0; i < common.tw; i++) {
             if (f[i] !== 0 && f[i] !== 1) {
                 f[i] = 0;
             }
@@ -117,13 +117,13 @@ export function create(): Map {
     }
 
     const itemGates: core.ItemGate[] = [];
-    itemGates.push({ x: 0, y: core.game.props.th / 2 });
-    itemGates.push({ x: core.game.props.tw - 1, y: core.game.props.th / 2 });
-    itemGates.push({ x: core.game.props.tw / 2, y: core.game.props.th - 1 });
+    itemGates.push({ x: 0, y: common.th / 2 });
+    itemGates.push({ x: common.tw - 1, y: common.th / 2 });
+    itemGates.push({ x: common.tw / 2, y: common.th - 1 });
 
     return {
-        w: core.game.props.tw,
-        h: core.game.props.th,
+        w: common.tw,
+        h: common.th,
         floor,
         ladders,
         borns,
@@ -136,14 +136,14 @@ export function born() {
     const i = Math.floor(Math.random() * core.map.borns.length);
     const {x, y} = core.map.borns[i];
     return {
-        x: (x + .5) * common.constant.tileWidth,
-        y: y * common.constant.tileHeight,
+        x: (x + .5) * common.tileWidth,
+        y: y * common.tileHeight,
     };
 }
 export function onFloor(x: number, y: number) {
-    x = Math.floor(x / common.constant.tileWidth);
-    if (y % common.constant.tileHeight !== 0) { return false; }
-    y = y / common.constant.tileHeight;
+    x = Math.floor(x / common.tileWidth);
+    if (y % common.tileHeight !== 0) { return false; }
+    y = y / common.tileHeight;
     if (x < 0 || y < 0 || x >= core.map.w || y >= core.map.h || !core.map.floor[y]) { return false; }
     return core.map.floor[y][x];
 }
@@ -153,7 +153,7 @@ export function nearLadder(u: services.user.User) {
     const x = u.x;
     const y = u.y;
     for (const ladder of core.map.ladders) {
-        if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
+        if (Math.abs(x - ladder.x * common.tileWidth) < 8 && y >= ladder.y1 * common.tileHeight && y <= ladder.y2 * common.tileHeight) {
             return ladder;
         }
     }
@@ -161,7 +161,7 @@ export function nearLadder(u: services.user.User) {
 }
 export function onLadder(x: number, y: number) {
     for (const ladder of core.map.ladders) {
-        if (Math.abs(x - ladder.x * common.constant.tileWidth) < 8 && y >= ladder.y1 * common.constant.tileHeight && y <= ladder.y2 * common.constant.tileHeight) {
+        if (Math.abs(x - ladder.x * common.tileWidth) < 8 && y >= ladder.y1 * common.tileHeight && y <= ladder.y2 * common.tileHeight) {
             return true;
         }
     }

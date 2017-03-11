@@ -3,13 +3,13 @@ import * as common from "./common";
 import * as core from "./core";
 
 function userCanGoLeft(user: services.user.User) {
-    const x = Math.floor((user.x - 5) / common.constant.tileWidth);
-    const y = Math.floor(user.y / common.constant.tileHeight);
+    const x = Math.floor((user.x - 5) / common.tileWidth);
+    const y = Math.floor(user.y / common.tileHeight);
     return core.map.floor[y][x];
 }
 function userCanGoRight(user: services.user.User) {
-    const x = Math.floor((user.x + 5) / common.constant.tileWidth);
-    const y = Math.floor(user.y / common.constant.tileHeight);
+    const x = Math.floor((user.x + 5) / common.tileWidth);
+    const y = Math.floor(user.y / common.tileHeight);
     return core.map.floor[y][x];
 }
 export function playerAI(user: services.user.User) {

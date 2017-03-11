@@ -2,16 +2,15 @@ import * as libs from "./libs";
 import * as common from "./common";
 import * as services from "./services";
 
-export let game: services.game.Game;
 export let map: services.map.Map;
 export let mapData: common.MapData;
 export const items: services.item.Item[] = [];
 export const users: services.user.User[] = [];
 export const grenades: services.grenade.Grenade[] = [];
 export const mines: Mine[] = [];
+export let tick = 0;
 
 export function init() {
-    game = services.game.create("大乱斗");
     setInterval(() => {
         services.game.update();
     }, 17);
@@ -25,6 +24,10 @@ export function init() {
         doors: map.doors,
         itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
     };
+}
+
+export function updateTick() {
+    tick++;
 }
 
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
