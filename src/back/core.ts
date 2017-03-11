@@ -30,7 +30,6 @@ export interface Client {
     p1: services.user.User | null;
     name: string;
     joinTime: number;
-    ip: string;
     kill: number;
     death: number;
     highestKill: number;
@@ -44,7 +43,6 @@ export function getClientData(client: Client): common.Client {
         id: client.id,
         name: client.name,
         joinTime: client.joinTime,
-        ip: client.ip,
         kill: client.kill,
         death: client.death,
         highestKill: client.highestKill,

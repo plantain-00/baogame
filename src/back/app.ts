@@ -24,13 +24,11 @@ core.init();
 let concount = 0;
 
 wss.on("connection", ws => {
-    const ip = ws.upgradeReq.connection.remoteAddress;
     const client: core.Client = {
         id: concount++,
         p1: null,
         name: "无名小卒",
         joinTime: Date.now(),
-        ip,
         kill: 0,
         death: 0,
         highestKill: 0,

@@ -95,7 +95,6 @@ export type Client = {
     id: number;
     name: string;
     joinTime: number;
-    ip: string;
     kill: number;
     death: number;
     highestKill: number;
