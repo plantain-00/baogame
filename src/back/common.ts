@@ -160,7 +160,6 @@ export type InitSuccessProtocol = {
     initSuccess: {
         props: Props;
         map: MapData;
-        bodies: User[];
     }
 };
 

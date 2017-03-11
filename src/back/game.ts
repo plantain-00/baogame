@@ -4,7 +4,6 @@ import * as core from "./core";
 
 export interface Game {
     clients: core.Client[];
-    bodies: services.user.User[];
     mines: core.Mine[];
     entitys: services.grenade.Grenade[];
     tick: number;
@@ -24,7 +23,6 @@ export interface Game {
 export function create(name: string): Game {
     const result: Game = {
         clients: [],
-        bodies: [],
         mines: [],
         entitys: [],
         tick: 0,
@@ -55,13 +53,6 @@ export function createUser(client: core.Client) {
     u.y = y + common.constant.tileHeight / 2;
     core.users.push(u);
     return u;
-}
-export function getUser(uid: number) {
-    const user = core.users.find(u => u.id === uid);
-    if (user) {
-        return user;
-    }
-    return core.game.bodies.find(u => u.id === uid);
 }
 export function explode(x: number, y: number, byUser: services.user.User, power: number) {
     for (const user of core.users) {
@@ -194,10 +185,6 @@ export function clean() {
         const user = core.users[i];
         if (user.dead) {
             core.users.splice(i, 1);
-            core.game.bodies.push(user);
-            if (core.game.bodies.length > 100) {
-                core.game.bodies = core.game.bodies.slice(0, 50);
-            }
         }
     }
 }

@@ -433,7 +433,7 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
 
     let killer: User | undefined;
     if (user.killer && user.killer !== user.id) {
-        killer = services.game.getUser(user.killer);
+        killer = core.users.find(u => u.id === user.killer);
         if (killer) {
             scoreing(killer);
         }

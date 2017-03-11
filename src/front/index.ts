@@ -110,10 +110,6 @@ function initDone() {
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
-            // 初始化尸体
-            for (const user of protocol.initSuccess.bodies) {
-                drawer.drawUser(ctxBody, user, undefined, P.h, P.w, P.userWidth, P.userHeight, p1.id);
-            }
             $(".joining").show();
         } else if (protocol.kind === "joinSuccess") {
             $(".joining").hide();

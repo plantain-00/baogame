@@ -37,7 +37,6 @@ wss.on("connection", ws => {
         leaveTime: undefined,
         ws,
     };
-    const bodiesData = core.game.bodies.map(body => services.user.getData(body));
 
     core.game.clients.push(client);
 
@@ -54,7 +53,6 @@ wss.on("connection", ws => {
                 initSuccess: {
                     props: core.game.props,
                     map: core.mapData,
-                    bodies: bodiesData,
                 },
             };
             core.emit(ws, outProtocol);

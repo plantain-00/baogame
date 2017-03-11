@@ -12,7 +12,6 @@ message Protocol {
 message InitSuccess {
     required Props props = 1;
     required MapData map = 2;
-    repeated User bodies = 3;;
 }
 
 message MapData {
