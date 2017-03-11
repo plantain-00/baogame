@@ -76,7 +76,7 @@ let lastControl: string;
 
 function initDone() {
     connect(() => {
-        emit({ kind: "init", init: { userName: userName! } });
+        emit({ kind: "init" });
     }, protocol => {
         if (protocol.kind === "initSuccess") {
             P = protocol.initSuccess.props;	// 常量

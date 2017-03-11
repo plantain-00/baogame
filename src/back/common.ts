@@ -92,8 +92,6 @@ export type User = {
 
 export type Client = {
     p1: number | null;
-    id: number;
-    name: string;
     kill: number;
     highestKill: number;
 };
@@ -127,9 +125,6 @@ export type TickProtocol = {
 
 export type InitProtocol = {
     kind: "init";
-    init: {
-        userName: string;
-    };
 };
 
 export type Props = {

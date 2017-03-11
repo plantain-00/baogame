@@ -28,7 +28,6 @@ export function init() {
 export interface Client {
     id: number;
     p1: services.user.User | null;
-    name: string;
     kill: number;
     highestKill: number;
     ws: libs.WebSocket;
@@ -37,8 +36,6 @@ export interface Client {
 export function getClientData(client: Client): common.Client {
     return {
         p1: client.p1 && client.p1.id,
-        id: client.id,
-        name: client.name,
         kill: client.kill,
         highestKill: client.highestKill,
     };

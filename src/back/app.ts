@@ -27,7 +27,6 @@ wss.on("connection", ws => {
     const client: core.Client = {
         id: concount++,
         p1: null,
-        name: "无名小卒",
         kill: 0,
         highestKill: 0,
         ws,
@@ -40,9 +39,6 @@ wss.on("connection", ws => {
         const protocol: common.Protocol = JSON.parse(message);
 
         if (protocol.kind === "init") {
-            if (protocol.init.userName) {
-                client.name = protocol.init.userName.replace(/[<>]/g, "").substring(0, 8);
-            }
             const outProtocol: common.Protocol = {
                 kind: "initSuccess",
                 initSuccess: {
@@ -59,8 +55,7 @@ wss.on("connection", ws => {
                 }
             }
             if (protocol.join.p1 && client.p1 && !client.p1.dieing && !client.p1.dead) { return; }
-            client.name = protocol.join.userName.replace(/[<>]/g, "").substring(0, 8);
-            const user = services.game.createUser(client);
+            const user = services.game.createUser(client, protocol.join.userName.replace(/[<>]/g, "").substring(0, 8));
             if (protocol.join.p1) {
                 client.p1 = user;
             }

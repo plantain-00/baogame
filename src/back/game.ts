@@ -40,14 +40,14 @@ export function create(name: string): Game {
     result.props.h = result.props.th * common.constant.tileHeight;
     return result;
 }
-export function createNPC(data: any) {
-    const u = services.user.create(data);
+export function createNPC(data: any, name: string) {
+    const u = services.user.create(data, name);
     u.npc = true;
     core.users.push(u);
     return u;
 }
-export function createUser(client: core.Client) {
-    const u = services.user.create(client);
+export function createUser(client: core.Client, name: string) {
+    const u = services.user.create(client, name);
     const {x, y} = services.map.born();
     u.x = x;
     u.y = y + common.constant.tileHeight / 2;

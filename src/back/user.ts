@@ -57,10 +57,10 @@ export interface User {
     client: core.Client;
 }
 
-export function create(client: core.Client): User {
+export function create(client: core.Client, name: string): User {
     return {
         id: userCount++,
-        name: client.name,
+        name,
         onFloor: false,
         onLadder: false,
         nearLadder: false,
