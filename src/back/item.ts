@@ -1,5 +1,5 @@
-import * as services from "./services";
 import * as common from "./common";
+import * as services from "./services";
 
 const Items: Item[] = [];
 for (const key in common.items) {
@@ -56,16 +56,6 @@ export function update(item: Item) {
         item.y += item.vy;
     }
 }
-export function touchUser(item: Item, u: services.user.User) {
-    if (item.id === common.items.drug.id) {
-        item.dead = true;
-        services.user.killed(u, "drug");
-    } else {
-        item.dead = true;
-        u.carry = item.id;
-        u.carryCount = item.count;
-    }
-}
 export function getData(item: Item): common.Item {
     return {
         x: item.x,
@@ -73,4 +63,24 @@ export function getData(item: Item): common.Item {
         id: item.id,
         dead: item.dead,
     };
+}
+
+export function eat(user: services.user.User, item: services.item.Item) {
+    if (user.dead || item.dead) {
+        return;
+    }
+    if (user.carry === common.items.bomb.id) {
+        return;
+    }
+    if ((user.x - item.x) * (user.x - item.x) + (user.y + common.userHeight / 2 - item.y) * (user.y + common.userHeight / 2 - item.y) >
+        (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
+        return;
+    }
+    item.dead = true;
+    if (item.id === common.items.drug.id) {
+        services.user.killed(user, "drug");
+    } else {
+        user.carry = item.id;
+        user.carryCount = item.count;
+    }
 }
