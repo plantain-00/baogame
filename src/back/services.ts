@@ -1,5 +1,4 @@
 import * as user from "./user";
-import * as game from "./game";
 import * as ai from "./ai";
 import * as grenade from "./grenade";
 import * as map from "./map";
@@ -10,4 +9,4 @@ import * as format from "./format";
 import * as mine from "./mine";
 import * as gun from "./gun";
 
-export { user, ai, grenade, map, item, door, itemGate, format, game, mine, gun };
+export { user, ai, grenade, map, item, door, itemGate, format, mine, gun };

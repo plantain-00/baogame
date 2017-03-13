@@ -12,7 +12,77 @@ export let tick = 0;
 
 export function init() {
     setInterval(() => {
-        services.game.update();
+        updateTick();
+        services.map.update();
+        for (const item of items) {
+            services.item.update(item);
+        }
+        for (const grenade of grenades) {
+            services.grenade.update(grenade);
+        }
+        // 碰撞检测
+        for (let i = 0; i < users.length; i++) {
+            for (let j = i + 1; j < users.length; j++) {
+                services.user.collide(users[i], users[j]);
+            }
+            for (const item of items) {
+                services.item.eat(users[i], item);
+            }
+        }
+        // user更新
+        for (const user of users) {
+            services.user.update(user);
+        }
+        const itemdata = items.map(item => services.item.getData(item));
+        const userdata = users.map(user => services.user.getData(user));
+        const entitydata = grenades.map(e => ({
+            x: e.x,
+            y: e.y,
+            r: e.r,
+        }));
+        for (const user of users) {
+            if (user.ws) {
+                const minedata: common.Mine[] = mines.filter(mine => mine.creater.id === user.id || mine.dead).map(mine => ({
+                    x: mine.x,
+                    y: mine.y,
+                    dead: mine.dead!,
+                }));
+                emit(user.ws, {
+                    kind: "tick",
+                    tick: {
+                        users: userdata,
+                        items: itemdata,
+                        mines: minedata,
+                        entitys: entitydata,
+                        p1: user.id,
+                    },
+                });
+            }
+        }
+        for (let i = items.length - 1; i >= 0; i--) {
+            const item = items[i];
+            if (item.dead) {
+                items.splice(i, 1);
+            }
+        }
+        for (let i = mines.length - 1; i >= 0; i--) {
+            const mine = mines[i];
+            if (mine.dead) {
+                mines.splice(i, 1);
+            }
+        }
+        for (let i = grenades.length - 1; i >= 0; i--) {
+            const grenade = grenades[i];
+            if (grenade.dead) {
+                grenades.splice(i, 1);
+            }
+        }
+        for (let i = users.length - 1; i >= 0; i--) {
+            const user = users[i];
+            if (user.dead) {
+                users.splice(i, 1);
+            }
+        }
     }, 17);
     map = services.map.create();
     mapData = {
