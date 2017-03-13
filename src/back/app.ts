@@ -38,7 +38,7 @@ wss.on("connection", ws => {
         if (protocol.kind === "join") {
             user = services.user.createUser(protocol.join.userName.replace(/[<>]/g, "").substring(0, 8), ws);
             core.users.push(user);
-            core.emit(ws, { kind: "joinSuccess" });
+            core.emit(ws, { kind: "joinSuccess", userId: user.id });
         } else if (protocol.kind === "control") {
             if (user && protocol.control) {
                 user.control = protocol.control;

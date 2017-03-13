@@ -1,7 +1,7 @@
-// 移动的控制器
+import * as common from "../back/common";
 
-export function start(joing: (p: boolean) => void, initDone: () => void) {
-    const p1 = {
+export function start(joing: () => void, initDone: () => void) {
+    const control: common.Control = {
         upDown: 0,
         downDown: 0,
         leftDown: 0,
@@ -22,49 +22,49 @@ export function start(joing: (p: boolean) => void, initDone: () => void) {
     $(".mobileController .moreBtn").on("touchstart", e => {
         const t = $(e.currentTarget).data("act");
         if (t === "a") {
-            if (!p1.itemDown) {
-                p1.itemPress = true;
+            if (!control.itemDown) {
+                control.itemPress = true;
             }
-            p1.itemDown = 20000;
+            control.itemDown = 20000;
         } else if (t === "l") {
-            if (!p1.leftDown) {
-                p1.leftPress = true;
+            if (!control.leftDown) {
+                control.leftPress = true;
             }
-            p1.leftDown = 20000;
+            control.leftDown = 20000;
         } else if (t === "r") {
-            if (!p1.rightDown) {
-                p1.rightPress = true;
+            if (!control.rightDown) {
+                control.rightPress = true;
             }
-            p1.rightDown = 20000;
+            control.rightDown = 20000;
         } else if (t === "u") {
-            if (!p1.upDown) {
-                p1.upPress = true;
+            if (!control.upDown) {
+                control.upPress = true;
             }
-            p1.upDown = 20000;
+            control.upDown = 20000;
         } else if (t === "d") {
-            if (!p1.downDown) {
-                p1.downPress = true;
+            if (!control.downDown) {
+                control.downPress = true;
             }
-            p1.downDown = 20000;
+            control.downDown = 20000;
         }
     });
 
     $(".mobileController .moreBtn").on("touchend", e => {
         const t = $(e.currentTarget).data("act");
         if (t === "a") {
-            p1.itemDown = 0;
+            control.itemDown = 0;
         } else if (t === "l") {
-            p1.leftDown = 0;
+            control.leftDown = 0;
         } else if (t === "r") {
-            p1.rightDown = 0;
+            control.rightDown = 0;
         } else if (t === "u") {
-            p1.upDown = 0;
+            control.upDown = 0;
         } else if (t === "d") {
-            p1.downDown = 0;
+            control.downDown = 0;
         }
     });
 
-    $(".joining .joinBtn").click(() => { joing(true); });
+    $(".joining .joinBtn").click(() => { joing(); });
     $(".joining .dismissBtn").click(() => {
         $(".joining").hide();
     });
@@ -84,5 +84,5 @@ export function start(joing: (p: boolean) => void, initDone: () => void) {
     if (initDone) {
         initDone();
     }
-    return p1;
+    return control;
 }

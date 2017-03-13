@@ -218,7 +218,7 @@ export function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
     ctx.lineWidth = 1;
 }
 
-export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number, p1id: number | null | undefined) {
+export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, currentUserId: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number) {
     if (user.doubleJumping) {
         brusts.push(brust.create(user.x, user.y, 10, 40, height));
     }
@@ -244,16 +244,16 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, p1Id:
         img = images.normal;
     }
 
-    if (user.id === p1Id) {
+    if (user.id === currentUserId) {
         ctx.fillStyle = "#ffa";
     } else {
         ctx.fillStyle = "#f77";
     }
 
     // 用户指示器
-    if (user.carry !== common.items.hide.id || user.id === p1id) {
+    if (user.carry !== common.items.hide.id || user.id === currentUserId) {
         ctx.fillText(user.name, 0, -50);
-        if (user.nearLadder && user.id === p1id) {
+        if (user.nearLadder && user.id === currentUserId) {
             ctx.fillText("上", 0, -70);
         }
     }

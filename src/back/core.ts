@@ -12,7 +12,7 @@ export let tick = 0;
 
 export function init() {
     setInterval(() => {
-        updateTick();
+        tick++;
         services.map.update();
         for (const item of items) {
             services.item.update(item);
@@ -54,7 +54,6 @@ export function init() {
                         items: itemdata,
                         mines: minedata,
                         entitys: entitydata,
-                        p1: user.id,
                     },
                 });
             }
@@ -94,10 +93,6 @@ export function init() {
         doors: map.doors,
         itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
     };
-}
-
-export function updateTick() {
-    tick++;
 }
 
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {

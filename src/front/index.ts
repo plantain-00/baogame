@@ -9,11 +9,13 @@ import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 
-const p1 = (navigator.userAgent.indexOf("iPhone") === -1
+const control = (navigator.userAgent.indexOf("iPhone") === -1
     && navigator.userAgent.indexOf("Android") === -1
     && navigator.userAgent.indexOf("iPad") === -1)
     ? pcController.start(joing, initDone)
     : mobileController.start(joing, initDone);
+let currentUserId: number;
+let currentUser: common.User;
 
 (window as any).items = common.items;
 
@@ -55,7 +57,7 @@ let userName = localStorage.getItem("userName");
 if (userName) {
     $("#name").val(userName);
 }
-function joing(p: boolean) {
+function joing() {
     userName = $("#name").val() || "无名小卒";
     if ($("#name").val()) {
         localStorage.setItem("userName", userName!);
@@ -66,7 +68,6 @@ function joing(p: boolean) {
         kind: "join",
         join: {
             userName: userName!,
-            p1: p,
         },
     });
 }
@@ -87,13 +88,13 @@ function initDone() {
             cdomBg.id = "bg";
             cdomBody.width = common.w;
             cdomBody.height = common.h;
-            context = cdom.getContext("2d") !;
+            context = cdom.getContext("2d")!;
             context.font = "14px 宋体";
             context.textBaseline = "middle"; // 设置文本的垂直对齐方式
             context.textAlign = "center"; // 设置文本的水平对对齐方式
 
             ctxBg = cdomBg.getContext("2d");
-            ctxBody = cdomBody.getContext("2d") !;
+            ctxBody = cdomBody.getContext("2d")!;
             ctxBody.font = "14px 宋体";
             ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
             ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
@@ -102,19 +103,20 @@ function initDone() {
             game.itemGates = protocol.initSuccess.map.itemGates;
             game.doors = protocol.initSuccess.map.doors;
             game.signs = protocol.initSuccess.map.signs;
-            const middle = document.getElementById("middle") !;
+            const middle = document.getElementById("middle")!;
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
             $(".joining").show();
         } else if (protocol.kind === "joinSuccess") {
+            currentUserId = protocol.userId;
             $(".joining").hide();
         } else if (protocol.kind === "tick") {
             t++;
-            p1.id = protocol.tick.p1;
             for (let i = 0; i < protocol.tick.users.length; i++) {
-                if (protocol.tick.users[i].id === p1.id) {
-                    p1.data = protocol.tick.users[i];
+                if (protocol.tick.users[i].id === currentUserId) {
+                    currentUser = protocol.tick.users[i];
+                    break;
                 }
             }
 
@@ -122,18 +124,7 @@ function initDone() {
 
             const controlProtocol: common.ControlProtocol = {
                 kind: "control",
-                control: {
-                    leftDown: p1.leftDown,
-                    rightDown: p1.rightDown,
-                    upDown: p1.upDown,
-                    downDown: p1.downDown,
-                    itemDown: p1.itemDown,
-                    leftPress: p1.leftPress,
-                    rightPress: p1.rightPress,
-                    upPress: p1.upPress,
-                    downPress: p1.downPress,
-                    itemPress: p1.itemPress,
-                },
+                control,
             };
             const thisControl = JSON.stringify(controlProtocol);
             if (thisControl !== lastControl) {
@@ -146,19 +137,18 @@ function initDone() {
                     userCount++;
                 }
             }
-            p1.leftPress = false;
-            p1.rightPress = false;
-            p1.upPress = false;
-            p1.downPress = false;
-            p1.itemPress = false;
+            control.leftPress = false;
+            control.rightPress = false;
+            control.upPress = false;
+            control.downPress = false;
+            control.itemPress = false;
         } else if (protocol.kind === "explode") {
             cdx = 8;
             cdy = 9;
             drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
         } else if (protocol.kind === "userDead") {
             notice(protocol.userDead.message);
-            // p1 dead
-            if (protocol.userDead.user.id === p1.id) {
+            if (protocol.userDead.user.id === currentUserId) {
                 setTimeout(() => {
                     $(".joining").show().find("h4").html("你挂了");
                 }, 500);
@@ -192,7 +182,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
     ctx.drawImage(cdomBody, 0, 0);
 
     drawer.drawDoors(context, game.doors, common.h);
-    drawer.drawSigns(context, game.signs, common.h, p1.data);
+    drawer.drawSigns(context, game.signs, common.h, currentUser);
     drawer.drawItemGates(context, game.itemGates, common.h);
 
     for (const mine of protocol.tick.mines) {
@@ -207,9 +197,9 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
     for (const user of protocol.tick.users) {
         if (user.dead === true) {
             drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
-            drawer.drawUser(ctxBody, user, undefined, common.h, common.w, common.userWidth, common.userHeight, p1.id);
+            drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
         } else {
-            drawer.drawUser(ctx, user, protocol.tick.p1, common.h, common.w, common.userWidth, common.userHeight, p1.id);
+            drawer.drawUser(ctx, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
         }
     }
 

@@ -117,7 +117,6 @@ export type TickProtocol = {
         items: Item[];
         mines: Mine[];
         entitys: Entity[];
-        p1: number | null | undefined;
     };
 };
 
@@ -141,13 +140,13 @@ export type InitSuccessProtocol = {
 export type JoinProtocol = {
     kind: "join";
     join: {
-        p1: boolean;
         userName: string;
     };
 };
 
 export type JoinSuccessProtocol = {
     kind: "joinSuccess";
+    userId: number;
 };
 
 export type Control = {

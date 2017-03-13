@@ -42,7 +42,6 @@ message Tick {
     repeated Item items = 2;
     repeated Mine mines = 3;
     repeated Entity entitys = 4;
-    optional number p1 = 5;
 }
 
 message User {
