@@ -107,7 +107,7 @@ export function create(name: string, ws?: libs.WebSocket): User {
 export function getStatus(user: User): common.userStatus {
     user.crawl = false;
     if (user.dieing) { return "dieing"; }
-    if ((user.vy <= 0 || user.onLadder) && services.game.checkMine(user)) {
+    if ((user.vy <= 0 || user.onLadder) && services.mine.check(user)) {
         return "dieing";
     }
     if (user.onLadder && user.vx === 0 && user.vy === 0) {
@@ -138,9 +138,7 @@ export function getStatus(user: User): common.userStatus {
             if (typeof user.mining === "number" && user.mining > 0) {
                 user.mining--;
                 if (user.mining === 0) {
-                    if (services.game.addMine(user)) {
-                        user.carryCount--;
-                    }
+                    services.mine.lay(user);
                 } else {
                     return "mining";
                 }
@@ -437,7 +435,7 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
         }
     }
 
-    services.game.announce({
+    core.announce({
         kind: "userDead",
         userDead: {
             user: getData(user),

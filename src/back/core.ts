@@ -39,6 +39,14 @@ export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     }
 }
 
+export function announce(protocol: common.Protocol) {
+    for (const user of users) {
+        if (user.ws) {
+            emit(user.ws, protocol);
+        }
+    }
+}
+
 export interface Mine {
     x: number;
     y: number;

@@ -7,5 +7,6 @@ import * as item from "./item";
 import * as door from "./door";
 import * as itemGate from "./itemGate";
 import * as format from "./format";
+import * as mine from "./mine";
 
-export { user, playerAI, grenade, map, item, door, itemGate, format, game };
+export { user, playerAI, grenade, map, item, door, itemGate, format, game, mine };

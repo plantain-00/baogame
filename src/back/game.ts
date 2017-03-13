@@ -30,7 +30,7 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
             user.danger = true;
         }
     }
-    announce({ kind: "explode", explode: { x, y, power } });
+    core.announce({ kind: "explode", explode: { x, y, power } });
 }
 export function checkShot(u: services.user.User) {
     const x = u.x;
@@ -50,36 +50,6 @@ export function checkShot(u: services.user.User) {
         if (f > 0 && x < user.x && user.y <= y && user.y + uh >= y) {
             services.user.killed(user, "gun", u);
             user.vx = 6 * f;
-        }
-    }
-}
-export function addMine(user: services.user.User) {
-    const x = user.x + user.faceing * 40;
-    if (services.map.onFloor(x, user.y)) {
-        core.mines.push({
-            x,
-            y: user.y,
-            creater: user,
-        });
-        return true;
-    }
-    return false;
-}
-export function checkMine(user: services.user.User) {
-    for (let i = core.mines.length - 1; i >= 0; i--) {
-        const mine = core.mines[i];
-        if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {
-            services.user.killed(user, "mine", mine.creater);
-            mine.dead = true;
-            return true;
-        }
-    }
-    return false;
-}
-export function announce(protocol: common.Protocol) {
-    for (const user of core.users) {
-        if (user.ws) {
-            core.emit(user.ws, protocol);
         }
     }
 }
@@ -107,10 +77,6 @@ export function update() {
     }
     // 分发状态
     sendTick();
-    // 清理死亡的人物/物品
-    clean();
-}
-export function clean() {
     for (let i = core.items.length - 1; i >= 0; i--) {
         const item = core.items[i];
         if (item.dead) {
