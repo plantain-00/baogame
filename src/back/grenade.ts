@@ -44,7 +44,7 @@ export function update(grenade: Grenade) {
     grenade.life--;
     if (grenade.life < 0) {
         grenade.dead = true;
-        services.game.explode(grenade.x, grenade.y, grenade.creater, 100);
+        explode(grenade.x, grenade.y, grenade.creater, 100);
     }
 }
 
@@ -72,4 +72,22 @@ export function throwGrenade(user: services.user.User) {
     grenade.vy = user.vy + vy;
 
     core.grenades.push(grenade);
+}
+
+export function explode(x: number, y: number, byUser: services.user.User, power: number) {
+    for (const user of core.users) {
+        const ux = user.x;
+        const uy = user.y + common.userHeight;
+        const distance = (ux - x) ** 2 + (uy - y) ** 2;
+        if (distance < power * power) {
+            services.user.killed(user, "bomb", byUser);
+        } else if (distance < 2.25 * power * power) {
+            const r = Math.atan2(uy - y, ux - x);
+            const force = 450 * power / (distance + 2500);
+            user.vx += force * Math.cos(r);
+            user.vy += force * Math.sin(r);
+            user.danger = true;
+        }
+    }
+    core.announce({ kind: "explode", explode: { x, y, power } });
 }

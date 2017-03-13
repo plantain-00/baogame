@@ -1,58 +1,7 @@
 import * as services from "./services";
 import * as common from "./common";
 import * as core from "./core";
-import * as libs from "./libs";
 
-export function createNPC(name: string) {
-    const u = services.user.create(name);
-    u.npc = true;
-    return u;
-}
-export function createUser(name: string, ws?: libs.WebSocket) {
-    const u = services.user.create(name, ws);
-    const { x, y } = services.map.born();
-    u.x = x;
-    u.y = y + common.tileHeight / 2;
-    return u;
-}
-export function explode(x: number, y: number, byUser: services.user.User, power: number) {
-    for (const user of core.users) {
-        const ux = user.x;
-        const uy = user.y + common.userHeight;
-        const distance = (ux - x) ** 2 + (uy - y) ** 2;
-        if (distance < power * power) {
-            services.user.killed(user, "bomb", byUser);
-        } else if (distance < 2.25 * power * power) {
-            const r = Math.atan2(uy - y, ux - x);
-            const force = 450 * power / (distance + 2500);
-            user.vx += force * Math.cos(r);
-            user.vy += force * Math.sin(r);
-            user.danger = true;
-        }
-    }
-    core.announce({ kind: "explode", explode: { x, y, power } });
-}
-export function checkShot(u: services.user.User) {
-    const x = u.x;
-    const y = u.y + common.userHeight * 2 / 3;
-    const f = u.faceing;
-
-    for (const user of core.users) {
-        let uh = common.userHeight;
-        if (user.crawl) {
-            uh /= 2;
-        }
-        if (f < 0 && x > user.x && user.y <= y && user.y + uh >= y) {
-            services.user.killed(user, "gun", u);
-            user.vx = 6 * f;
-        }
-
-        if (f > 0 && x < user.x && user.y <= y && user.y + uh >= y) {
-            services.user.killed(user, "gun", u);
-            user.vx = 6 * f;
-        }
-    }
-}
 export function update() {
     core.updateTick();
     services.map.update();

@@ -36,7 +36,7 @@ wss.on("connection", ws => {
         const protocol: common.Protocol = JSON.parse(message);
 
         if (protocol.kind === "join") {
-            user = services.game.createUser(protocol.join.userName.replace(/[<>]/g, "").substring(0, 8), ws);
+            user = services.user.createUser(protocol.join.userName.replace(/[<>]/g, "").substring(0, 8), ws);
             core.users.push(user);
             core.emit(ws, { kind: "joinSuccess" });
         } else if (protocol.kind === "control") {

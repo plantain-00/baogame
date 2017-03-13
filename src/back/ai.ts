@@ -12,7 +12,7 @@ function userCanGoRight(user: services.user.User) {
     const y = Math.floor(user.y / common.tileHeight);
     return core.map.floor[y][x];
 }
-export function playerAI(user: services.user.User) {
+export function play(user: services.user.User) {
     if (user.status === "standing") {
         if (user.carry === 1) {
             if (user.goleft || !user.goright) {
@@ -48,4 +48,9 @@ export function playerAI(user: services.user.User) {
             user.control.itemPress = find;
         }
     }
+}
+export function create(name: string) {
+    const u = services.user.create(name);
+    u.npc = true;
+    return u;
 }

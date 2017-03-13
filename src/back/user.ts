@@ -188,7 +188,7 @@ export function update(user: User) {
         user.carryCount--;
         if (user.carryCount <= 0) {
             if (user.carry === common.items.bomb.id) {
-                services.game.explode(user.x + user.faceing * 20, user.y + common.userHeight / 2, user, 120);
+                services.grenade.explode(user.x + user.faceing * 20, user.y + common.userHeight / 2, user, 120);
             }
             user.carry = 0;
             user.carryCount = 0;
@@ -197,7 +197,7 @@ export function update(user: User) {
     user.status = getStatus(user);
 
     if (user.npc) {
-        services.playerAI(user);
+        services.ai.play(user);
     }
     if (user.status === "falling" || user.status === "standing" || user.status === "climbing") {
         // 开枪
@@ -208,7 +208,7 @@ export function update(user: User) {
                 if (user.carryCount === 0) {
                     user.carry = 0;
                 }
-                services.game.checkShot(user);
+                services.gun.check(user);
             }
         } else if (user.control.itemPress && user.carry === common.items.gun.id && user.carryCount > 0) {
             user.fireing = 25;
@@ -589,4 +589,12 @@ export function collide(a: services.user.User, b: services.user.User) {
     b.onLadder = false;
     a.lastTouch = b.id;
     b.lastTouch = a.id;
+}
+
+export function createUser(name: string, ws?: libs.WebSocket) {
+    const u = services.user.create(name, ws);
+    const { x, y } = services.map.born();
+    u.x = x;
+    u.y = y + common.tileHeight / 2;
+    return u;
 }
