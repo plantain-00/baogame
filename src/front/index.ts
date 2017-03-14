@@ -218,8 +218,8 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
         }
     }
 
-    for (const entity of protocol.tick.entitys) {
-        drawer.drawEntity(ctx, entity, common.h);
+    for (const grenade of protocol.tick.grenades) {
+        drawer.drawGrenade(ctx, grenade, common.h);
     }
 
     drawer.draw(ctx);

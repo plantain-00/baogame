@@ -335,12 +335,12 @@ export function drawItem(ctx: CanvasRenderingContext2D, item: common.Item, t: nu
     ctx.restore();
 }
 
-export function drawEntity(ctx: CanvasRenderingContext2D, entity: common.Entity, height: number) {
+export function drawGrenade(ctx: CanvasRenderingContext2D, grenade: common.Grenade, height: number) {
     const w = 15;
     const h = 18;
     ctx.save();
-    ctx.translate(entity.x, height - entity.y);
-    ctx.rotate(entity.r / 10);
+    ctx.translate(grenade.x, height - grenade.y);
+    ctx.rotate(grenade.r / 10);
     ctx.drawImage(images.grenade, -w, -h, w * 2, h * 2);
     ctx.restore();
 }

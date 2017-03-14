@@ -41,7 +41,7 @@ message Tick {
     repeated User users = 1;
     repeated Item items = 2;
     repeated Mine mines = 3;
-    repeated Entity entitys = 4;
+    repeated Grenade grenades = 4;
 }
 
 message User {
@@ -78,7 +78,7 @@ message Mine {
     required boolean dead = 3;
 }
 
-message Entity {
+message Grenade {
     required uint32 x = 1;
     required uint32 y = 2;
     required uint32 r = 3;

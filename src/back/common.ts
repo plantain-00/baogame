@@ -67,7 +67,7 @@ export type Mine = {
     dead: boolean;
 };
 
-export type Entity = {
+export type Grenade = {
     x: number;
     y: number;
     r: number;
@@ -116,7 +116,7 @@ export type TickProtocol = {
         users: User[];
         items: Item[];
         mines: Mine[];
-        entitys: Entity[];
+        grenades: Grenade[];
     };
 };
 

@@ -88,7 +88,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
             itemPress: false,
         },
         ladder: undefined,
-
         doubleJumping: false,
         flying: 0,
         status: "standing",

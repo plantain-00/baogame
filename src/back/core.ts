@@ -35,7 +35,7 @@ export function init() {
         }
         const itemdata = items.map(item => services.item.getData(item));
         const userdata = users.map(user => services.user.getData(user));
-        const entitydata = grenades.map(e => ({
+        const grenadedata = grenades.map(e => ({
             x: e.x,
             y: e.y,
             r: e.r,
@@ -53,7 +53,7 @@ export function init() {
                         users: userdata,
                         items: itemdata,
                         mines: minedata,
-                        entitys: entitydata,
+                        grenades: grenadedata,
                     },
                 });
             }
