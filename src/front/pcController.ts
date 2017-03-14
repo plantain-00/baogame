@@ -14,25 +14,35 @@ export function start(joing: () => void, initDone: () => void) {
         downPress: false,
     };
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
         if (e.keyCode === 87) {
-            if (!control.upDown) { control.upPress = true; }
+            if (!control.upDown) {
+                control.upPress = true;
+            }
             control.upDown = 2000;
         } else if (e.keyCode === 83) {
-            if (!control.downDown) { control.downPress = true; }
+            if (!control.downDown) {
+                control.downPress = true;
+            }
             control.downDown = 2000;
         } else if (e.keyCode === 65) {
-            if (!control.leftDown) { control.leftPress = true; }
+            if (!control.leftDown) {
+                control.leftPress = true;
+            }
             control.leftDown = 2000;
         } else if (e.keyCode === 68) {
-            if (!control.rightDown) { control.rightPress = true; }
+            if (!control.rightDown) {
+                control.rightPress = true;
+            }
             control.rightDown = 2000;
         } else if (e.keyCode === 81) {
-            if (!control.itemDown) { control.itemPress = true; }
+            if (!control.itemDown) {
+                control.itemPress = true;
+            }
             control.itemDown = 2000;
         }
     });
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keyup", e => {
         if (e.keyCode === 87) {
             control.upDown = 0;
         } else if (e.keyCode === 83) {
@@ -51,7 +61,6 @@ export function start(joing: () => void, initDone: () => void) {
         }
         e.preventDefault();
     });
-
     $(".txt-input").on("keydown", (e) => { e.stopPropagation(); });
     $(".txt-input").on("keyup", (e) => { e.stopPropagation(); });
     $(".joining .joinBtn").click(() => { joing(); });
