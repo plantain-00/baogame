@@ -403,7 +403,7 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
     if (user.killer && user.killer !== user.id) {
         killer = core.users.find(u => u.id === user.killer);
         if (killer) {
-            user.score++;
+            killer.score++;
         }
     }
 
