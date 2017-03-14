@@ -1,23 +1,22 @@
 import * as common from "../back/common";
+import { Reconnector } from "reconnection/browser";
 
 let ws: WebSocket | undefined;
 
 export function connect(onmessage: (protocol: common.Protocol) => void) {
     const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-    ws = new WebSocket(`${protocol}//${location.host}/ws/`);
-    ws.onmessage = evt => {
-        onmessage(JSON.parse(evt.data));
-    };
-    // ws.onclose = (evt) => {
-    //     if (!ws) {
-    //         setTimeout(() => {
-    //             connect();
-    //         }, 500);
-    //     }
-    // };
-    ws.onerror = evt => {
-        console.log("WebSocketError");
-    };
+    const reconnector = new Reconnector(() => {
+        ws = new WebSocket(`${protocol}//${location.host}/ws/`);
+        ws.onmessage = evt => {
+            onmessage(JSON.parse(evt.data));
+        };
+        ws.onclose = () => {
+            reconnector.reconnect();
+        };
+        ws.onopen = () => {
+            reconnector.reset();
+        };
+    });
 }
 
 export function emit(protocol: common.Protocol) {
