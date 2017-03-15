@@ -8,6 +8,21 @@ import * as toast from "./effects/toast";
 import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
+import * as Vue from "vue";
+
+/* tslint:disable:no-unused-new */
+
+type App = {
+    notices?: string[];
+} & Vue;
+
+const app: App = new Vue({
+    el: "#container",
+    data: {
+        notices: [],
+    },
+});
+console.log(app);
 
 const control = (navigator.userAgent.indexOf("iPhone") === -1
     && navigator.userAgent.indexOf("Android") === -1
@@ -31,10 +46,6 @@ const scoreText = [
     "已经如同神一般",
     "已经超越神了",
 ];
-
-function notice(str: string) {
-    $(".notice .notiveIn").prepend("<div class='noticeItem'>" + str + "</div>");
-}
 
 let cdomBody: HTMLCanvasElement;
 let ctxBody: CanvasRenderingContext2D;
@@ -147,7 +158,7 @@ function initDone() {
             cdy = 9;
             drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
         } else if (protocol.kind === "userDead") {
-            notice(protocol.userDead.message);
+            app.notices!.push(protocol.userDead.message);
             if (protocol.userDead.user.id === currentUserId) {
                 setTimeout(() => {
                     $(".joining").show().find("h4").html("你挂了");

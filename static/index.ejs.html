@@ -1,43 +1,52 @@
 <!doctype/>
 <html>
+
 <head>
-<meta name="viewport" content="width=1100, user-scalable=no">
-<title>暴走大乱斗</title>
-<link rel="stylesheet" href="./index.css" />
+    <meta name="viewport" content="width=1100, user-scalable=no">
+    <title>暴走大乱斗</title>
+    <link rel="stylesheet" href="./index.css" />
 </head>
+
 <body>
-<div class="frame">
-	<div class="middle" id="middle">
-		<canvas id="Bg"></canvas>
-		<canvas id="Fg"></canvas>
-	</div>
-</div>
-<div class="joining" style="display:none"><div class="center">
-	<h4 class="message">加入游戏</h4>
-	你的名字：<input id="name" class="txt-input" placeholder="无名小卒"/>
-	<div>
-		<a href="javascript:void(0)" class="btn joinBtn">加入</a>
-		<a href="javascript:void(0)" class="btn btn-weak dismissBtn">观战</a>
-	</div>
-</div></div>
-<div class="mobileController" style="display:none">
-	<div class="left">
-		<div data-act="l" class="moreBtn l">左</div>
-		<div data-act="r" class="moreBtn r">右</div>
-	</div>
-	<div class="right">
-		<div data-act="a" class="moreBtn item">act</div>
-		<div data-act="u" class="moreBtn up">上</div>
-		<div data-act="d" class="moreBtn down">下</div>
-	</div>
-</div>
-<div class="notice">
-	<div class="noticeFix">
-		<div class="noticeItem">W,A,S,D:移动  Q:使用物品</div>
-	</div>
-	<div class="notiveIn"></div>
-	<script src="zepto.js"></script>
-	<script src="scripts/<%= staticScriptsIndexJs %>"></script>
-</div>
+    <div class="frame">
+        <div class="middle" id="middle">
+            <canvas id="Bg"></canvas>
+            <canvas id="Fg"></canvas>
+        </div>
+    </div>
+    <div id="container">
+        <div class="joining" style="display:none">
+            <div class="center">
+                <h4 class="message">加入游戏</h4>
+                你的名字：<input id="name" class="txt-input" placeholder="无名小卒" />
+                <div>
+                    <a href="javascript:void(0)" class="btn joinBtn">加入</a>
+                    <a href="javascript:void(0)" class="btn btn-weak dismissBtn">观战</a>
+                </div>
+            </div>
+        </div>
+        <div class="mobileController" style="display:none">
+            <div class="left">
+                <div data-act="l" class="moreBtn l">左</div>
+                <div data-act="r" class="moreBtn r">右</div>
+            </div>
+            <div class="right">
+                <div data-act="a" class="moreBtn item">act</div>
+                <div data-act="u" class="moreBtn up">上</div>
+                <div data-act="d" class="moreBtn down">下</div>
+            </div>
+        </div>
+        <div class="notice">
+            <div class="noticeFix">
+                <div class="noticeItem">W,A,S,D:移动 Q:使用物品</div>
+            </div>
+            <div class="notiveIn">
+                <div class='noticeItem' v-for="notice in notices">{{notice}}</div>
+            </div>
+        </div>
+    </div>
+    <script src="zepto.js"></script>
+    <script src="scripts/<%= staticScriptsIndexJs %>"></script>
 </body>
+
 </html>
