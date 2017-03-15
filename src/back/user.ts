@@ -410,27 +410,27 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
     let message: string | undefined;
     if (killer) {
         if (action === "drug") {
-            message = "<b>" + killer.name + "</b>让<b>" + user.name + "</b>品尝到了毒药的滋味";
+            message = `${killer.name} 让 ${user.name} 品尝到了毒药的滋味`;
         } else if (action === "mine") {
             if (user.killer === user.id) {
-                message = "<b>" + killer.name + "</b>用自己的身体检验了地雷的可靠性，结果很成功";
+                message = `${killer.name} 用自己的身体检验了地雷的可靠性，结果很成功`;
             } else {
-                message = "<b>" + killer.name + "</b>的地雷让<b>" + user.name + "</b>的菊花一紧";
+                message = `${killer.name} 的地雷让 ${user.name} 的菊花一紧`;
             }
         } else if (action === "gun") {
-            message = "<b>" + killer.name + "</b>开枪了，<b>" + user.name + "</b>应声倒地";
+            message = `${killer.name} 开枪了，${user.name} 应声倒地`;
         } else if (action === "power") {
-            message = "<b>" + killer.name + "</b>把<b>" + user.name + "</b>扔进了泥潭";
+            message = `${killer.name} 把 ${user.name} 扔进了泥潭`;
         } else if (action === "bomb") {
-            message = "<b>" + user.name + "</b>没能从爆炸中逃生";
+            message = `${user.name} 没能从爆炸中逃生`;
         } else {
-            message = "<b>" + killer.name + "</b>把<b>" + user.name + "</b>扔进了泥潭";
+            message = `${killer.name} 把 ${user.name} 扔进了泥潭`;
         }
     } else {
         if (action === "drug") {
-            message = "<b>" + user.name + "</b>尝了一口毒药";
+            message = `${user.name} 尝了一口毒药`;
         } else {
-            message = "<b>" + user.name + "</b>完成了华丽的一跃";
+            message = `${user.name} 完成了华丽的一跃`;
         }
     }
 

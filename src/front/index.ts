@@ -7,6 +7,7 @@ import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
+import * as score from "./score";
 
 /* tslint:disable:no-unused-new */
 
@@ -93,19 +94,6 @@ let currentUserId: number;
 let currentUser: common.User;
 
 (window as any).items = common.items;
-
-const scoreText = [
-    "小试牛刀",
-    "势不可挡",
-    "正在大杀特杀",
-    "已经主宰比赛",
-    "已经杀人如麻",
-    "已经无人能挡",
-    "已经变态杀戮",
-    "已经妖怪般的杀戮",
-    "已经如同神一般",
-    "已经超越神了",
-];
 
 let cdomBody: HTMLCanvasElement;
 let ctxBody: CanvasRenderingContext2D;
@@ -350,9 +338,7 @@ connect(protocol => {
         }
         if (protocol.userDead.killer) {
             const killer = protocol.userDead.killer;
-            if (killer.score <= 10) {
-                drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + scoreText[killer.score - 1], common.h));
-            }
+            drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + score.getText(killer.score), common.h));
         }
     }
 });
