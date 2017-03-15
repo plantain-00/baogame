@@ -1,6 +1,7 @@
 import * as Vue from "vue";
+import { Reconnector } from "reconnection/browser";
 
-export { Vue };
+export { Vue, Reconnector };
 
 export type App = {
     notices: string[];

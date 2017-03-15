@@ -1,4 +1,3 @@
-import { connect, emit } from "./socket";
 import * as common from "../back/common";
 import * as images from "./images";
 import * as flare from "./effects/flare";
@@ -239,7 +238,17 @@ document.addEventListener("keyup", e => {
     e.preventDefault();
 });
 
+let ws: WebSocket | undefined;
+
+function emit(protocol: common.Protocol) {
+    if (!ws) {
+        return;
+    }
+    ws.send(JSON.stringify(protocol));
+}
+
 const middle = document.getElementById("middle")!;
+
 function checkDisplay() {
     if (600 > window.innerHeight) {
         const h = window.innerHeight;
@@ -258,87 +267,98 @@ if (isMobile) {
     window.onresize = checkDisplay;
 }
 
-connect(protocol => {
-    if (protocol.kind === "initSuccess") {
-        const cdom = document.createElement("canvas");	// 玩家层
-        const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
-        cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
-        cdom.width = common.w;
-        cdom.height = common.h;
-        cdom.id = "fg";
-        cdomBg.width = common.w;
-        cdomBg.height = common.h;
-        cdomBg.id = "bg";
-        cdomBody.width = common.w;
-        cdomBody.height = common.h;
-        context = cdom.getContext("2d")!;
-        context.font = "14px 宋体";
-        context.textBaseline = "middle"; // 设置文本的垂直对齐方式
-        context.textAlign = "center"; // 设置文本的水平对对齐方式
+const urlProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+const reconnector = new libs.Reconnector(() => {
+    ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
+    ws.onmessage = evt => {
+        const protocol: common.Protocol = JSON.parse(evt.data);
+        if (protocol.kind === "initSuccess") {
+            const cdom = document.createElement("canvas");	// 玩家层
+            const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
+            cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
+            cdom.width = common.w;
+            cdom.height = common.h;
+            cdom.id = "fg";
+            cdomBg.width = common.w;
+            cdomBg.height = common.h;
+            cdomBg.id = "bg";
+            cdomBody.width = common.w;
+            cdomBody.height = common.h;
+            context = cdom.getContext("2d")!;
+            context.font = "14px 宋体";
+            context.textBaseline = "middle"; // 设置文本的垂直对齐方式
+            context.textAlign = "center"; // 设置文本的水平对对齐方式
 
-        ctxBg = cdomBg.getContext("2d");
-        ctxBody = cdomBody.getContext("2d")!;
-        ctxBody.font = "14px 宋体";
-        ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
-        ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
+            ctxBg = cdomBg.getContext("2d");
+            ctxBody = cdomBody.getContext("2d")!;
+            ctxBody.font = "14px 宋体";
+            ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
+            ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
 
-        drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
-        game.itemGates = protocol.initSuccess.map.itemGates;
-        game.doors = protocol.initSuccess.map.doors;
-        game.signs = protocol.initSuccess.map.signs;
-        middle.innerHTML = "";
-        middle.appendChild(cdomBg);
-        middle.appendChild(cdom);
-        app.showDialog = true;
-    } else if (protocol.kind === "joinSuccess") {
-        currentUserId = protocol.userId;
-        app.showDialog = false;
-    } else if (protocol.kind === "tick") {
-        t++;
-        for (let i = 0; i < protocol.tick.users.length; i++) {
-            if (protocol.tick.users[i].id === currentUserId) {
-                currentUser = protocol.tick.users[i];
-                break;
+            drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
+            game.itemGates = protocol.initSuccess.map.itemGates;
+            game.doors = protocol.initSuccess.map.doors;
+            game.signs = protocol.initSuccess.map.signs;
+            middle.innerHTML = "";
+            middle.appendChild(cdomBg);
+            middle.appendChild(cdom);
+            app.showDialog = true;
+        } else if (protocol.kind === "joinSuccess") {
+            currentUserId = protocol.userId;
+            app.showDialog = false;
+        } else if (protocol.kind === "tick") {
+            t++;
+            for (let i = 0; i < protocol.tick.users.length; i++) {
+                if (protocol.tick.users[i].id === currentUserId) {
+                    currentUser = protocol.tick.users[i];
+                    break;
+                }
+            }
+
+            render(context, protocol);
+
+            const controlProtocol: common.ControlProtocol = {
+                kind: "control",
+                control,
+            };
+            const thisControl = JSON.stringify(controlProtocol);
+            if (thisControl !== lastControl) {
+                lastControl = thisControl;
+                emit(controlProtocol);
+            }
+            let userCount = 0;
+            for (const user of protocol.tick.users) {
+                if (!user.npc) {
+                    userCount++;
+                }
+            }
+            control.leftPress = false;
+            control.rightPress = false;
+            control.upPress = false;
+            control.downPress = false;
+            control.itemPress = false;
+        } else if (protocol.kind === "explode") {
+            cdx = 8;
+            cdy = 9;
+            drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
+        } else if (protocol.kind === "userDead") {
+            app.notices.push(protocol.userDead.message);
+            if (protocol.userDead.user.id === currentUserId) {
+                setTimeout(() => {
+                    app.showFail = true;
+                    app.showDialog = true;
+                }, 500);
+            }
+            if (protocol.userDead.killer) {
+                const killer = protocol.userDead.killer;
+                drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + score.getText(killer.score), common.h));
             }
         }
-
-        render(context, protocol);
-
-        const controlProtocol: common.ControlProtocol = {
-            kind: "control",
-            control,
-        };
-        const thisControl = JSON.stringify(controlProtocol);
-        if (thisControl !== lastControl) {
-            lastControl = thisControl;
-            emit(controlProtocol);
-        }
-        let userCount = 0;
-        for (const user of protocol.tick.users) {
-            if (!user.npc) {
-                userCount++;
-            }
-        }
-        control.leftPress = false;
-        control.rightPress = false;
-        control.upPress = false;
-        control.downPress = false;
-        control.itemPress = false;
-    } else if (protocol.kind === "explode") {
-        cdx = 8;
-        cdy = 9;
-        drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
-    } else if (protocol.kind === "userDead") {
-        app.notices.push(protocol.userDead.message);
-        if (protocol.userDead.user.id === currentUserId) {
-            setTimeout(() => {
-                app.showFail = true;
-                app.showDialog = true;
-            }, 500);
-        }
-        if (protocol.userDead.killer) {
-            const killer = protocol.userDead.killer;
-            drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + score.getText(killer.score), common.h));
-        }
-    }
+    };
+    ws.onclose = () => {
+        reconnector.reconnect();
+    };
+    ws.onopen = () => {
+        reconnector.reset();
+    };
 });
