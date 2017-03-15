@@ -15,25 +15,25 @@
         </div>
     </div>
     <div id="container">
-        <div class="joining" style="display:none">
+        <div v-if="showDialog" class="joining">
             <div class="center">
-                <h4 class="message">加入游戏</h4>
-                你的名字：<input id="name" class="txt-input" placeholder="无名小卒" />
+                <h4 class="message">{{showFail ? "你挂了" : "加入游戏"}}</h4>
+                你的名字：<input class="txt-input" v-model="userName" @keydown="stopPropagation($event)" @keyup="stopPropagation($event)" />
                 <div>
-                    <a href="javascript:void(0)" class="btn joinBtn">加入</a>
-                    <a href="javascript:void(0)" class="btn btn-weak dismissBtn">观战</a>
+                    <a href="javascript:void(0)" class="btn joinBtn" @click="join()">按e加入</a>
+                    <a href="javascript:void(0)" class="btn btn-weak dismissBtn" @click="close()">观战</a>
                 </div>
             </div>
         </div>
-        <div class="mobileController" style="display:none">
+        <div v-if="showMobileControl" class="mobileController">
             <div class="left">
-                <div data-act="l" class="moreBtn l">左</div>
-                <div data-act="r" class="moreBtn r">右</div>
+                <div data-act="l" class="moreBtn l" @touchstart="touchstart($event)" @touchend="touchend($event)">左</div>
+                <div data-act="r" class="moreBtn r" @touchstart="touchstart($event)" @touchend="touchend($event)">右</div>
             </div>
             <div class="right">
-                <div data-act="a" class="moreBtn item">act</div>
-                <div data-act="u" class="moreBtn up">上</div>
-                <div data-act="d" class="moreBtn down">下</div>
+                <div data-act="a" class="moreBtn item" @touchstart="touchstart($event)" @touchend="touchend($event)">act</div>
+                <div data-act="u" class="moreBtn up" @touchstart="touchstart($event)" @touchend="touchend($event)">上</div>
+                <div data-act="d" class="moreBtn down" @touchstart="touchstart($event)" @touchend="touchend($event)">下</div>
             </div>
         </div>
         <div class="notice">
@@ -45,7 +45,6 @@
             </div>
         </div>
     </div>
-    <script src="zepto.js"></script>
     <script src="scripts/<%= staticScriptsIndexJs %>"></script>
 </body>
 

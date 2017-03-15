@@ -8,27 +8,90 @@ import * as toast from "./effects/toast";
 import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
-import * as Vue from "vue";
+import * as libs from "./libs";
 
 /* tslint:disable:no-unused-new */
 
-type App = {
-    notices?: string[];
-} & Vue;
-
-const app: App = new Vue({
+const app: any = new libs.Vue({
     el: "#container",
     data: {
         notices: [],
+        userName: localStorage.getItem("userName") || "无名小卒",
+        showDialog: false,
+        showFail: false,
+        showMobileControl: false,
+    },
+    methods: {
+        join(this: libs.App) {
+            if (this.userName) {
+                localStorage.setItem("userName", this.userName);
+            } else {
+                localStorage.removeItem("userName");
+            }
+            emit({
+                kind: "join",
+                join: {
+                    userName: this.userName!,
+                },
+            });
+        },
+        close(this: libs.App) {
+            this.showDialog = false;
+        },
+        stopPropagation(e: KeyboardEvent) {
+            e.stopPropagation();
+        },
+        touchstart(e: TouchEvent) {
+            const t = (e.target as HTMLElement).dataset.act;
+            if (t === "a") {
+                if (!control.itemDown) {
+                    control.itemPress = true;
+                }
+                control.itemDown = 20000;
+            } else if (t === "l") {
+                if (!control.leftDown) {
+                    control.leftPress = true;
+                }
+                control.leftDown = 20000;
+            } else if (t === "r") {
+                if (!control.rightDown) {
+                    control.rightPress = true;
+                }
+                control.rightDown = 20000;
+            } else if (t === "u") {
+                if (!control.upDown) {
+                    control.upPress = true;
+                }
+                control.upDown = 20000;
+            } else if (t === "d") {
+                if (!control.downDown) {
+                    control.downPress = true;
+                }
+                control.downDown = 20000;
+            }
+        },
+        touchend(e: TouchEvent) {
+            const t = (e.target as HTMLElement).dataset.act;
+            if (t === "a") {
+                control.itemDown = 0;
+            } else if (t === "l") {
+                control.leftDown = 0;
+            } else if (t === "r") {
+                control.rightDown = 0;
+            } else if (t === "u") {
+                control.upDown = 0;
+            } else if (t === "d") {
+                control.downDown = 0;
+            }
+        },
     },
 });
-console.log(app);
 
 const control = (navigator.userAgent.indexOf("iPhone") === -1
     && navigator.userAgent.indexOf("Android") === -1
     && navigator.userAgent.indexOf("iPad") === -1)
-    ? pcController.start(joing, initDone)
-    : mobileController.start(joing, initDone);
+    ? pcController.start(app, initDone)
+    : mobileController.start(app, initDone);
 let currentUserId: number;
 let currentUser: common.User;
 
@@ -63,25 +126,6 @@ const game: {
         doors: [],
         itemGates: [],
     };
-
-let userName = localStorage.getItem("userName");
-if (userName) {
-    $("#name").val(userName);
-}
-function joing() {
-    userName = $("#name").val() || "无名小卒";
-    if ($("#name").val()) {
-        localStorage.setItem("userName", userName!);
-    } else {
-        localStorage.removeItem("userName");
-    }
-    emit({
-        kind: "join",
-        join: {
-            userName: userName!,
-        },
-    });
-}
 
 let lastControl: string;
 
@@ -118,10 +162,10 @@ function initDone() {
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
-            $(".joining").show();
+            app.showDialog = true;
         } else if (protocol.kind === "joinSuccess") {
             currentUserId = protocol.userId;
-            $(".joining").hide();
+            app.showDialog = false;
         } else if (protocol.kind === "tick") {
             t++;
             for (let i = 0; i < protocol.tick.users.length; i++) {
@@ -158,10 +202,11 @@ function initDone() {
             cdy = 9;
             drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
         } else if (protocol.kind === "userDead") {
-            app.notices!.push(protocol.userDead.message);
+            app.notices.push(protocol.userDead.message);
             if (protocol.userDead.user.id === currentUserId) {
                 setTimeout(() => {
-                    $(".joining").show().find("h4").html("你挂了");
+                    app.showFail = true;
+                    app.showDialog = true;
                 }, 500);
             }
             if (protocol.userDead.killer) {

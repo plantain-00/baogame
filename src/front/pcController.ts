@@ -1,6 +1,7 @@
 import * as common from "../back/common";
+import * as libs from "./libs";
 
-export function start(joing: () => void, initDone: () => void) {
+export function start(app: libs.App, initDone: () => void) {
     const control: common.Control = {
         upDown: 0,
         downDown: 0,
@@ -55,19 +56,12 @@ export function start(joing: () => void, initDone: () => void) {
             control.itemDown = 0;
         }
         if (e.keyCode === 69) {
-            if ($(".joining").css("display") !== "none") {
-                joing();
+            if (app.showDialog) {
+                app.join();
             }
         }
         e.preventDefault();
     });
-    $(".txt-input").on("keydown", (e) => { e.stopPropagation(); });
-    $(".txt-input").on("keyup", (e) => { e.stopPropagation(); });
-    $(".joining .joinBtn").click(() => { joing(); });
-    $(".joining .dismissBtn").click(() => {
-        $(".joining").hide();
-    });
-    $(".joining .joinBtn").text("按e加入");
 
     if (initDone) {
         initDone();
