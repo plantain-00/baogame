@@ -6,7 +6,6 @@ import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
-import * as score from "./score";
 import * as locales from "./locales";
 
 /* tslint:disable:no-unused-new */
@@ -339,7 +338,9 @@ const reconnector = new libs.Reconnector(() => {
             }
             if (protocol.userDead.killer) {
                 const killer = protocol.userDead.killer;
-                drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + score.getText(killer.score), common.h));
+                if (killer.score >= 3) {
+                    drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + locales.getScoreText(killer.score), common.h));
+                }
             }
         }
     };

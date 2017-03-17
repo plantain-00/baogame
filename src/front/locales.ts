@@ -12,6 +12,16 @@ const defaultLocale = {
         flypack: "flypack",
         grenade: "grenade",
     },
+    score: [
+        "is on a Killing Spree",
+        "is Dominating",
+        "has a Mega-Kill",
+        "is Unstoppable",
+        "is Wicked Sick",
+        "has a M-m-m-m....Monster Kill",
+        "is Godlike",
+        "Holy Shit",
+    ],
 };
 
 const otherLocales: { [language: string]: typeof defaultLocale } = {
@@ -27,6 +37,16 @@ const otherLocales: { [language: string]: typeof defaultLocale } = {
             flypack: "喷气背包",
             grenade: "手雷",
         },
+        score: [
+            "正在大杀特杀",
+            "已经主宰比赛",
+            "已经杀人如麻",
+            "已经无人能挡",
+            "已经变态杀戮",
+            "已经妖怪般的杀戮",
+            "已经如同神一般",
+            "已经超越神了",
+        ],
     },
 };
 
@@ -61,4 +81,11 @@ export function getItemName(id: number) {
         return locale.item.grenade;
     }
     return "";
+}
+
+export function getScoreText(score: number) {
+    if (score <= 8) {
+        return locale.score[score - 1];
+    }
+    return locale.score[7];
 }
