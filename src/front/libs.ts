@@ -4,7 +4,6 @@ import { Reconnector } from "reconnection/browser";
 export { Vue, Reconnector };
 
 export type App = {
-    notices: string[];
     userName: string;
     showDialog: boolean;
     showFail: boolean;

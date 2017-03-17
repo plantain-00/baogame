@@ -15,7 +15,7 @@ const defaultLocale = {
 };
 
 const otherLocales: { [language: string]: typeof defaultLocale } = {
-    "zh-CN": {
+    "zh-cn": {
         item: {
             power: "无敌",
             gun: "枪",
@@ -30,7 +30,7 @@ const otherLocales: { [language: string]: typeof defaultLocale } = {
     },
 };
 
-const locale = otherLocales[navigator.language] || defaultLocale;
+const locale = otherLocales[navigator.language.toLowerCase()] || defaultLocale;
 
 export function getItemName(id: number) {
     if (id === common.items.power.id) {

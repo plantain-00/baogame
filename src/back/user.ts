@@ -406,39 +406,11 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
         }
     }
 
-    let message: string | undefined;
-    if (killer) {
-        if (action === "drug") {
-            message = `${killer.name} 让 ${user.name} 品尝到了毒药的滋味`;
-        } else if (action === "mine") {
-            if (user.killer === user.id) {
-                message = `${killer.name} 用自己的身体检验了地雷的可靠性，结果很成功`;
-            } else {
-                message = `${killer.name} 的地雷让 ${user.name} 的菊花一紧`;
-            }
-        } else if (action === "gun") {
-            message = `${killer.name} 开枪了，${user.name} 应声倒地`;
-        } else if (action === "power") {
-            message = `${killer.name} 把 ${user.name} 扔进了泥潭`;
-        } else if (action === "bomb") {
-            message = `${user.name} 没能从爆炸中逃生`;
-        } else {
-            message = `${killer.name} 把 ${user.name} 扔进了泥潭`;
-        }
-    } else {
-        if (action === "drug") {
-            message = `${user.name} 尝了一口毒药`;
-        } else {
-            message = `${user.name} 完成了华丽的一跃`;
-        }
-    }
-
     core.announce({
         kind: "userDead",
         userDead: {
             user: getData(user),
             killer: killer ? getData(killer) : undefined,
-            message,
         },
     });
 }

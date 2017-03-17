@@ -172,7 +172,6 @@ export type UserDeadProtocol = {
     userDead: {
         user: User;
         killer: User | undefined;
-        message: string;
     };
 };
 

@@ -18,7 +18,6 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
 const app: any = new libs.Vue({
     el: "#container",
     data: {
-        notices: [],
         userName: localStorage.getItem("userName") || "无名小卒",
         showDialog: false,
         showFail: false,
@@ -332,7 +331,6 @@ const reconnector = new libs.Reconnector(() => {
             cdy = 9;
             drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
         } else if (protocol.kind === "userDead") {
-            app.notices.push(protocol.userDead.message);
             if (protocol.userDead.user.id === currentUserId) {
                 setTimeout(() => {
                     app.showFail = true;
