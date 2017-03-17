@@ -7,6 +7,7 @@ import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
 import * as score from "./score";
+import * as language from "./language";
 
 /* tslint:disable:no-unused-new */
 
@@ -92,8 +93,6 @@ const app: any = new libs.Vue({
 let currentUserId: number;
 let currentUser: common.User;
 
-(window as any).items = common.items;
-
 let cdomBody: HTMLCanvasElement;
 let ctxBody: CanvasRenderingContext2D;
 let context: CanvasRenderingContext2D;
@@ -158,12 +157,7 @@ function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
     for (const item of protocol.tick.items) {
         drawer.drawItem(ctx, item, t, common.h);
         if (item.dead) {
-            let itemName = "";
-            for (const key in common.items) {
-                if ((common.items as any)[key].id === item.id) {
-                    itemName = (common.items as any)[key].name;
-                }
-            }
+            const itemName = language.getItemName(item.id);
             drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
         }
     }

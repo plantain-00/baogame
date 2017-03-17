@@ -11,45 +11,36 @@ export const h = th * tileHeight;
 export const items = {
     power: {
         id: 1,
-        name: "无敌",
         count: 1000,
     },
     gun: {
         id: 2,
-        name: "枪",
         count: 3,
     },
     mine: {
         id: 3,
-        name: "地雷",
         count: 2,
     },
     drug: {
         id: 4,
-        name: "毒药",
     },
     hide: {
         id: 5,
-        name: "隐身",
         count: 1000,
     },
     bomb: {
         id: 6,
-        name: "惊喜！",
         count: 550,
     },
     doublejump: {
         id: 7,
-        name: "二段跳",
     },
     flypack: {
         id: 8,
-        name: "喷气背包",
         count: 250,
     },
     grenade: {
         id: 9,
-        name: "手雷",
         count: 3,
     },
 };
