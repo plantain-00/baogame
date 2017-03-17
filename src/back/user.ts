@@ -199,7 +199,6 @@ export function update(user: User) {
         services.ai.play(user);
     }
     if (user.status === "falling" || user.status === "standing" || user.status === "climbing") {
-        // 开枪
         if (typeof user.fireing === "number" && user.fireing > 0) {
             user.fireing--;
             if (user.fireing === 5) {
@@ -467,7 +466,6 @@ export function getData(user: User): common.User {
 }
 
 export function collide(a: services.user.User, b: services.user.User) {
-    // 不碰撞情况
     if (a.dead || b.dead) {
         return;
     }
@@ -475,7 +473,6 @@ export function collide(a: services.user.User, b: services.user.User) {
         return;
     }
 
-    // 带电情况
     if (a.carry === common.items.power.id && b.carry !== common.items.power.id) {
         services.user.killed(b, "power", a);
         b.vx = (b.x - a.x) / 2;

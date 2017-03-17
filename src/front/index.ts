@@ -7,7 +7,7 @@ import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
 import * as score from "./score";
-import * as language from "./language";
+import * as locales from "./locales";
 
 /* tslint:disable:no-unused-new */
 
@@ -112,65 +112,6 @@ const game: {
 
 let lastControl: string;
 
-function render(ctx: CanvasRenderingContext2D, protocol: common.TickProtocol) {
-    ctx.clearRect(0, 0, common.w, common.h);
-    ctx.save();
-    ctx.translate(cdx, cdy);
-    if (cdx > .5) {
-        cdx *= -.98;
-    } else {
-        cdx = 0;
-    }
-    if (cdy > .5) {
-        cdy *= -.97;
-    } else {
-        cdy = 0;
-    }
-    drawer.drawWater(ctx, 20, "#758", common.h, common.w, t);
-
-    ctx.drawImage(cdomBody, 0, 0);
-
-    drawer.drawDoors(context, game.doors, common.h);
-    drawer.drawSigns(context, game.signs, common.h, currentUser);
-    drawer.drawItemGates(context, game.itemGates, common.h);
-
-    for (const mine of protocol.tick.mines) {
-        ctx.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
-        if (mine.dead) {
-            cdx = 3;
-            cdy = 11;
-            drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
-        }
-    }
-
-    for (const user of protocol.tick.users) {
-        if (user.dead === true) {
-            drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
-            drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
-        } else {
-            drawer.drawUser(ctx, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
-        }
-    }
-
-    drawer.drawWater(ctx, 10, "#95a", common.h, common.w, t);
-
-    for (const item of protocol.tick.items) {
-        drawer.drawItem(ctx, item, t, common.h);
-        if (item.dead) {
-            const itemName = language.getItemName(item.id);
-            drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
-        }
-    }
-
-    for (const grenade of protocol.tick.grenades) {
-        drawer.drawGrenade(ctx, grenade, common.h);
-    }
-
-    drawer.draw(ctx);
-
-    ctx.restore();
-}
-
 const control: common.Control = {
     upDown: 0,
     downDown: 0,
@@ -267,9 +208,9 @@ const reconnector = new libs.Reconnector(() => {
     ws.onmessage = evt => {
         const protocol: common.Protocol = JSON.parse(evt.data);
         if (protocol.kind === "initSuccess") {
-            const cdom = document.createElement("canvas");	// 玩家层
-            const cdomBg = document.createElement("canvas");	// 背景层（只绘制一次）
-            cdomBody = document.createElement("canvas");	// 标记层（只添加，不修改，尸体）
+            const cdom = document.createElement("canvas");
+            const cdomBg = document.createElement("canvas");
+            cdomBody = document.createElement("canvas");
             cdom.width = common.w;
             cdom.height = common.h;
             cdom.id = "fg";
@@ -280,14 +221,14 @@ const reconnector = new libs.Reconnector(() => {
             cdomBody.height = common.h;
             context = cdom.getContext("2d")!;
             context.font = "14px 宋体";
-            context.textBaseline = "middle"; // 设置文本的垂直对齐方式
-            context.textAlign = "center"; // 设置文本的水平对对齐方式
+            context.textBaseline = "middle";
+            context.textAlign = "center";
 
             ctxBg = cdomBg.getContext("2d");
             ctxBody = cdomBody.getContext("2d")!;
             ctxBody.font = "14px 宋体";
-            ctxBody.textBaseline = "middle"; // 设置文本的垂直对齐方式
-            ctxBody.textAlign = "center"; // 设置文本的水平对对齐方式
+            ctxBody.textBaseline = "middle";
+            ctxBody.textAlign = "center";
 
             drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
             game.itemGates = protocol.initSuccess.map.itemGates;
@@ -309,7 +250,62 @@ const reconnector = new libs.Reconnector(() => {
                 }
             }
 
-            render(context, protocol);
+            context.clearRect(0, 0, common.w, common.h);
+            context.save();
+            context.translate(cdx, cdy);
+            if (cdx > .5) {
+                cdx *= -.98;
+            } else {
+                cdx = 0;
+            }
+            if (cdy > .5) {
+                cdy *= -.97;
+            } else {
+                cdy = 0;
+            }
+            drawer.drawWater(context, 20, "#758", common.h, common.w, t);
+
+            context.drawImage(cdomBody, 0, 0);
+
+            drawer.drawDoors(context, game.doors, common.h);
+            drawer.drawSigns(context, game.signs, common.h, currentUser);
+            drawer.drawItemGates(context, game.itemGates, common.h);
+
+            for (const mine of protocol.tick.mines) {
+                context.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
+                if (mine.dead) {
+                    cdx = 3;
+                    cdy = 11;
+                    drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
+                }
+            }
+
+            for (const user of protocol.tick.users) {
+                if (user.dead === true) {
+                    drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
+                    drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+                } else {
+                    drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+                }
+            }
+
+            drawer.drawWater(context, 10, "#95a", common.h, common.w, t);
+
+            for (const item of protocol.tick.items) {
+                drawer.drawItem(context, item, t, common.h);
+                if (item.dead) {
+                    const itemName = locales.getItemName(item.id);
+                    drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
+                }
+            }
+
+            for (const grenade of protocol.tick.grenades) {
+                drawer.drawGrenade(context, grenade, common.h);
+            }
+
+            drawer.draw(context);
+
+            context.restore();
 
             const controlProtocol: common.ControlProtocol = {
                 kind: "control",

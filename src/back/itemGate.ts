@@ -14,7 +14,6 @@ export function update(data: core.ItemGate) {
             data.targetItem = item;
         }
     } else {
-        // 生成物品（如果需要）
         if (core.items.length < core.users.length && Math.random() * 100 < core.users.length) {
             const item = services.item.create();
             core.items.push(item);
