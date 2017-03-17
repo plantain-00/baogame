@@ -21,6 +21,7 @@ const app: any = new libs.Vue({
         showDialog: false,
         showFail: false,
         showMobileControl: isMobile,
+        ui: locales.locale.ui,
     },
     methods: {
         join(this: libs.App) {
@@ -35,9 +36,6 @@ const app: any = new libs.Vue({
                     userName: this.userName!,
                 },
             });
-        },
-        close(this: libs.App) {
-            this.showDialog = false;
         },
         stopPropagation(e: KeyboardEvent) {
             e.stopPropagation();

@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=1100, user-scalable=no">
-    <title>暴走大乱斗</title>
+    <title>bao game</title>
     <link rel="stylesheet" href="./index.css" />
 </head>
 
@@ -17,28 +17,28 @@
     <div id="container">
         <div v-if="showDialog" class="joining">
             <div class="center">
-                <h4 class="message">{{showFail ? "你挂了" : "加入游戏"}}</h4>
-                你的名字：<input class="txt-input" v-model="userName" @keydown="stopPropagation($event)" @keyup="stopPropagation($event)" />
+                <h4 class="message">{{showFail ? ui.youAreDead : ui.joinGame}}</h4>
+                {{ui.yourName}}
+                <input class="txt-input" v-model="userName" @keydown="stopPropagation($event)" @keyup="stopPropagation($event)"/>
                 <div>
-                    <a href="javascript:void(0)" class="btn joinBtn" @click="join()">按e加入</a>
-                    <a href="javascript:void(0)" class="btn btn-weak dismissBtn" @click="close()">观战</a>
+                    <a href="javascript:void(0)" class="btn joinBtn" @click="join()">{{ui.joinByPressE}}</a>
                 </div>
             </div>
         </div>
         <div v-if="showMobileControl" class="mobileController">
             <div class="left">
-                <div data-act="l" class="moreBtn l" @touchstart="touchstart($event)" @touchend="touchend($event)">左</div>
-                <div data-act="r" class="moreBtn r" @touchstart="touchstart($event)" @touchend="touchend($event)">右</div>
+                <div data-act="l" class="moreBtn l" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.left}}</div>
+                <div data-act="r" class="moreBtn r" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.right}}</div>
             </div>
             <div class="right">
-                <div data-act="a" class="moreBtn item" @touchstart="touchstart($event)" @touchend="touchend($event)">act</div>
-                <div data-act="u" class="moreBtn up" @touchstart="touchstart($event)" @touchend="touchend($event)">上</div>
-                <div data-act="d" class="moreBtn down" @touchstart="touchstart($event)" @touchend="touchend($event)">下</div>
+                <div data-act="a" class="moreBtn item" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.item}}</div>
+                <div data-act="u" class="moreBtn up" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.up}}</div>
+                <div data-act="d" class="moreBtn down" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.down}}</div>
             </div>
         </div>
         <div class="notice">
             <div class="noticeFix">
-                <div class="noticeItem">W,A,S,D:移动 Q:使用物品</div>
+                <div class="noticeItem">{{ui.notice}}</div>
             </div>
         </div>
     </div>
