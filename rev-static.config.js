@@ -1,6 +1,7 @@
 module.exports = {
     inputFiles: [
         "static/scripts/index.js",
+        "static/index.css",
         "static/*.ejs.html",
     ],
     outputFiles: file => file.replace(".ejs", ""),
