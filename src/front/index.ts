@@ -204,7 +204,7 @@ const reconnector = new libs.Reconnector(() => {
     ws.binaryType = "arraybuffer";
     ws.onmessage = evt => {
         debug = typeof evt.data === "string";
-        const protocol: common.Protocol = JSON.parse(evt.data);
+        const protocol = format.decode(evt.data);
         if (protocol.kind === "initSuccess") {
             const cdom = document.createElement("canvas");
             const cdomBg = document.createElement("canvas");
@@ -229,8 +229,8 @@ const reconnector = new libs.Reconnector(() => {
             ctxBody.textAlign = "center";
 
             drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
-            game.itemGates = protocol.initSuccess.map.itemGates;
-            game.doors = protocol.initSuccess.map.doors;
+            game.itemGates = protocol.initSuccess.map.itemGates || [];
+            game.doors = protocol.initSuccess.map.doors || [];
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
@@ -240,10 +240,12 @@ const reconnector = new libs.Reconnector(() => {
             app.showDialog = false;
         } else if (protocol.kind === "tick") {
             t++;
-            for (let i = 0; i < protocol.tick.users.length; i++) {
-                if (protocol.tick.users[i].id === currentUserId) {
-                    currentUser = protocol.tick.users[i];
-                    break;
+            if (protocol.tick.users) {
+                for (let i = 0; i < protocol.tick.users.length; i++) {
+                    if (protocol.tick.users[i].id === currentUserId) {
+                        currentUser = protocol.tick.users[i];
+                        break;
+                    }
                 }
             }
 
@@ -267,36 +269,44 @@ const reconnector = new libs.Reconnector(() => {
             drawer.drawDoors(context, game.doors, common.h);
             drawer.drawItemGates(context, game.itemGates, common.h);
 
-            for (const mine of protocol.tick.mines) {
-                context.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
-                if (mine.dead) {
-                    cdx = 3;
-                    cdy = 11;
-                    drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
+            if (protocol.tick.mines) {
+                for (const mine of protocol.tick.mines) {
+                    context.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
+                    if (mine.dead) {
+                        cdx = 3;
+                        cdy = 11;
+                        drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
+                    }
                 }
             }
 
-            for (const user of protocol.tick.users) {
-                if (user.dead === true) {
-                    drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
-                    drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
-                } else {
-                    drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+            if (protocol.tick.users) {
+                for (const user of protocol.tick.users) {
+                    if (user.dead === true) {
+                        drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
+                        drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+                    } else {
+                        drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+                    }
                 }
             }
 
             drawer.drawWater(context, 10, "#95a", common.h, common.w, t);
 
-            for (const item of protocol.tick.items) {
-                drawer.drawItem(context, item, t, common.h);
-                if (item.dead) {
-                    const itemName = locales.getItemName(item.id);
-                    drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
+            if (protocol.tick.items) {
+                for (const item of protocol.tick.items) {
+                    drawer.drawItem(context, item, t, common.h);
+                    if (item.dead) {
+                        const itemName = locales.getItemName(item.id);
+                        drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
+                    }
                 }
             }
 
-            for (const grenade of protocol.tick.grenades) {
-                drawer.drawGrenade(context, grenade, common.h);
+            if (protocol.tick.grenades) {
+                for (const grenade of protocol.tick.grenades) {
+                    drawer.drawGrenade(context, grenade, common.h);
+                }
             }
 
             drawer.draw(context);
@@ -311,12 +321,6 @@ const reconnector = new libs.Reconnector(() => {
             if (thisControl !== lastControl) {
                 lastControl = thisControl;
                 emit(controlProtocol);
-            }
-            let userCount = 0;
-            for (const user of protocol.tick.users) {
-                if (!user.npc) {
-                    userCount++;
-                }
             }
             control.leftPress = false;
             control.rightPress = false;

@@ -80,30 +80,32 @@ export function draw(ctx: CanvasRenderingContext2D) {
 export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
     ctx.clearRect(0, 0, width, height);
     // 绘制柱子
-    for (const ladder of map.ladders) {
-        ctx.fillStyle = "#888";
-        for (let j = height - ladder.y2 * common.tileHeight + 10; j < height - ladder.y1 * common.tileHeight; j += 20) {
-            ctx.fillRect(ladder.x * common.tileWidth - 10, j, 20, 4);
+    if (map.ladders) {
+        for (const ladder of map.ladders) {
+            ctx.fillStyle = "#888";
+            for (let j = height - ladder.y2 * common.tileHeight + 10; j < height - ladder.y1 * common.tileHeight; j += 20) {
+                ctx.fillRect(ladder.x * common.tileWidth - 10, j, 20, 4);
+            }
+
+            ctx.fillStyle = "#aaa";
+            ctx.beginPath();
+            ctx.rect(ladder.x * common.tileHeight - 12, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
+            ctx.stroke();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(ladder.x * common.tileWidth - 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.rect(ladder.x * common.tileWidth + 8, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
+            ctx.stroke();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(ladder.x * common.tileWidth + 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
         }
-
-        ctx.fillStyle = "#aaa";
-        ctx.beginPath();
-        ctx.rect(ladder.x * common.tileHeight - 12, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
-        ctx.stroke();
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(ladder.x * common.tileWidth - 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.rect(ladder.x * common.tileWidth + 8, height - ladder.y2 * common.tileHeight, 4, (ladder.y2 - ladder.y1) * common.tileHeight);
-        ctx.stroke();
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(ladder.x * common.tileWidth + 10, height - ladder.y2 * common.tileHeight - 4, 4, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
     }
 
     // 绘制地板

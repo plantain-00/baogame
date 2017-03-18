@@ -29,7 +29,7 @@ message Join {
 }
 
 message JoinSuccess {
-    required string userName = 1;
+    required uint32 userId = 1;
 }
 
 message Control {
@@ -38,11 +38,11 @@ message Control {
     required uint32 upDown = 3;
     required uint32 downDown = 4;
     required uint32 itemDown = 5;
-    required boolean leftPress = 6;
-    required boolean rightPress = 7;
-    required boolean upPress = 8;
-    required boolean downPress = 9;
-    required boolean itemPress = 10;
+    required bool leftPress = 6;
+    required bool rightPress = 7;
+    required bool upPress = 8;
+    required bool downPress = 9;
+    required bool itemPress = 10;
 }
 
 message Explode {
@@ -82,13 +82,13 @@ message ItemGate {
 }
 
 message User {
-    required string carry = 1;
+    required uint32 carry = 1;
     required uint32 carryCount = 2;
     optional Ladder nearLadder = 3;
     required int32 faceing = 4;
     required uint32 fireing = 5;
     required uint32 grenadeing = 6;
-    required boolean danger = 7;
+    required bool danger = 7;
     required string status = 8;
     required string name = 9;
     required uint32 id = 10;
@@ -96,9 +96,9 @@ message User {
     required uint32 y = 12;
     required uint32 vy = 13;
     required uint32 score = 14;
-    required boolean dead = 15;
-    required boolean npc = 16;
-    required boolean doubleJumping = 17;
+    required bool dead = 15;
+    required bool npc = 16;
+    required bool doubleJumping = 17;
     required uint32 flying = 18;
 }
 
@@ -106,13 +106,13 @@ message Item {
     required uint32 x = 1;
     required uint32 y = 2;
     required uint32 id = 3;
-    required boolean dead = 4;
+    required bool dead = 4;
 }
 
 message Mine {
     required uint32 x = 1;
     required uint32 y = 2;
-    required boolean dead = 3;
+    required bool dead = 3;
 }
 
 message Grenade {
