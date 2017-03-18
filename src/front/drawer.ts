@@ -109,7 +109,7 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
     // 绘制地板
     for (let i = 0; i < map.h; i++) {
         for (let j = 0; j < map.w; j++) {
-            if (map.floor[i * map.w + j]) {
+            if (map.floors[i * map.w + j]) {
                 const x = j * common.tileWidth;
                 const y = height - i * common.tileHeight;
                 ctx.beginPath();
@@ -129,25 +129,6 @@ export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width
             }
         }
     }
-}
-
-export function drawSigns(ctx: CanvasRenderingContext2D, signs: common.Sign[], height: number, p1Data: common.User | undefined) {
-    ctx.fillStyle = "#fff";
-    ctx.font = "20px 宋体";
-    for (const sign of signs) {
-        ctx.drawImage(images.sign, sign.x * common.tileWidth, height - (sign.y + 1) * common.tileHeight, common.tileWidth, common.tileHeight);
-    }
-    if (p1Data) {
-        const ux = Math.floor(p1Data.x / common.tileWidth);
-        const uy = Math.floor(p1Data.y / common.tileHeight);
-        for (const sign of signs) {
-            if (ux === sign.x && uy === sign.y) {
-                ctx.fillText(sign.message, sign.x * common.tileWidth, height - (sign.y + 1) * common.tileHeight - 30);
-                break;
-            }
-        }
-    }
-    ctx.font = "14px 宋体";
 }
 
 export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.Door[], height: number) {

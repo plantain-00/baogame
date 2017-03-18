@@ -10,7 +10,6 @@ export interface Map {
     borns: core.Position[];
     doors: common.Door[];
     itemGates: core.ItemGate[];
-    signs: common.Sign[];
 };
 
 export function create(): Map {
@@ -129,7 +128,6 @@ export function create(): Map {
         borns,
         doors: [],
         itemGates,
-        signs: [],
     };
 }
 export function born() {

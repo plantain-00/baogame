@@ -24,5 +24,6 @@ Then open http://localhost:8030 in your browser.
 
 key | default value | description
 --- | --- | ---
-p | 8030 | port
-h | localhost | host
+-p | 8030 | port
+-h | localhost | host
+--debug | false | when true, send json rather than protobuf

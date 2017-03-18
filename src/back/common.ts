@@ -85,12 +85,6 @@ export type User = {
     flying: number;
 };
 
-export type Sign = {
-    x: number;
-    y: number;
-    message: string;
-};
-
 export type Door = {
     x: number;
     y: number;
@@ -114,9 +108,8 @@ export type TickProtocol = {
 export type MapData = {
     w: number;
     h: number;
-    floor: number[];
+    floors: number[];
     ladders: Ladder[];
-    signs: Sign[],
     doors: Door[],
     itemGates: ItemGate[],
 };
@@ -137,7 +130,9 @@ export type JoinProtocol = {
 
 export type JoinSuccessProtocol = {
     kind: "joinSuccess";
-    userId: number;
+    joinSuccess: {
+        userId: number;
+    };
 };
 
 export type Control = {

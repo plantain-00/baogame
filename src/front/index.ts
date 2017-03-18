@@ -7,6 +7,7 @@ import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
 import * as locales from "./locales";
+import * as format from "./format";
 
 /* tslint:disable:no-unused-new */
 
@@ -97,11 +98,9 @@ let t = 0;
 let cdx = 0;
 let cdy = 0;
 const game: {
-    signs: common.Sign[],
     doors: common.Door[],
     itemGates: common.ItemGate[],
 } = {
-        signs: [],
         doors: [],
         itemGates: [],
     };
@@ -170,12 +169,13 @@ document.addEventListener("keyup", e => {
 });
 
 let ws: WebSocket | undefined;
+let debug = false;
 
 function emit(protocol: common.Protocol) {
     if (!ws) {
         return;
     }
-    ws.send(JSON.stringify(protocol));
+    ws.send(format.encode(protocol, debug));
 }
 
 const middle = document.getElementById("middle")!;
@@ -201,7 +201,9 @@ if (isMobile) {
 const urlProtocol = location.protocol === "https:" ? "wss:" : "ws:";
 const reconnector = new libs.Reconnector(() => {
     ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
+    ws.binaryType = "arraybuffer";
     ws.onmessage = evt => {
+        debug = typeof evt.data === "string";
         const protocol: common.Protocol = JSON.parse(evt.data);
         if (protocol.kind === "initSuccess") {
             const cdom = document.createElement("canvas");
@@ -229,13 +231,12 @@ const reconnector = new libs.Reconnector(() => {
             drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
             game.itemGates = protocol.initSuccess.map.itemGates;
             game.doors = protocol.initSuccess.map.doors;
-            game.signs = protocol.initSuccess.map.signs;
             middle.innerHTML = "";
             middle.appendChild(cdomBg);
             middle.appendChild(cdom);
             app.showDialog = true;
         } else if (protocol.kind === "joinSuccess") {
-            currentUserId = protocol.userId;
+            currentUserId = protocol.joinSuccess.userId;
             app.showDialog = false;
         } else if (protocol.kind === "tick") {
             t++;
@@ -264,7 +265,6 @@ const reconnector = new libs.Reconnector(() => {
             context.drawImage(cdomBody, 0, 0);
 
             drawer.drawDoors(context, game.doors, common.h);
-            drawer.drawSigns(context, game.signs, common.h, currentUser);
             drawer.drawItemGates(context, game.itemGates, common.h);
 
             for (const mine of protocol.tick.mines) {

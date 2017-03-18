@@ -11,10 +11,13 @@ export function start() {
     });
 }
 
-export function encode(protocol: common.Protocol): Uint8Array {
-    return protocolType.encode(protocol).finish();
+export function encode(protocol: common.Protocol, debug: boolean): string | Uint8Array {
+    return debug ? JSON.stringify(protocol) : protocolType.encode(protocol).finish();
 }
 
-export function decode(protocol: ArrayBuffer): common.Protocol {
+export function decode(protocol: ArrayBuffer | string): common.Protocol {
+    if (typeof protocol === "string") {
+        return JSON.parse(protocol);
+    }
     return protocolType.decode(new Buffer(protocol)).toObject() as common.Protocol;
 }

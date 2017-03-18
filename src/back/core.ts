@@ -9,8 +9,10 @@ export const users: services.user.User[] = [];
 export const grenades: services.grenade.Grenade[] = [];
 export const mines: Mine[] = [];
 export let tick = 0;
+export let debug = false;
 
-export function init() {
+export function init(debugMode: boolean) {
+    debug = debugMode;
     setInterval(() => {
         tick++;
         services.map.update();
@@ -87,9 +89,8 @@ export function init() {
     mapData = {
         w: map.w,
         h: map.h,
-        floor: map.floor.reduce((acc, f) => acc.concat(f), []),
+        floors: map.floor.reduce((acc, f) => acc.concat(f), []),
         ladders: map.ladders,
-        signs: map.signs,
         doors: map.doors,
         itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
     };
@@ -97,7 +98,7 @@ export function init() {
 
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     try {
-        // ws.send(format.encode(protocol), { binary: true });
+        ws.send(services.format.encode(protocol, debug), { binary: !debug });
         ws.send(JSON.stringify(protocol));
     } catch (e) {
         console.log(e);
@@ -147,7 +148,6 @@ export type MapData = {
     ladders: common.Ladder[];
     borns: Position[]; // user is born in one of these positions
     npcs: NPC[]; // position, name, status of npcs
-    signs: common.Sign[]; // user move to here, then a message appears
     doors: common.Door[]; // show a door and create npc here
     itemGates: ItemGate[]; // show a gate and create item here
 };

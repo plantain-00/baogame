@@ -10,16 +10,17 @@ const wss = new libs.WebSocketServer({ server });
 const argv = libs.minimist(process.argv.slice(2));
 const port = argv["p"] || 8030;
 const host = argv["h"] || "localhost";
+const debug: boolean = argv["debug"];
 
 server.listen(port || 8030, () => {
-    console.log(`Listening on ${host}:${port}`);
+    console.log(`Listening on ${host}:${port}${debug ? "(debug)" : "(production)"}`);
 });
 
 app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
-// services.format.start();
+services.format.start();
 
-core.init();
+core.init(debug);
 
 wss.on("connection", ws => {
     const outProtocol: common.Protocol = {
@@ -32,13 +33,12 @@ wss.on("connection", ws => {
     let user: services.user.User | undefined;
 
     ws.on("message", message => {
-        // const protocol = services.format.decode(message);
-        const protocol: common.Protocol = JSON.parse(message);
+        const protocol = services.format.decode(message);
 
         if (protocol.kind === "join") {
             user = services.user.createUser(protocol.join.userName.replace(/[<>]/g, "").substring(0, 8), ws);
             core.users.push(user);
-            core.emit(ws, { kind: "joinSuccess", userId: user.id });
+            core.emit(ws, { kind: "joinSuccess", joinSuccess: { userId: user.id } });
         } else if (protocol.kind === "control") {
             if (user && protocol.control) {
                 user.control = protocol.control;
