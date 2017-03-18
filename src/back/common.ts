@@ -67,7 +67,7 @@ export type Grenade = {
 export type User = {
     carry: number;
     carryCount: number;
-    nearLadder: boolean;
+    nearLadder?: Ladder;
     faceing: number;
     fireing: number;
     grenadeing: number;

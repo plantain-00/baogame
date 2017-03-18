@@ -84,7 +84,7 @@ message ItemGate {
 message User {
     required string carry = 1;
     required uint32 carryCount = 2;
-    required boolean nearLadder = 3;
+    optional Ladder nearLadder = 3;
     required int32 faceing = 4;
     required uint32 fireing = 5;
     required uint32 grenadeing = 6;

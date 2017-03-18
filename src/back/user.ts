@@ -10,7 +10,7 @@ export interface User {
     name: string;
     onFloor: number | false;
     onLadder: boolean;
-    nearLadder: boolean | common.Ladder;
+    nearLadder?: common.Ladder;
     dead: boolean;
     rolling: boolean;
     crawl: boolean;
@@ -54,7 +54,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         name,
         onFloor: false,
         onLadder: false,
-        nearLadder: false,
         dead: false,
         rolling: false,
         crawl: false,
@@ -418,7 +417,7 @@ export function getData(user: User): common.User {
     return {
         carry: user.carry,
         carryCount: user.carryCount,
-        nearLadder: user.nearLadder as boolean,
+        nearLadder: user.nearLadder,
         faceing: user.faceing,
         fireing: user.fireing as number,
         grenadeing: user.grenadeing,

@@ -132,7 +132,7 @@ export function create(): Map {
 }
 export function born() {
     const i = Math.floor(Math.random() * core.map.borns.length);
-    const {x, y} = core.map.borns[i];
+    const { x, y } = core.map.borns[i];
     return {
         x: (x + .5) * common.tileWidth,
         y: y * common.tileHeight,
@@ -146,8 +146,12 @@ export function onFloor(x: number, y: number) {
     return core.map.floor[y][x];
 }
 export function nearLadder(u: services.user.User) {
-    if (onFloor(u.x, u.y) === false) { return false; }
-    if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) { return false; }
+    if (onFloor(u.x, u.y) === false) {
+        return undefined;
+    }
+    if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) {
+        return undefined;
+    }
     const x = u.x;
     const y = u.y;
     for (const ladder of core.map.ladders) {
@@ -155,7 +159,7 @@ export function nearLadder(u: services.user.User) {
             return ladder;
         }
     }
-    return false;
+    return undefined;
 }
 export function onLadder(x: number, y: number) {
     for (const ladder of core.map.ladders) {
