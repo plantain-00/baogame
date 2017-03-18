@@ -82,7 +82,7 @@ message ItemGate {
 }
 
 message User {
-    required uint32 carry = 1;
+    optional uint32 carry = 1;
     required uint32 carryCount = 2;
     optional Ladder nearLadder = 3;
     required int32 faceing = 4;

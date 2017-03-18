@@ -14,7 +14,7 @@ function userCanGoRight(user: services.user.User) {
 }
 export function play(user: services.user.User) {
     if (user.status === "standing") {
-        if (user.carry === 1) {
+        if (user.carry === common.ItemType.power) {
             if (user.goleft || !user.goright) {
                 user.goleft = true;
                 if (userCanGoLeft(user)) {
@@ -34,11 +34,11 @@ export function play(user: services.user.User) {
                     user.control.rightDown = 0;
                 }
             }
-        } else if (user.carry === 2) {
+        } else if (user.carry === common.ItemType.gun) {
             let find = false;
             for (const other of core.users) {
                 if (user === other || other.dieing) { continue; }
-                if (Math.abs(other.y - user.y) < 10 && other.carry !== common.items.hide.id) {
+                if (Math.abs(other.y - user.y) < 10 && other.carry !== common.ItemType.hide) {
                     if (user.facing && other.x < user.x || !user.facing && other.x > user.x) {
                         find = true;
                         break;

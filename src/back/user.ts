@@ -22,7 +22,7 @@ export interface User {
     faceing: number;
     danger: boolean;
     ignore: any[];
-    carry: number;
+    carry?: number;
     carryCount: number;
     fireing: number | boolean;
     mining: number | boolean;
@@ -65,7 +65,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         faceing: 1,
         danger: false,
         ignore: [],
-        carry: 0,
         carryCount: 0,
         fireing: 0,
         mining: 0,
@@ -159,12 +158,12 @@ export function getStatus(user: User): common.userStatus {
                     if (user.vx < 0) { user.vx -= 2; }
                     return "rolling2";
                 }
-            } else if (user.control.itemPress && user.vx === 0 && user.carry === common.items.mine.id && user.carryCount > 0) {
+            } else if (user.control.itemPress && user.vx === 0 && user.carry === common.ItemType.mine && user.carryCount > 0) {
                 user.mining = 20;
                 return "mining";
             } else {
                 user.lastTouch = null;
-                if (user.carry === common.items.doublejump.id) {
+                if (user.carry === common.ItemType.doublejump) {
                     user.canDoubleJump = true;
                 }
                 return "standing";
@@ -182,13 +181,13 @@ export function update(user: User) {
         user.ignore[key]--;
     }
     // 时限
-    if (user.carry === common.items.power.id || user.carry === common.items.hide.id || user.carry === common.items.bomb.id) {
+    if (user.carry === common.ItemType.power || user.carry === common.ItemType.hide || user.carry === common.ItemType.bomb) {
         user.carryCount--;
         if (user.carryCount <= 0) {
-            if (user.carry === common.items.bomb.id) {
+            if (user.carry === common.ItemType.bomb) {
                 services.grenade.explode(user.x + user.faceing * 20, user.y + common.userHeight / 2, user, 120);
             }
-            user.carry = 0;
+            user.carry = undefined;
             user.carryCount = 0;
         }
     }
@@ -203,11 +202,11 @@ export function update(user: User) {
             if (user.fireing === 5) {
                 user.carryCount--;
                 if (user.carryCount === 0) {
-                    user.carry = 0;
+                    user.carry = undefined;
                 }
                 services.gun.check(user);
             }
-        } else if (user.control.itemPress && user.carry === common.items.gun.id && user.carryCount > 0) {
+        } else if (user.control.itemPress && user.carry === common.ItemType.gun && user.carryCount > 0) {
             user.fireing = 25;
         }
     } else {
@@ -224,9 +223,9 @@ export function update(user: User) {
             user.grenadeing = 0;
             user.carryCount--;
             if (user.carryCount === 0) {
-                user.carry = 0;
+                user.carry = undefined;
             }
-        } else if (user.grenadeing === 0 && user.control.itemPress && user.carry === common.items.grenade.id && user.carryCount > 0) {
+        } else if (user.grenadeing === 0 && user.control.itemPress && user.carry === common.ItemType.grenade && user.carryCount > 0) {
             user.grenadeing = 1;
         }
     } else {
@@ -264,13 +263,13 @@ export function update(user: User) {
     } else if (user.status === "standing") {
         if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
-                if (user.carry === common.items.power.id) {
+                if (user.carry === common.ItemType.power) {
                     user.vx = -.4;
                 } else {
                     user.vx = -1;
                 }
             } else {
-                if (user.carry === common.items.power.id) {
+                if (user.carry === common.ItemType.power) {
                     user.vx -= .08;
                 } else {
                     user.vx -= .2;
@@ -280,13 +279,13 @@ export function update(user: User) {
             user.vx = Math.max(user.vx, -4, -user.control.leftDown / 20);
         } else if (!user.control.leftDown && user.control.rightDown) {
             if (user.vx < 0) {
-                if (user.carry === common.items.power.id) {
+                if (user.carry === common.ItemType.power) {
                     user.vx = .4;
                 } else {
                     user.vx = 1;
                 }
             } else {
-                if (user.carry === common.items.power.id) {
+                if (user.carry === common.ItemType.power) {
                     user.vx += .08;
                 } else {
                     user.vx += .2;
@@ -313,10 +312,10 @@ export function update(user: User) {
             user.canDoubleJump = false;
             user.vy = 5;
         }
-        if (user.control.upPress && user.carry === common.items.flypack.id) {
+        if (user.control.upPress && user.carry === common.ItemType.flypack) {
             user.flypackActive = true;
         }
-        if (user.control.upDown && user.carry === common.items.flypack.id && user.carryCount > 0 && user.flypackActive) {
+        if (user.control.upDown && user.carry === common.ItemType.flypack && user.carryCount > 0 && user.flypackActive) {
             user.vy += .3;
             user.flying += 1;
             user.carryCount--;
@@ -327,12 +326,12 @@ export function update(user: User) {
         if (user.control.rightPress && user.faceing === -1) {
             user.faceing = 1;
         }
-        if (user.control.leftDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
+        if (user.control.leftDown && user.carry === common.ItemType.flypack && user.carryCount > 0) {
             user.vx -= .15;
             user.flying += 2;
             user.carryCount -= .2;
         }
-        if (user.control.rightDown && user.carry === common.items.flypack.id && user.carryCount > 0) {
+        if (user.control.rightDown && user.carry === common.ItemType.flypack && user.carryCount > 0) {
             user.vx += .15;
             user.flying += 4;
             user.carryCount -= .2;
@@ -444,39 +443,39 @@ export function collide(a: services.user.User, b: services.user.User) {
         return;
     }
 
-    if (a.carry === common.items.power.id && b.carry !== common.items.power.id) {
+    if (a.carry === common.ItemType.power && b.carry !== common.ItemType.power) {
         services.user.killed(b, "power", a);
         b.vx = (b.x - a.x) / 2;
-        if (b.carry === common.items.bomb.id) {
+        if (b.carry === common.ItemType.bomb) {
             a.carry = b.carry;
             a.carryCount = b.carryCount;
-            b.carry = 0;
+            b.carry = undefined;
         }
         return;
-    } else if (a.carry !== common.items.power.id && b.carry === common.items.power.id) {
+    } else if (a.carry !== common.ItemType.power && b.carry === common.ItemType.power) {
         services.user.killed(a, "power", b);
         a.vx = (a.x - b.x) / 2;
-        if (a.carry === common.items.bomb.id) {
+        if (a.carry === common.ItemType.bomb) {
             b.carry = a.carry;
             b.carryCount = a.carryCount;
-            a.carry = 0;
+            a.carry = undefined;
         }
         return;
-    } else if (a.carry === common.items.power.id && b.carry === common.items.power.id) {
-        a.carry = 0;
-        b.carry = 0;
+    } else if (a.carry === common.ItemType.power && b.carry === common.ItemType.power) {
+        a.carry = undefined;
+        b.carry = undefined;
     }
     // 排除刚刚碰撞
     if (a.ignore[b.id] > 0 || b.ignore[a.id] > 0) { return; }
 
-    if (b.carry === common.items.bomb.id && a.carry !== common.items.bomb.id) {
+    if (b.carry === common.ItemType.bomb && a.carry !== common.ItemType.bomb) {
         a.carry = b.carry;
         a.carryCount = b.carryCount;
         b.carry = 0;
-    } else if (a.carry === common.items.bomb.id && b.carry !== common.items.bomb.id) {
+    } else if (a.carry === common.ItemType.bomb && b.carry !== common.ItemType.bomb) {
         b.carry = a.carry;
         b.carryCount = a.carryCount;
-        a.carry = 0;
+        a.carry = undefined;
     }
     // 正常情况
     if (a.onFloor && b.onFloor) {

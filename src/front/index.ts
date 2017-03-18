@@ -297,7 +297,7 @@ const reconnector = new libs.Reconnector(() => {
                 for (const item of protocol.tick.items) {
                     drawer.drawItem(context, item, t, common.h);
                     if (item.dead) {
-                        const itemName = locales.getItemName(item.id);
+                        const itemName = locales.locale.item[item.id];
                         drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
                     }
                 }

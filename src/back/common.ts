@@ -8,47 +8,24 @@ export const th = 15;
 export const w = tw * tileWidth;
 export const h = th * tileHeight;
 
-export const items = {
-    power: {
-        id: 1,
-        count: 1000,
-    },
-    gun: {
-        id: 2,
-        count: 3,
-    },
-    mine: {
-        id: 3,
-        count: 2,
-    },
-    drug: {
-        id: 4,
-    },
-    hide: {
-        id: 5,
-        count: 1000,
-    },
-    bomb: {
-        id: 6,
-        count: 550,
-    },
-    doublejump: {
-        id: 7,
-    },
-    flypack: {
-        id: 8,
-        count: 250,
-    },
-    grenade: {
-        id: 9,
-        count: 3,
-    },
+export enum ItemType {
+    power,
+    gun,
+    mine,
+    drug,
+    hide,
+    bomb,
+    doublejump,
+    flypack,
+    grenade,
 };
+
+export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3];
 
 export type Item = {
     x: number;
     y: number;
-    id: number;
+    id: ItemType;
     dead: boolean;
 };
 
@@ -65,7 +42,7 @@ export type Grenade = {
 };
 
 export type User = {
-    carry: number;
+    carry?: number;
     carryCount: number;
     nearLadder?: Ladder;
     faceing: number;

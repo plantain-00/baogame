@@ -1,13 +1,8 @@
 import * as common from "./common";
 import * as services from "./services";
 
-const Items: Item[] = [];
-for (const key in common.items) {
-    Items.push((common.items as any)[key]);
-}
-
 export interface Item {
-    id: number;
+    id: common.ItemType;
     count: number;
     lifetime: number;
     slowdown: number;
@@ -20,11 +15,11 @@ export interface Item {
 
 export function create(type?: number): Item {
     if (type === undefined) {
-        type = Math.floor(Math.random() * Items.length);
+        type = Math.floor(Math.random() * common.itemCounts.length);
     }
     return {
-        id: Items[type].id,
-        count: Items[type].count || 0,
+        id: type,
+        count: common.itemCounts[type],
         lifetime: 3000,
         slowdown: 0,
         vx: Math.random() + .5,
@@ -69,7 +64,7 @@ export function eat(user: services.user.User, item: services.item.Item) {
     if (user.dead || item.dead) {
         return;
     }
-    if (user.carry === common.items.bomb.id) {
+    if (user.carry === common.ItemType.bomb) {
         return;
     }
     if ((user.x - item.x) * (user.x - item.x) + (user.y + common.userHeight / 2 - item.y) * (user.y + common.userHeight / 2 - item.y) >
@@ -77,7 +72,7 @@ export function eat(user: services.user.User, item: services.item.Item) {
         return;
     }
     item.dead = true;
-    if (item.id === common.items.drug.id) {
+    if (item.id === common.ItemType.drug) {
         services.user.killed(user, "drug");
     } else {
         user.carry = item.id;
