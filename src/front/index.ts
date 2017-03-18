@@ -18,7 +18,7 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
 const app: any = new libs.Vue({
     el: "#container",
     data: {
-        userName: localStorage.getItem("userName") || "无名小卒",
+        userName: localStorage.getItem("userName") || locales.locale.ui.noOne,
         showDialog: false,
         showFail: false,
         showMobileControl: isMobile,

@@ -32,7 +32,8 @@ const defaultLocale = {
         up: "up",
         down: "down",
         useItem: "item",
-        notice: "W,A,S,D: move Q:use item",
+        notice: "W,A,S,D: move Q: use item",
+        noOne: "no one",
     },
 };
 
@@ -70,6 +71,7 @@ const otherLocales: { [language: string]: typeof defaultLocale } = {
             down: "下",
             useItem: "物品",
             notice: "W,A,S,D: 移动 Q: 使用物品",
+            noOne: "无名小卒",
         },
     },
 };
