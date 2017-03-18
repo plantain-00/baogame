@@ -99,7 +99,6 @@ export function init(debugMode: boolean) {
 export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     try {
         ws.send(services.format.encode(protocol, debug), { binary: !debug });
-        ws.send(JSON.stringify(protocol));
     } catch (e) {
         console.log(e);
     }

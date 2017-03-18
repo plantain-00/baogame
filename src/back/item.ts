@@ -58,8 +58,8 @@ export function update(item: Item) {
 }
 export function getData(item: Item): common.Item {
     return {
-        x: item.x,
-        y: item.y,
+        x: Math.round(item.x),
+        y: Math.round(item.y),
         id: item.id,
         dead: item.dead,
     };

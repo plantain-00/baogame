@@ -426,7 +426,7 @@ export function getData(user: User): common.User {
         status: user.status,
         name: user.name,
         id: user.id,
-        x: user.x,
+        x: Math.round(user.x),
         y: user.y,
         vy: user.vy,
         score: user.score,
