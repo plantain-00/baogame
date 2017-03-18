@@ -25,7 +25,7 @@ export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3];
 export type Item = {
     x: number;
     y: number;
-    id: ItemType;
+    type: ItemType;
     dead: boolean;
 };
 
@@ -42,8 +42,8 @@ export type Grenade = {
 };
 
 export type User = {
-    carry?: number;
-    carryCount: number;
+    itemType?: number;
+    itemCount: number;
     nearLadder?: Ladder;
     faceing: number;
     fireing: number;

@@ -82,8 +82,8 @@ message ItemGate {
 }
 
 message User {
-    optional uint32 carry = 1;
-    required uint32 carryCount = 2;
+    optional uint32 itemType = 1;
+    required uint32 itemCount = 2;
     optional Ladder nearLadder = 3;
     required int32 faceing = 4;
     required uint32 fireing = 5;
@@ -105,7 +105,7 @@ message User {
 message Item {
     required uint32 x = 1;
     required uint32 y = 2;
-    required uint32 id = 3;
+    required uint32 type = 3;
     required bool dead = 4;
 }
 

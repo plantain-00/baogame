@@ -213,13 +213,13 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
         img = images.alone;
     } else if (user.status === "dieing") {
         img = images.alone;
-    } else if (user.carry === common.ItemType.power) {
+    } else if (user.itemType === common.ItemType.power) {
         img = images.win;
     } else if (user.danger) {
         img = images.danger;
     } else if (user.status === "crawling" || user.status === "mining" || user.status === "rolling2") {
         img = images.throll;
-    } else if (user.carry === common.ItemType.bomb) {
+    } else if (user.itemType === common.ItemType.bomb) {
         img = images.wtf;
     } else if (user.status === "falling" || user.status === "climbing") {
         img = images.happy;
@@ -234,7 +234,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
     }
 
     // 用户指示器
-    if (user.carry !== common.ItemType.hide || user.id === currentUserId) {
+    if (user.itemType !== common.ItemType.hide || user.id === currentUserId) {
         ctx.fillText(user.name, 0, -50);
         if (user.nearLadder && user.id === currentUserId) {
             ctx.fillText("上", 0, -70);
@@ -253,8 +253,8 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
         ctx.restore();
     }
 
-    if (user.carry === common.ItemType.hide) {
-        ctx.globalAlpha = user.carryCount > 900 ? (user.carryCount - 900) / 100 : user.carryCount > 100 ? 0 : (100 - user.carryCount) / 100;
+    if (user.itemType === common.ItemType.hide) {
+        ctx.globalAlpha = user.itemCount > 900 ? (user.itemCount - 900) / 100 : user.itemCount > 100 ? 0 : (100 - user.itemCount) / 100;
     }
 
     if (user.status === "crawling" || user.status === "mining" || user.status === "rolling2") {
@@ -262,14 +262,14 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
     } else {
         ctx.drawImage(img, -userWidth / 2, -userHeight, userWidth, userHeight);
     }
-    if (user.carry === common.ItemType.flypack) {
+    if (user.itemType === common.ItemType.flypack) {
         const bottleWidth = 10;
         const bottleHeight = 30;
         const wPadding = -userWidth / 2 - bottleWidth;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.fillStyle = "rgb(100,160,255)";
-        ctx.fillRect(wPadding, -bottleHeight * user.carryCount / common.itemCounts[common.ItemType.flypack], bottleWidth, bottleHeight * user.carryCount / common.itemCounts[common.ItemType.flypack]);
+        ctx.fillRect(wPadding, -bottleHeight * user.itemCount / common.itemCounts[common.ItemType.flypack], bottleWidth, bottleHeight * user.itemCount / common.itemCounts[common.ItemType.flypack]);
         ctx.stroke();
 
         ctx.drawImage(images.jet, wPadding - 16, -bottleHeight - 10, 40, bottleHeight + 20);
@@ -277,14 +277,14 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
             brusts.push(brust.create(user.x, user.y, 1, 5, height, user.faceing * (wPadding + bottleWidth / 2), -10));
         }
     }
-    if (user.carry === common.ItemType.bomb) {
+    if (user.itemType === common.ItemType.bomb) {
         ctx.drawImage(images.bomb, userWidth / 2 - 10, -userHeight, 30, 40);
         if (!user.dead) {
             ctx.scale(user.faceing, 1);
             const x = user.faceing * (userWidth / 2 + 10);
             ctx.font = "28px 宋体";
             ctx.fillStyle = "#ff0";
-            ctx.fillText((Math.floor(user.carryCount * 17 / 1000) + 1).toString(), x, -userHeight - 10);
+            ctx.fillText((Math.floor(user.itemCount * 17 / 1000) + 1).toString(), x, -userHeight - 10);
             ctx.font = "14px 宋体";
             ctx.scale(user.faceing, 1);
         }
@@ -314,7 +314,7 @@ export function drawItem(ctx: CanvasRenderingContext2D, item: common.Item, t: nu
     ctx.stroke();
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.drawImage(images.items[item.id], -s, -s, s * 2, s * 2);
+    ctx.drawImage(images.items[item.type], -s, -s, s * 2, s * 2);
     ctx.restore();
 }
 

@@ -2,7 +2,7 @@ import * as common from "./common";
 import * as services from "./services";
 
 export interface Item {
-    id: common.ItemType;
+    type: common.ItemType;
     count: number;
     lifetime: number;
     slowdown: number;
@@ -18,7 +18,7 @@ export function create(type?: number): Item {
         type = Math.floor(Math.random() * common.itemCounts.length);
     }
     return {
-        id: type,
+        type,
         count: common.itemCounts[type],
         lifetime: 3000,
         slowdown: 0,
@@ -55,7 +55,7 @@ export function getData(item: Item): common.Item {
     return {
         x: Math.round(item.x),
         y: Math.round(item.y),
-        id: item.id,
+        type: item.type,
         dead: item.dead,
     };
 }
@@ -64,7 +64,7 @@ export function eat(user: services.user.User, item: services.item.Item) {
     if (user.dead || item.dead) {
         return;
     }
-    if (user.carry === common.ItemType.bomb) {
+    if (user.itemType === common.ItemType.bomb) {
         return;
     }
     if ((user.x - item.x) * (user.x - item.x) + (user.y + common.userHeight / 2 - item.y) * (user.y + common.userHeight / 2 - item.y) >
@@ -72,10 +72,10 @@ export function eat(user: services.user.User, item: services.item.Item) {
         return;
     }
     item.dead = true;
-    if (item.id === common.ItemType.drug) {
+    if (item.type === common.ItemType.drug) {
         services.user.killed(user, "drug");
     } else {
-        user.carry = item.id;
-        user.carryCount = item.count;
+        user.itemType = item.type;
+        user.itemCount = item.count;
     }
 }

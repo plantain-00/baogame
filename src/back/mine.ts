@@ -9,7 +9,7 @@ export function lay(user: services.user.User) {
             y: user.y,
             creater: user,
         });
-        user.carryCount--;
+        user.itemCount--;
     }
 }
 export function check(user: services.user.User) {

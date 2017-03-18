@@ -22,8 +22,8 @@ export interface User {
     faceing: number;
     danger: boolean;
     ignore: any[];
-    carry?: number;
-    carryCount: number;
+    itemType?: number;
+    itemCount: number;
     fireing: number | boolean;
     mining: number | boolean;
     grenadeing: number;
@@ -65,7 +65,7 @@ export function create(name: string, ws?: libs.WebSocket): User {
         faceing: 1,
         danger: false,
         ignore: [],
-        carryCount: 0,
+        itemCount: 0,
         fireing: 0,
         mining: 0,
         grenadeing: 0,
@@ -158,12 +158,12 @@ export function getStatus(user: User): common.userStatus {
                     if (user.vx < 0) { user.vx -= 2; }
                     return "rolling2";
                 }
-            } else if (user.control.itemPress && user.vx === 0 && user.carry === common.ItemType.mine && user.carryCount > 0) {
+            } else if (user.control.itemPress && user.vx === 0 && user.itemType === common.ItemType.mine && user.itemCount > 0) {
                 user.mining = 20;
                 return "mining";
             } else {
                 user.lastTouch = null;
-                if (user.carry === common.ItemType.doublejump) {
+                if (user.itemType === common.ItemType.doublejump) {
                     user.canDoubleJump = true;
                 }
                 return "standing";
@@ -181,14 +181,14 @@ export function update(user: User) {
         user.ignore[key]--;
     }
     // 时限
-    if (user.carry === common.ItemType.power || user.carry === common.ItemType.hide || user.carry === common.ItemType.bomb) {
-        user.carryCount--;
-        if (user.carryCount <= 0) {
-            if (user.carry === common.ItemType.bomb) {
+    if (user.itemType === common.ItemType.power || user.itemType === common.ItemType.hide || user.itemType === common.ItemType.bomb) {
+        user.itemCount--;
+        if (user.itemCount <= 0) {
+            if (user.itemType === common.ItemType.bomb) {
                 services.grenade.explode(user.x + user.faceing * 20, user.y + common.userHeight / 2, user, 120);
             }
-            user.carry = undefined;
-            user.carryCount = 0;
+            user.itemType = undefined;
+            user.itemCount = 0;
         }
     }
     user.status = getStatus(user);
@@ -200,13 +200,13 @@ export function update(user: User) {
         if (typeof user.fireing === "number" && user.fireing > 0) {
             user.fireing--;
             if (user.fireing === 5) {
-                user.carryCount--;
-                if (user.carryCount === 0) {
-                    user.carry = undefined;
+                user.itemCount--;
+                if (user.itemCount === 0) {
+                    user.itemType = undefined;
                 }
                 services.gun.check(user);
             }
-        } else if (user.control.itemPress && user.carry === common.ItemType.gun && user.carryCount > 0) {
+        } else if (user.control.itemPress && user.itemType === common.ItemType.gun && user.itemCount > 0) {
             user.fireing = 25;
         }
     } else {
@@ -221,11 +221,11 @@ export function update(user: User) {
         } else if (user.grenadeing > 0 && !user.control.itemDown) {
             services.grenade.throwGrenade(user);
             user.grenadeing = 0;
-            user.carryCount--;
-            if (user.carryCount === 0) {
-                user.carry = undefined;
+            user.itemCount--;
+            if (user.itemCount === 0) {
+                user.itemType = undefined;
             }
-        } else if (user.grenadeing === 0 && user.control.itemPress && user.carry === common.ItemType.grenade && user.carryCount > 0) {
+        } else if (user.grenadeing === 0 && user.control.itemPress && user.itemType === common.ItemType.grenade && user.itemCount > 0) {
             user.grenadeing = 1;
         }
     } else {
@@ -263,13 +263,13 @@ export function update(user: User) {
     } else if (user.status === "standing") {
         if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
-                if (user.carry === common.ItemType.power) {
+                if (user.itemType === common.ItemType.power) {
                     user.vx = -.4;
                 } else {
                     user.vx = -1;
                 }
             } else {
-                if (user.carry === common.ItemType.power) {
+                if (user.itemType === common.ItemType.power) {
                     user.vx -= .08;
                 } else {
                     user.vx -= .2;
@@ -279,13 +279,13 @@ export function update(user: User) {
             user.vx = Math.max(user.vx, -4, -user.control.leftDown / 20);
         } else if (!user.control.leftDown && user.control.rightDown) {
             if (user.vx < 0) {
-                if (user.carry === common.ItemType.power) {
+                if (user.itemType === common.ItemType.power) {
                     user.vx = .4;
                 } else {
                     user.vx = 1;
                 }
             } else {
-                if (user.carry === common.ItemType.power) {
+                if (user.itemType === common.ItemType.power) {
                     user.vx += .08;
                 } else {
                     user.vx += .2;
@@ -312,13 +312,13 @@ export function update(user: User) {
             user.canDoubleJump = false;
             user.vy = 5;
         }
-        if (user.control.upPress && user.carry === common.ItemType.flypack) {
+        if (user.control.upPress && user.itemType === common.ItemType.flypack) {
             user.flypackActive = true;
         }
-        if (user.control.upDown && user.carry === common.ItemType.flypack && user.carryCount > 0 && user.flypackActive) {
+        if (user.control.upDown && user.itemType === common.ItemType.flypack && user.itemCount > 0 && user.flypackActive) {
             user.vy += .3;
             user.flying += 1;
-            user.carryCount--;
+            user.itemCount--;
         }
         if (user.control.leftPress && user.faceing === 1) {
             user.faceing = -1;
@@ -326,15 +326,15 @@ export function update(user: User) {
         if (user.control.rightPress && user.faceing === -1) {
             user.faceing = 1;
         }
-        if (user.control.leftDown && user.carry === common.ItemType.flypack && user.carryCount > 0) {
+        if (user.control.leftDown && user.itemType === common.ItemType.flypack && user.itemCount > 0) {
             user.vx -= .15;
             user.flying += 2;
-            user.carryCount -= .2;
+            user.itemCount -= .2;
         }
-        if (user.control.rightDown && user.carry === common.ItemType.flypack && user.carryCount > 0) {
+        if (user.control.rightDown && user.itemType === common.ItemType.flypack && user.itemCount > 0) {
             user.vx += .15;
             user.flying += 4;
-            user.carryCount -= .2;
+            user.itemCount -= .2;
         }
         user.vy -= .2;
         user.vy = Math.max(-9, user.vy);
@@ -414,8 +414,8 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
 }
 export function getData(user: User): common.User {
     return {
-        carry: user.carry,
-        carryCount: user.carryCount,
+        itemType: user.itemType,
+        itemCount: user.itemCount,
         nearLadder: user.nearLadder,
         faceing: user.faceing,
         fireing: user.fireing as number,
@@ -443,39 +443,39 @@ export function collide(a: services.user.User, b: services.user.User) {
         return;
     }
 
-    if (a.carry === common.ItemType.power && b.carry !== common.ItemType.power) {
+    if (a.itemType === common.ItemType.power && b.itemType !== common.ItemType.power) {
         services.user.killed(b, "power", a);
         b.vx = (b.x - a.x) / 2;
-        if (b.carry === common.ItemType.bomb) {
-            a.carry = b.carry;
-            a.carryCount = b.carryCount;
-            b.carry = undefined;
+        if (b.itemType === common.ItemType.bomb) {
+            a.itemType = b.itemType;
+            a.itemCount = b.itemCount;
+            b.itemType = undefined;
         }
         return;
-    } else if (a.carry !== common.ItemType.power && b.carry === common.ItemType.power) {
+    } else if (a.itemType !== common.ItemType.power && b.itemType === common.ItemType.power) {
         services.user.killed(a, "power", b);
         a.vx = (a.x - b.x) / 2;
-        if (a.carry === common.ItemType.bomb) {
-            b.carry = a.carry;
-            b.carryCount = a.carryCount;
-            a.carry = undefined;
+        if (a.itemType === common.ItemType.bomb) {
+            b.itemType = a.itemType;
+            b.itemCount = a.itemCount;
+            a.itemType = undefined;
         }
         return;
-    } else if (a.carry === common.ItemType.power && b.carry === common.ItemType.power) {
-        a.carry = undefined;
-        b.carry = undefined;
+    } else if (a.itemType === common.ItemType.power && b.itemType === common.ItemType.power) {
+        a.itemType = undefined;
+        b.itemType = undefined;
     }
     // 排除刚刚碰撞
     if (a.ignore[b.id] > 0 || b.ignore[a.id] > 0) { return; }
 
-    if (b.carry === common.ItemType.bomb && a.carry !== common.ItemType.bomb) {
-        a.carry = b.carry;
-        a.carryCount = b.carryCount;
-        b.carry = 0;
-    } else if (a.carry === common.ItemType.bomb && b.carry !== common.ItemType.bomb) {
-        b.carry = a.carry;
-        b.carryCount = a.carryCount;
-        a.carry = undefined;
+    if (b.itemType === common.ItemType.bomb && a.itemType !== common.ItemType.bomb) {
+        a.itemType = b.itemType;
+        a.itemCount = b.itemCount;
+        b.itemType = 0;
+    } else if (a.itemType === common.ItemType.bomb && b.itemType !== common.ItemType.bomb) {
+        b.itemType = a.itemType;
+        b.itemCount = a.itemCount;
+        a.itemType = undefined;
     }
     // 正常情况
     if (a.onFloor && b.onFloor) {

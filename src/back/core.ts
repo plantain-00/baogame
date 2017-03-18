@@ -128,8 +128,8 @@ export type NPC = {
     x: number;
     y: number;
     name: string;
-    carry?: number;
-    carryCount?: number;
+    itemType?: number;
+    itemCount?: number;
     AI?: "walking";
 };
 
