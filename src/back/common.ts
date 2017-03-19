@@ -9,15 +9,15 @@ export const w = tw * tileWidth;
 export const h = th * tileHeight;
 
 export enum ItemType {
-    power,
-    gun,
-    mine,
-    drug,
-    hide,
-    bomb,
-    doublejump,
-    flypack,
-    grenade,
+    power = 0,
+    gun = 1,
+    mine = 2,
+    drug = 3,
+    hide = 4,
+    bomb = 5,
+    doublejump = 6,
+    flypack = 7,
+    grenade = 8,
 };
 
 export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3];
@@ -49,7 +49,7 @@ export type User = {
     fireing: number;
     grenadeing: number;
     danger: boolean,
-    status: string;
+    status: userStatus;
     name: string;
     id: number;
     x: number;
@@ -149,7 +149,16 @@ export type UserDeadProtocol = {
 
 export type Protocol = InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
-export type userStatus = "dieing" | "climbing" | "rolling2" | "standing" | "rolling" | "mining" | "crawling" | "falling";
+export enum userStatus {
+    dieing = 0,
+    climbing = 1,
+    rolling2 = 2,
+    standing = 3,
+    rolling = 4,
+    mining = 5,
+    crawling = 6,
+    falling = 7,
+}
 
 export type Ladder = { // (x,y1) until (x,y2)
     x: number;

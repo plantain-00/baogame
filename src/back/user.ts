@@ -87,7 +87,7 @@ export function create(name: string, ws?: libs.WebSocket): User {
         ladder: undefined,
         doubleJumping: false,
         flying: 0,
-        status: "standing",
+        status: common.userStatus.standing,
         npc: false,
         r: 0,
         vr: 0,
@@ -101,12 +101,12 @@ export function create(name: string, ws?: libs.WebSocket): User {
 }
 export function getStatus(user: User): common.userStatus {
     user.crawl = false;
-    if (user.dieing) { return "dieing"; }
+    if (user.dieing) { return common.userStatus.dieing; }
     if ((user.vy <= 0 || user.onLadder) && services.mine.check(user)) {
-        return "dieing";
+        return common.userStatus.dieing;
     }
     if (user.onLadder && user.vx === 0 && user.vy === 0) {
-        return "climbing";
+        return common.userStatus.climbing;
     } else {
         const onFloor = services.map.onFloor(user.x, user.y);
         user.onFloor = onFloor;
@@ -119,15 +119,15 @@ export function getStatus(user: User): common.userStatus {
                     user.rolling = false;
                 } else {
                     user.crawl = true;
-                    return "rolling2";
+                    return common.userStatus.rolling2;
                 }
             }
             if (user.danger) {
                 if (Math.abs(user.vx) < .2) {
                     user.danger = false;
-                    return "standing";
+                    return common.userStatus.standing;
                 } else {
-                    return "rolling";
+                    return common.userStatus.rolling;
                 }
             }
             if (typeof user.mining === "number" && user.mining > 0) {
@@ -135,7 +135,7 @@ export function getStatus(user: User): common.userStatus {
                 if (user.mining === 0) {
                     services.mine.lay(user);
                 } else {
-                    return "mining";
+                    return common.userStatus.mining;
                 }
             }
             if ((user.control.upDown || user.control.downDown) && user.nearLadder) {
@@ -144,30 +144,30 @@ export function getStatus(user: User): common.userStatus {
                 user.vx = 0;
                 user.ladder = user.nearLadder;
                 user.x = user.ladder.x * common.tileWidth;
-                return "climbing";
+                return common.userStatus.climbing;
             } else if (user.control.downDown) {
                 user.crawl = true;
                 if (Math.abs(user.vx) < .2) {
-                    return "crawling";
+                    return common.userStatus.crawling;
                 } else {
                     user.rolling = true;
                     user.rollPoint = 20;
                     if (user.vx > 0) { user.vx += 2; }
                     if (user.vx < 0) { user.vx -= 2; }
-                    return "rolling2";
+                    return common.userStatus.rolling2;
                 }
             } else if (user.control.itemPress && user.vx === 0 && user.itemType === common.ItemType.mine && user.itemCount > 0) {
                 user.mining = 20;
-                return "mining";
+                return common.userStatus.mining;
             } else {
                 user.lastTouch = undefined;
                 if (user.itemType === common.ItemType.doublejump) {
                     user.canDoubleJump = true;
                 }
-                return "standing";
+                return common.userStatus.standing;
             }
         } else {
-            return "falling";
+            return common.userStatus.falling;
         }
     }
 }
@@ -194,7 +194,9 @@ export function update(user: User) {
     if (user.npc) {
         services.ai.play(user);
     }
-    if (user.status === "falling" || user.status === "standing" || user.status === "climbing") {
+    if (user.status === common.userStatus.falling
+        || user.status === common.userStatus.standing
+        || user.status === common.userStatus.climbing) {
         if (typeof user.fireing === "number" && user.fireing > 0) {
             user.fireing--;
             if (user.fireing === 5) {
@@ -211,7 +213,10 @@ export function update(user: User) {
         user.fireing = 0;
     }
 
-    if (user.status === "falling" || user.status === "standing" || user.status === "climbing" || user.status === "crawling") {
+    if (user.status === common.userStatus.falling
+        || user.status === common.userStatus.standing
+        || user.status === common.userStatus.climbing
+        || user.status === common.userStatus.crawling) {
         // grenade
         if (user.grenadeing > 0 && user.control.itemDown) {
             user.grenadeing++;
@@ -230,14 +235,14 @@ export function update(user: User) {
         user.grenadeing = 0;
     }
 
-    if (user.status === "dieing") {
+    if (user.status === common.userStatus.dieing) {
         user.vx *= .98;
         user.vy -= .2;
         user.vy = Math.max(-9, user.vy);
         user.r += user.vr;
         user.vr *= .96;
     }
-    if (user.status === "climbing") {
+    if (user.status === common.userStatus.climbing) {
         if (user.control.upDown && !user.control.downDown && user.y < user.ladder!.y2 * common.tileHeight - common.userHeight) {
             user.y += 3;
         } else if (user.control.downDown && !user.control.upDown && user.y > user.ladder!.y1 * common.tileHeight + 3) {
@@ -258,7 +263,7 @@ export function update(user: User) {
                 user.onLadder = false;
             }
         }
-    } else if (user.status === "standing") {
+    } else if (user.status === common.userStatus.standing) {
         if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
                 if (user.itemType === common.ItemType.power) {
@@ -300,11 +305,11 @@ export function update(user: User) {
         } else {
             user.vy = 0;
         }
-    } else if (user.status === "rolling2") {
+    } else if (user.status === common.userStatus.rolling2) {
         user.vx *= .96;
-    } else if (user.status === "rolling") {
+    } else if (user.status === common.userStatus.rolling) {
         user.vx *= .9;
-    } else if (user.status === "falling") {
+    } else if (user.status === common.userStatus.falling) {
         if (user.control.upPress && user.canDoubleJump) {
             user.doubleJumping = true;
             user.canDoubleJump = false;
@@ -342,7 +347,7 @@ export function update(user: User) {
         if (user.vy === -9) {
             user.danger = true;
         }
-    } else if (user.status === "crawling") {
+    } else if (user.status === common.userStatus.crawling) {
         user.vx = 0;
     }
 

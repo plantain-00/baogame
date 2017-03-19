@@ -211,17 +211,20 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
     ctx.translate(user.x, height - user.y);
     if (user.dead) {
         img = images.alone;
-    } else if (user.status === "dieing") {
+    } else if (user.status === common.userStatus.dieing) {
         img = images.alone;
     } else if (user.itemType === common.ItemType.power) {
         img = images.win;
     } else if (user.danger) {
         img = images.danger;
-    } else if (user.status === "crawling" || user.status === "mining" || user.status === "rolling2") {
+    } else if (user.status === common.userStatus.crawling
+        || user.status === common.userStatus.mining
+        || user.status === common.userStatus.rolling2) {
         img = images.throll;
     } else if (user.itemType === common.ItemType.bomb) {
         img = images.wtf;
-    } else if (user.status === "falling" || user.status === "climbing") {
+    } else if (user.status === common.userStatus.falling
+        || user.status === common.userStatus.climbing) {
         img = images.happy;
     } else {
         img = images.normal;
@@ -257,7 +260,9 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
         ctx.globalAlpha = user.itemCount > 900 ? (user.itemCount - 900) / 100 : user.itemCount > 100 ? 0 : (100 - user.itemCount) / 100;
     }
 
-    if (user.status === "crawling" || user.status === "mining" || user.status === "rolling2") {
+    if (user.status === common.userStatus.crawling
+        || user.status === common.userStatus.mining
+        || user.status === common.userStatus.rolling2) {
         ctx.drawImage(img, -userWidth / 2, -25, userWidth, userHeight);
     } else {
         ctx.drawImage(img, -userWidth / 2, -userHeight, userWidth, userHeight);

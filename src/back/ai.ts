@@ -13,7 +13,7 @@ function userCanGoRight(user: services.user.User) {
     return core.map.floor[y][x];
 }
 export function play(user: services.user.User) {
-    if (user.status === "standing") {
+    if (user.status === common.userStatus.standing) {
         if (user.itemType === common.ItemType.power) {
             if (user.goleft || !user.goright) {
                 user.goleft = true;

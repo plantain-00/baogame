@@ -89,7 +89,7 @@ message User {
     required uint32 fireing = 5;
     required uint32 grenadeing = 6;
     required bool danger = 7;
-    required string status = 8;
+    required uint32 status = 8;
     required string name = 9;
     required uint32 id = 10;
     required uint32 x = 11;
