@@ -50,7 +50,7 @@ export function init(debugMode: boolean) {
                     dead: mine.dead!,
                 }));
                 emit(user.ws, {
-                    kind: "tick",
+                    kind: common.ProtocolKind.tick,
                     tick: {
                         users: userdata,
                         items: itemdata,

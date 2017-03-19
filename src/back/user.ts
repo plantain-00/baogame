@@ -408,7 +408,7 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
     }
 
     core.announce({
-        kind: "userDead",
+        kind: common.ProtocolKind.userDead,
         userDead: {
             user: getData(user),
             killer: killer ? getData(killer) : undefined,

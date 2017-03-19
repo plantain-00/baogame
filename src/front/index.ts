@@ -32,7 +32,7 @@ const app: any = new libs.Vue({
                 localStorage.removeItem("userName");
             }
             emit({
-                kind: "join",
+                kind: common.ProtocolKind.join,
                 join: {
                     userName: this.userName!,
                 },
@@ -214,15 +214,15 @@ const reconnector = new libs.Reconnector(() => {
     ws.onmessage = evt => {
         debug = typeof evt.data === "string";
         const protocol = format.decode(evt.data);
-        if (protocol.kind === "initSuccess") {
+        if (protocol.kind === common.ProtocolKind.initSuccess) {
             drawer.drawBg(ctxBg, protocol.initSuccess.map, common.w, common.h);
             game.itemGates = protocol.initSuccess.map.itemGates || [];
             game.doors = protocol.initSuccess.map.doors || [];
             app.showDialog = true;
-        } else if (protocol.kind === "joinSuccess") {
+        } else if (protocol.kind === common.ProtocolKind.joinSuccess) {
             currentUserId = protocol.joinSuccess.userId;
             app.showDialog = false;
-        } else if (protocol.kind === "tick") {
+        } else if (protocol.kind === common.ProtocolKind.tick) {
             t++;
             if (protocol.tick.users) {
                 for (let i = 0; i < protocol.tick.users.length; i++) {
@@ -295,7 +295,7 @@ const reconnector = new libs.Reconnector(() => {
             context.restore();
 
             const controlProtocol: common.ControlProtocol = {
-                kind: "control",
+                kind: common.ProtocolKind.control,
                 control,
             };
             const thisControl = JSON.stringify(controlProtocol);
@@ -308,11 +308,11 @@ const reconnector = new libs.Reconnector(() => {
             control.upPress = false;
             control.downPress = false;
             control.itemPress = false;
-        } else if (protocol.kind === "explode") {
+        } else if (protocol.kind === common.ProtocolKind.explode) {
             cdx = 8;
             cdy = 9;
             drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
-        } else if (protocol.kind === "userDead") {
+        } else if (protocol.kind === common.ProtocolKind.userDead) {
             if (protocol.userDead.user.id === currentUserId) {
                 setTimeout(() => {
                     app.showFail = true;

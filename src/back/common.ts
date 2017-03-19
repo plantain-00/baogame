@@ -72,8 +72,18 @@ export type ItemGate = {
     y: number;
 };
 
+export enum ProtocolKind {
+    tick = 0,
+    initSuccess = 1,
+    join = 2,
+    joinSuccess = 3,
+    control = 4,
+    explode = 5,
+    userDead = 6,
+}
+
 export type TickProtocol = {
-    kind: "tick";
+    kind: ProtocolKind.tick;
     tick: {
         users: User[];
         items: Item[];
@@ -92,21 +102,21 @@ export type MapData = {
 };
 
 export type InitSuccessProtocol = {
-    kind: "initSuccess";
+    kind: ProtocolKind.initSuccess;
     initSuccess: {
         map: MapData;
     }
 };
 
 export type JoinProtocol = {
-    kind: "join";
+    kind: ProtocolKind.join;
     join: {
         userName: string;
     };
 };
 
 export type JoinSuccessProtocol = {
-    kind: "joinSuccess";
+    kind: ProtocolKind.joinSuccess;
     joinSuccess: {
         userId: number;
     };
@@ -126,12 +136,12 @@ export type Control = {
 };
 
 export type ControlProtocol = {
-    kind: "control";
+    kind: ProtocolKind.control;
     control: Control;
 };
 
 export type ExplodeProtocol = {
-    kind: "explode";
+    kind: ProtocolKind.explode;
     explode: {
         x: number;
         y: number;
@@ -140,7 +150,7 @@ export type ExplodeProtocol = {
 };
 
 export type UserDeadProtocol = {
-    kind: "userDead";
+    kind: ProtocolKind.userDead;
     userDead: {
         user: User;
         killer?: User;

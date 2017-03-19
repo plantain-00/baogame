@@ -89,5 +89,5 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
             user.danger = true;
         }
     }
-    core.announce({ kind: "explode", explode: { x, y, power } });
+    core.announce({ kind: common.ProtocolKind.explode, explode: { x, y, power } });
 }
