@@ -3,7 +3,7 @@ import * as common from "./common";
 import * as core from "./core";
 import * as libs from "./libs";
 
-let userCount = 0;
+let nextId = 0;
 
 export interface User {
     id: number;
@@ -29,7 +29,7 @@ export interface User {
     grenadeing: number;
     score: number;
     canDoubleJump: boolean;
-    lastTouch: number | null;
+    lastTouch?: number;
     rollPoint: number;
     ladder: common.Ladder | undefined;
     doubleJumping: boolean;
@@ -40,7 +40,7 @@ export interface User {
     vr: number;
     control: common.Control;
     flypackActive: boolean;
-    killer: number | null;
+    killer?: number;
     killedBy: core.KillReason | undefined;
     goleft: boolean;
     goright: boolean;
@@ -50,7 +50,7 @@ export interface User {
 
 export function create(name: string, ws?: libs.WebSocket): User {
     return {
-        id: userCount++,
+        id: nextId++,
         name,
         onFloor: false,
         onLadder: false,
@@ -71,7 +71,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         grenadeing: 0,
         score: 0,
         canDoubleJump: false,
-        lastTouch: null,
         rollPoint: 0,
         control: {
             leftDown: 0,
@@ -93,7 +92,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         r: 0,
         vr: 0,
         flypackActive: false,
-        killer: null,
         killedBy: undefined,
         goleft: false,
         goright: false,
@@ -162,7 +160,7 @@ export function getStatus(user: User): common.userStatus {
                 user.mining = 20;
                 return "mining";
             } else {
-                user.lastTouch = null;
+                user.lastTouch = undefined;
                 if (user.itemType === common.ItemType.doublejump) {
                     user.canDoubleJump = true;
                 }
