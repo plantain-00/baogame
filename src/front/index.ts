@@ -90,14 +90,6 @@ const app: any = new libs.Vue({
 let currentUserId: number;
 let currentUser: common.User;
 
-const cdomBody = document.createElement("canvas") as HTMLCanvasElement;
-cdomBody.width = common.w;
-cdomBody.height = common.h;
-const ctxBody = cdomBody.getContext("2d")!;
-ctxBody.font = "14px 宋体";
-ctxBody.textBaseline = "middle";
-ctxBody.textAlign = "center";
-
 const fg = document.getElementById("fg") as HTMLCanvasElement;
 fg.width = common.w;
 fg.height = common.h;
@@ -256,8 +248,6 @@ const reconnector = new libs.Reconnector(() => {
             }
             drawer.drawWater(context, 20, "#758", common.h, common.w, t);
 
-            context.drawImage(cdomBody, 0, 0);
-
             drawer.drawDoors(context, game.doors, common.h);
             drawer.drawItemGates(context, game.itemGates, common.h);
 
@@ -276,7 +266,6 @@ const reconnector = new libs.Reconnector(() => {
                 for (const user of protocol.tick.users) {
                     if (user.dead === true) {
                         drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
-                        drawer.drawUser(ctxBody, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
                     } else {
                         drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
                     }
