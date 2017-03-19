@@ -471,7 +471,7 @@ export function collide(a: services.user.User, b: services.user.User) {
     if (b.itemType === common.ItemType.bomb && a.itemType !== common.ItemType.bomb) {
         a.itemType = b.itemType;
         a.itemCount = b.itemCount;
-        b.itemType = 0;
+        b.itemType = undefined;
     } else if (a.itemType === common.ItemType.bomb && b.itemType !== common.ItemType.bomb) {
         b.itemType = a.itemType;
         b.itemCount = a.itemCount;

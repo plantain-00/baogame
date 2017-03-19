@@ -42,7 +42,7 @@ export type Grenade = {
 };
 
 export type User = {
-    itemType?: number;
+    itemType?: ItemType;
     itemCount: number;
     nearLadder?: Ladder;
     faceing: number;
