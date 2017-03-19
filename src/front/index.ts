@@ -90,10 +90,27 @@ const app: any = new libs.Vue({
 let currentUserId: number;
 let currentUser: common.User;
 
-let cdomBody: HTMLCanvasElement;
-let ctxBody: CanvasRenderingContext2D;
-let context: CanvasRenderingContext2D;
-let ctxBg;
+const cdomBody = document.createElement("canvas") as HTMLCanvasElement;
+cdomBody.width = common.w;
+cdomBody.height = common.h;
+const ctxBody = cdomBody.getContext("2d")!;
+ctxBody.font = "14px 宋体";
+ctxBody.textBaseline = "middle";
+ctxBody.textAlign = "center";
+
+const fg = document.getElementById("fg") as HTMLCanvasElement;
+fg.width = common.w;
+fg.height = common.h;
+const context = fg.getContext("2d")!;
+context.font = "14px 宋体";
+context.textBaseline = "middle";
+context.textAlign = "center";
+
+const bg = document.getElementById("bg") as HTMLCanvasElement;
+bg.width = common.w;
+bg.height = common.h;
+const ctxBg = bg.getContext("2d")!;
+
 let t = 0;
 let cdx = 0;
 let cdy = 0;
@@ -206,34 +223,9 @@ const reconnector = new libs.Reconnector(() => {
         debug = typeof evt.data === "string";
         const protocol = format.decode(evt.data);
         if (protocol.kind === "initSuccess") {
-            const cdom = document.createElement("canvas");
-            const cdomBg = document.createElement("canvas");
-            cdomBody = document.createElement("canvas");
-            cdom.width = common.w;
-            cdom.height = common.h;
-            cdom.id = "fg";
-            cdomBg.width = common.w;
-            cdomBg.height = common.h;
-            cdomBg.id = "bg";
-            cdomBody.width = common.w;
-            cdomBody.height = common.h;
-            context = cdom.getContext("2d")!;
-            context.font = "14px 宋体";
-            context.textBaseline = "middle";
-            context.textAlign = "center";
-
-            ctxBg = cdomBg.getContext("2d");
-            ctxBody = cdomBody.getContext("2d")!;
-            ctxBody.font = "14px 宋体";
-            ctxBody.textBaseline = "middle";
-            ctxBody.textAlign = "center";
-
-            drawer.drawBg(ctxBg!, protocol.initSuccess.map, common.w, common.h);
+            drawer.drawBg(ctxBg, protocol.initSuccess.map, common.w, common.h);
             game.itemGates = protocol.initSuccess.map.itemGates || [];
             game.doors = protocol.initSuccess.map.doors || [];
-            middle.innerHTML = "";
-            middle.appendChild(cdomBg);
-            middle.appendChild(cdom);
             app.showDialog = true;
         } else if (protocol.kind === "joinSuccess") {
             currentUserId = protocol.joinSuccess.userId;
