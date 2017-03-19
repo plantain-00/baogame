@@ -24,7 +24,7 @@ export interface User {
     ignore: any[];
     itemType?: number;
     itemCount: number;
-    fireing: number | boolean;
+    fireing?: number;
     mining: number | boolean;
     grenadeing: number;
     score: number;
@@ -197,7 +197,7 @@ export function update(user: User) {
     if (user.status === common.userStatus.falling
         || user.status === common.userStatus.standing
         || user.status === common.userStatus.climbing) {
-        if (typeof user.fireing === "number" && user.fireing > 0) {
+        if (user.fireing) {
             user.fireing--;
             if (user.fireing === 5) {
                 user.itemCount--;
@@ -206,7 +206,9 @@ export function update(user: User) {
                 }
                 services.gun.check(user);
             }
-        } else if (user.control.itemPress && user.itemType === common.ItemType.gun && user.itemCount > 0) {
+        } else if (user.control.itemPress
+            && user.itemType === common.ItemType.gun
+            && user.itemCount > 0) {
             user.fireing = 25;
         }
     } else {
@@ -421,7 +423,7 @@ export function getData(user: User): common.User {
         itemCount: user.itemCount,
         nearLadder: user.nearLadder,
         faceing: user.faceing,
-        fireing: user.fireing as number,
+        fireing: user.fireing,
         grenadeing: user.grenadeing,
         danger: user.danger,
         status: user.status,
@@ -550,8 +552,8 @@ export function collide(a: services.user.User, b: services.user.User) {
     // 阻止近期碰撞
     a.ignore[b.id] = 40;
     b.ignore[a.id] = 40;
-    a.fireing = false;
-    b.fireing = false;
+    a.fireing = undefined;
+    b.fireing = undefined;
     a.mining = false;
     b.mining = false;
     a.onLadder = false;

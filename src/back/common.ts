@@ -46,7 +46,7 @@ export type User = {
     itemCount: number;
     nearLadder?: Ladder;
     faceing: number;
-    fireing: number;
+    fireing?: number;
     grenadeing: number;
     danger: boolean,
     status: userStatus;

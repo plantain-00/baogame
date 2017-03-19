@@ -86,7 +86,7 @@ message User {
     required uint32 itemCount = 2;
     optional Ladder nearLadder = 3;
     required int32 faceing = 4;
-    required uint32 fireing = 5;
+    optional uint32 fireing = 5;
     required uint32 grenadeing = 6;
     required bool danger = 7;
     required uint32 status = 8;
