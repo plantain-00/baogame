@@ -8,7 +8,7 @@ let nextId = 0;
 export interface User {
     id: number;
     name: string;
-    onFloor: number | false;
+    onFloor?: number;
     onLadder: boolean;
     nearLadder?: common.Ladder;
     dead: boolean;
@@ -25,13 +25,13 @@ export interface User {
     itemType?: number;
     itemCount: number;
     fireing?: number;
-    mining: number | boolean;
+    mining?: number;
     grenadeing: number;
     score: number;
     canDoubleJump: boolean;
     lastTouch?: number;
     rollPoint: number;
-    ladder: common.Ladder | undefined;
+    ladder?: common.Ladder;
     doubleJumping: boolean;
     flying: number;
     status: common.userStatus;
@@ -52,7 +52,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
     return {
         id: nextId++,
         name,
-        onFloor: false,
         onLadder: false,
         dead: false,
         rolling: false,
@@ -84,7 +83,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
             downPress: false,
             itemPress: false,
         },
-        ladder: undefined,
         doubleJumping: false,
         flying: 0,
         status: common.userStatus.standing,
@@ -140,7 +138,7 @@ export function getStatus(user: User): common.userStatus {
             }
             if ((user.control.upDown || user.control.downDown) && user.nearLadder) {
                 user.onLadder = true;
-                user.onFloor = false;
+                user.onFloor = undefined;
                 user.vx = 0;
                 user.ladder = user.nearLadder;
                 user.x = user.ladder.x * common.tileWidth;
@@ -554,8 +552,8 @@ export function collide(a: services.user.User, b: services.user.User) {
     b.ignore[a.id] = 40;
     a.fireing = undefined;
     b.fireing = undefined;
-    a.mining = false;
-    b.mining = false;
+    a.mining = undefined;
+    b.mining = undefined;
     a.onLadder = false;
     b.onLadder = false;
     a.lastTouch = b.id;

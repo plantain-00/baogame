@@ -140,13 +140,17 @@ export function born() {
 }
 export function onFloor(x: number, y: number) {
     x = Math.floor(x / common.tileWidth);
-    if (y % common.tileHeight !== 0) { return false; }
+    if (y % common.tileHeight !== 0) {
+        return undefined;
+    }
     y = y / common.tileHeight;
-    if (x < 0 || y < 0 || x >= core.map.w || y >= core.map.h || !core.map.floor[y]) { return false; }
+    if (x < 0 || y < 0 || x >= core.map.w || y >= core.map.h || !core.map.floor[y]) {
+        return undefined;
+    }
     return core.map.floor[y][x];
 }
 export function nearLadder(u: services.user.User) {
-    if (onFloor(u.x, u.y) === false) {
+    if (onFloor(u.x, u.y) === undefined) {
         return undefined;
     }
     if (Math.abs(u.vx) > 1 || Math.abs(u.vy) > 1 || u.dieing) {
