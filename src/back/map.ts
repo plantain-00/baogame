@@ -174,9 +174,6 @@ export function onLadder(x: number, y: number) {
     return false;
 }
 export function update() {
-    for (const door of core.map.doors) {
-        services.door.update(door);
-    }
     for (const itemGate of core.map.itemGates) {
         services.itemGate.update(itemGate);
     }

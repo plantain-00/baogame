@@ -97,9 +97,8 @@ message User {
     required uint32 vy = 13;
     required uint32 score = 14;
     required bool dead = 15;
-    required bool npc = 16;
-    required bool doubleJumping = 17;
-    required uint32 flying = 18;
+    required bool doubleJumping = 16;
+    required uint32 flying = 17;
 }
 
 message Item {

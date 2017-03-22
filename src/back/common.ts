@@ -57,7 +57,6 @@ export type User = {
     vy: number;
     score: number;
     dead: boolean,
-    npc: boolean,
     doubleJumping: boolean,
     flying: number;
 };

@@ -9,8 +9,6 @@ import * as libs from "./libs";
 import * as locales from "./locales";
 import * as format from "./format";
 
-/* tslint:disable:no-unused-new */
-
 const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     || navigator.userAgent.indexOf("Android") > -1
     || navigator.userAgent.indexOf("iPad") > -1;

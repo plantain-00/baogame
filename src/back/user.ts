@@ -35,7 +35,6 @@ export interface User {
     doubleJumping: boolean;
     flying: number;
     status: common.userStatus;
-    npc: boolean;
     r: number;
     vr: number;
     control: common.Control;
@@ -86,7 +85,6 @@ export function create(name: string, ws?: libs.WebSocket): User {
         doubleJumping: false,
         flying: 0,
         status: common.userStatus.standing,
-        npc: false,
         r: 0,
         vr: 0,
         flypackActive: false,
@@ -189,9 +187,6 @@ export function update(user: User) {
     }
     user.status = getStatus(user);
 
-    if (user.npc) {
-        services.ai.play(user);
-    }
     if (user.status === common.userStatus.falling
         || user.status === common.userStatus.standing
         || user.status === common.userStatus.climbing) {
@@ -432,7 +427,6 @@ export function getData(user: User): common.User {
         vy: user.vy,
         score: user.score,
         dead: user.dead,
-        npc: user.npc,
         doubleJumping: user.doubleJumping,
         flying: user.flying,
     };

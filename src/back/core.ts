@@ -124,15 +124,6 @@ export type Position = {
     y: number;
 };
 
-export type NPC = {
-    x: number;
-    y: number;
-    name: string;
-    itemType?: number;
-    itemCount?: number;
-    AI?: "walking";
-};
-
 export type ItemGate = {
     x: number;
     y: number;
@@ -146,7 +137,6 @@ export type MapData = {
     floor: number[][];
     ladders: common.Ladder[];
     borns: Position[]; // user is born in one of these positions
-    npcs: NPC[]; // position, name, status of npcs
     doors: common.Door[]; // show a door and create npc here
     itemGates: ItemGate[]; // show a gate and create item here
 };
