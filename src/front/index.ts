@@ -21,6 +21,7 @@ const app: any = new libs.Vue({
         showFail: false,
         showMobileControl: isMobile,
         ui: locales.locale.ui,
+        fps: 0,
     },
     methods: {
         join(this: libs.App) {
@@ -205,6 +206,12 @@ if (isMobile) {
     window.onresize = checkDisplay;
 }
 
+let fps = 0;
+setInterval(() => {
+    app.fps = fps;
+    fps = 0;
+}, 1000);
+
 const urlProtocol = location.protocol === "https:" ? "wss:" : "ws:";
 const reconnector = new libs.Reconnector(() => {
     ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
@@ -222,6 +229,7 @@ const reconnector = new libs.Reconnector(() => {
             app.showDialog = false;
         } else if (protocol.kind === common.ProtocolKind.tick) {
             t++;
+            fps++;
             if (protocol.tick.users) {
                 for (let i = 0; i < protocol.tick.users.length; i++) {
                     if (protocol.tick.users[i].id === currentUserId) {

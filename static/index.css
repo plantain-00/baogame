@@ -183,3 +183,10 @@ input::-webkit-input-placeholder {
 a {
     color: #2be;
 }
+
+.fps {
+    position: fixed;
+    top: 0;
+    right: 0;
+    color: white;
+}

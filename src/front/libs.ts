@@ -10,4 +10,5 @@ export type App = {
     showMobileControl: boolean;
     join: () => void;
     close: () => void;
+    fps: number;
 } & Vue;
