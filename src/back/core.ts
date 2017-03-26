@@ -8,14 +8,11 @@ export const items: services.item.Item[] = [];
 export const users: services.user.User[] = [];
 export const grenades: services.grenade.Grenade[] = [];
 export const mines: Mine[] = [];
-export let tick = 0;
 export let debug = false;
 
 export function init(debugMode: boolean) {
     debug = debugMode;
     setInterval(() => {
-        tick++;
-
         for (const itemGate of map.itemGates) {
             services.itemGate.update(itemGate);
         }
