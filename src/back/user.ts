@@ -99,7 +99,7 @@ export function create(name: string, ws: libs.WebSocket): User {
     user.y = y + common.tileHeight / 2;
     return user;
 }
-export function getStatus(user: User): common.userStatus {
+function getStatus(user: User): common.userStatus {
     user.crawl = false;
     if (user.dieing) { return common.userStatus.dieing; }
     if ((user.vy <= 0 || user.onLadder) && services.mine.check(user)) {
@@ -178,7 +178,7 @@ export function update(user: User) {
     for (const key in user.ignore) {
         user.ignore[key]--;
     }
-    // 时限
+
     if (user.itemType === common.ItemType.power || user.itemType === common.ItemType.hide || user.itemType === common.ItemType.bomb) {
         user.itemCount--;
         if (user.itemCount <= 0) {
