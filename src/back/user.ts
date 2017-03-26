@@ -44,11 +44,11 @@ export interface User {
     goleft: boolean;
     goright: boolean;
     facing: boolean;
-    ws?: libs.WebSocket;
+    ws: libs.WebSocket;
 }
 
-export function create(name: string, ws?: libs.WebSocket): User {
-    return {
+export function create(name: string, ws: libs.WebSocket): User {
+    const user = {
         id: nextId++,
         name,
         onLadder: false,
@@ -94,6 +94,10 @@ export function create(name: string, ws?: libs.WebSocket): User {
         facing: false,
         ws,
     };
+    const { x, y } = services.map.born();
+    user.x = x;
+    user.y = y + common.tileHeight / 2;
+    return user;
 }
 export function getStatus(user: User): common.userStatus {
     user.crawl = false;
@@ -552,12 +556,4 @@ export function collide(a: services.user.User, b: services.user.User) {
     b.onLadder = false;
     a.lastTouch = b.id;
     b.lastTouch = a.id;
-}
-
-export function createUser(name: string, ws?: libs.WebSocket) {
-    const u = services.user.create(name, ws);
-    const { x, y } = services.map.born();
-    u.x = x;
-    u.y = y + common.tileHeight / 2;
-    return u;
 }
