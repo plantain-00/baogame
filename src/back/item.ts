@@ -13,21 +13,6 @@ export interface Item {
     y: number;
 }
 
-export function create(): Item {
-    const type = Math.floor(Math.random() * common.itemCounts.length);
-    return {
-        type,
-        count: common.itemCounts[type],
-        lifetime: 3000,
-        slowdown: 0,
-        vx: Math.random() + .5,
-        vy: Math.random() + .5,
-        dead: false,
-        x: 0,
-        y: 0,
-    };
-}
-
 export function update(item: Item) {
     item.slowdown++;
     if (item.x >= common.w - common.itemSize || item.x <= common.itemSize) {
