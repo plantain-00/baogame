@@ -1,5 +1,4 @@
 import * as common from "./common";
-import * as services from "./services";
 
 export interface Item {
     type: common.ItemType;
@@ -20,24 +19,4 @@ export function getData(item: Item): common.Item {
         type: item.type,
         dead: item.dead,
     };
-}
-
-export function eat(user: services.user.User, item: services.item.Item) {
-    if (user.dead || item.dead) {
-        return;
-    }
-    if (user.itemType === common.ItemType.bomb) {
-        return;
-    }
-    if ((user.x - item.x) * (user.x - item.x) + (user.y + common.userHeight / 2 - item.y) * (user.y + common.userHeight / 2 - item.y) >
-        (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
-        return;
-    }
-    item.dead = true;
-    if (item.type === common.ItemType.drug) {
-        services.user.killed(user, "drug");
-    } else {
-        user.itemType = item.type;
-        user.itemCount = item.count;
-    }
 }

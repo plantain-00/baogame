@@ -466,7 +466,7 @@ export function collide(a: services.user.User, b: services.user.User) {
         a.itemType = undefined;
         b.itemType = undefined;
     }
-    // 排除刚刚碰撞
+
     if (a.ignore[b.id] > 0 || b.ignore[a.id] > 0) { return; }
 
     if (b.itemType === common.ItemType.bomb && a.itemType !== common.ItemType.bomb) {
@@ -478,7 +478,7 @@ export function collide(a: services.user.User, b: services.user.User) {
         b.itemCount = a.itemCount;
         a.itemType = undefined;
     }
-    // 正常情况
+
     if (a.onFloor && b.onFloor) {
         if (a.crawl && !b.crawl) {
             b.vy = 5;
@@ -529,7 +529,7 @@ export function collide(a: services.user.User, b: services.user.User) {
         a.danger = true;
         b.danger = true;
     }
-    // 自然抗拒
+
     if (a.x < b.x) {
         if (!a.crawl) {
             a.vx -= 1;
@@ -545,7 +545,7 @@ export function collide(a: services.user.User, b: services.user.User) {
             b.vx -= 1;
         }
     }
-    // 阻止近期碰撞
+
     a.ignore[b.id] = 40;
     b.ignore[a.id] = 40;
     a.fireing = undefined;

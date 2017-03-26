@@ -90,16 +90,31 @@ export function init(debugMode: boolean) {
             }
         }
 
-        // 碰撞检测
         for (let i = 0; i < users.length; i++) {
             for (let j = i + 1; j < users.length; j++) {
                 services.user.collide(users[i], users[j]);
             }
             for (const item of items) {
-                services.item.eat(users[i], item);
+                if (users[i].dead || item.dead) {
+                    continue;
+                }
+                if (users[i].itemType === common.ItemType.bomb) {
+                    continue;
+                }
+                if ((users[i].x - item.x) * (users[i].x - item.x) + (users[i].y + common.userHeight / 2 - item.y) * (users[i].y + common.userHeight / 2 - item.y) >
+                    (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
+                    continue;
+                }
+                item.dead = true;
+                if (item.type === common.ItemType.drug) {
+                    services.user.killed(users[i], "drug");
+                } else {
+                    users[i].itemType = item.type;
+                    users[i].itemCount = item.count;
+                }
             }
         }
-        // user更新
+
         for (const user of users) {
             services.user.update(user);
         }
