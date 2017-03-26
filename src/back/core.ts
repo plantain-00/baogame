@@ -109,7 +109,10 @@ export function init(debugMode: boolean) {
         floors: map.floor.reduce((acc, f) => acc.concat(f), []),
         ladders: map.ladders,
         doors: map.doors,
-        itemGates: map.itemGates.map(itemGate => services.itemGate.getData(itemGate)),
+        itemGates: map.itemGates.map(itemGate => ({
+            x: itemGate.x,
+            y: itemGate.y,
+        })),
     };
 }
 
