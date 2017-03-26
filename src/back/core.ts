@@ -54,9 +54,42 @@ export function init(debugMode: boolean) {
                 item.y += item.vy;
             }
         }
+
         for (const grenade of grenades) {
-            services.grenade.update(grenade);
+            grenade.x += grenade.vx;
+            grenade.r += grenade.vx / 5;
+            if (grenade.x < 0 || grenade.x > common.w) {
+                grenade.vx *= -1;
+            }
+
+            grenade.vy -= .2;
+            grenade.vy = Math.max(grenade.vy, -6);
+
+            if (grenade.vy > 0) {
+                grenade.y += Math.floor(grenade.vy);
+            } else {
+                for (let i = 0; i < -grenade.vy; i++) {
+                    if (services.map.onFloor(grenade.x, grenade.y)) {
+                        if (services.map.onLadder(grenade.x, grenade.y)) {
+                            grenade.vx *= .7;
+                        } else {
+                            grenade.vy *= -.85;
+                            break;
+                        }
+                    }
+                    grenade.y--;
+                }
+            }
+            if (grenade.y < 0) {
+                grenade.dead = true;
+            }
+            grenade.life--;
+            if (grenade.life < 0) {
+                grenade.dead = true;
+                services.grenade.explode(grenade.x, grenade.y, grenade.creater, 100);
+            }
         }
+
         // 碰撞检测
         for (let i = 0; i < users.length; i++) {
             for (let j = i + 1; j < users.length; j++) {
