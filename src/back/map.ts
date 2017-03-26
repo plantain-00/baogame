@@ -173,8 +173,3 @@ export function onLadder(x: number, y: number) {
     }
     return false;
 }
-export function update() {
-    for (const itemGate of core.map.itemGates) {
-        services.itemGate.update(itemGate);
-    }
-}

@@ -15,7 +15,11 @@ export function init(debugMode: boolean) {
     debug = debugMode;
     setInterval(() => {
         tick++;
-        services.map.update();
+
+        for (const itemGate of map.itemGates) {
+            services.itemGate.update(itemGate);
+        }
+
         for (const item of items) {
             services.item.update(item);
         }
@@ -127,7 +131,6 @@ export type Position = {
 export type ItemGate = {
     x: number;
     y: number;
-    itemType?: number;
     targetItem?: services.item.Item;
 };
 

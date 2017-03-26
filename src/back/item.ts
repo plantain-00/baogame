@@ -13,10 +13,8 @@ export interface Item {
     y: number;
 }
 
-export function create(type?: number): Item {
-    if (type === undefined) {
-        type = Math.floor(Math.random() * common.itemCounts.length);
-    }
+export function create(): Item {
+    const type = Math.floor(Math.random() * common.itemCounts.length);
     return {
         type,
         count: common.itemCounts[type],
