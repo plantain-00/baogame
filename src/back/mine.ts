@@ -16,7 +16,7 @@ export function check(user: services.user.User) {
     for (let i = core.mines.length - 1; i >= 0; i--) {
         const mine = core.mines[i];
         if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {
-            services.user.killed(user, "mine", mine.creater);
+            services.user.killed(user, core.KillReason.mine, mine.creater);
             mine.dead = true;
             return true;
         }

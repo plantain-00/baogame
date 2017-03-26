@@ -108,7 +108,7 @@ export function init(debugMode: boolean) {
                 }
                 item.dead = true;
                 if (item.type === common.ItemType.drug) {
-                    services.user.killed(users[i], "drug");
+                    services.user.killed(users[i], KillReason.drug);
                 } else {
                     users[i].itemType = item.type;
                     users[i].itemCount = item.count;
@@ -228,4 +228,11 @@ export type MapData = {
     itemGates: ItemGate[]; // show a gate and create item here
 };
 
-export type KillReason = "power" | "drug" | "gun" | "mine" | "bomb" | "fall";
+export enum KillReason {
+    power,
+    drug,
+    gun,
+    mine,
+    bomb,
+    fall,
+};

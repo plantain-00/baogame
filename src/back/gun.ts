@@ -13,12 +13,12 @@ export function check(u: services.user.User) {
             uh /= 2;
         }
         if (f < 0 && x > user.x && user.y <= y && user.y + uh >= y) {
-            services.user.killed(user, "gun", u);
+            services.user.killed(user, core.KillReason.gun, u);
             user.vx = 6 * f;
         }
 
         if (f > 0 && x < user.x && user.y <= y && user.y + uh >= y) {
-            services.user.killed(user, "gun", u);
+            services.user.killed(user, core.KillReason.gun, u);
             user.vx = 6 * f;
         }
     }

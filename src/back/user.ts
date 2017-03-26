@@ -40,7 +40,6 @@ export interface User {
     control: common.Control;
     flypackActive: boolean;
     killer?: number;
-    killedBy: core.KillReason | undefined;
     goleft: boolean;
     goright: boolean;
     facing: boolean;
@@ -88,7 +87,6 @@ export function create(name: string, ws: libs.WebSocket): User {
         r: 0,
         vr: 0,
         flypackActive: false,
-        killedBy: undefined,
         goleft: false,
         goright: false,
         facing: false,
@@ -357,7 +355,7 @@ export function update(user: User) {
     if (user.y < 0) {
         user.dead = true;
         if (!user.dieing) {
-            killed(user, "fall");
+            killed(user, core.KillReason.fall);
         }
     } else {
         if (user.vy > 0) {
@@ -373,7 +371,7 @@ export function update(user: User) {
         }
     }
 }
-export function killed(user: User, action: core.KillReason, byUser?: User) {
+export function killed(user: User, killReason: core.KillReason, byUser?: User) {
     if (user.dieing) {
         return;
     }
@@ -381,18 +379,16 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
         user.killer = byUser.id;
     }
 
-    user.killedBy = action;
-
-    if (action === "power") {
+    if (killReason === core.KillReason.power) {
         user.vy = 10;
-    } else if (action === "drug") {
+    } else if (killReason === core.KillReason.drug) {
         user.vy = 3;
         user.killer = user.lastTouch;
-    } else if (action === "gun") {
+    } else if (killReason === core.KillReason.gun) {
         user.vy = 1;
-    } else if (action === "mine") {
+    } else if (killReason === core.KillReason.mine) {
         user.vy = 10;
-    } else if (action === "bomb") {
+    } else if (killReason === core.KillReason.bomb) {
         // todo
     } else {
         user.killer = user.lastTouch;
@@ -446,7 +442,7 @@ export function collide(a: services.user.User, b: services.user.User) {
     }
 
     if (a.itemType === common.ItemType.power && b.itemType !== common.ItemType.power) {
-        services.user.killed(b, "power", a);
+        services.user.killed(b, core.KillReason.power, a);
         b.vx = (b.x - a.x) / 2;
         if (b.itemType === common.ItemType.bomb) {
             a.itemType = b.itemType;
@@ -455,7 +451,7 @@ export function collide(a: services.user.User, b: services.user.User) {
         }
         return;
     } else if (a.itemType !== common.ItemType.power && b.itemType === common.ItemType.power) {
-        services.user.killed(a, "power", b);
+        services.user.killed(a, core.KillReason.power, b);
         a.vx = (a.x - b.x) / 2;
         if (a.itemType === common.ItemType.bomb) {
             b.itemType = a.itemType;

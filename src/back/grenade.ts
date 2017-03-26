@@ -45,7 +45,7 @@ export function explode(x: number, y: number, byUser: services.user.User, power:
         const uy = user.y + common.userHeight;
         const distance = (ux - x) ** 2 + (uy - y) ** 2;
         if (distance < power * power) {
-            services.user.killed(user, "bomb", byUser);
+            services.user.killed(user, core.KillReason.bomb, byUser);
         } else if (distance < 2.25 * power * power) {
             const r = Math.atan2(uy - y, ux - x);
             const force = 450 * power / (distance + 2500);
