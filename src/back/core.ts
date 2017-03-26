@@ -4,7 +4,7 @@ import * as services from "./services";
 
 export let map: services.map.Map;
 export let mapData: common.MapData;
-export const items: services.item.Item[] = [];
+export const items: Item[] = [];
 export const users: services.user.User[] = [];
 export const grenades: services.grenade.Grenade[] = [];
 export const mines: Mine[] = [];
@@ -118,7 +118,12 @@ export function init(debugMode: boolean) {
         for (const user of users) {
             services.user.update(user);
         }
-        const itemdata = items.map(item => services.item.getData(item));
+        const itemdata = items.map(item => ({
+            x: Math.round(item.x),
+            y: Math.round(item.y),
+            type: item.type,
+            dead: item.dead,
+        }));
         const userdata = users.map(user => services.user.getData(user));
         const grenadedata = grenades.map(e => ({
             x: e.x,
@@ -213,8 +218,20 @@ export type Position = {
 export type ItemGate = {
     x: number;
     y: number;
-    targetItem?: services.item.Item;
+    targetItem?: Item;
 };
+
+export interface Item {
+    type: common.ItemType;
+    count: number;
+    lifetime: number;
+    slowdown: number;
+    vx: number;
+    vy: number;
+    dead: boolean;
+    x: number;
+    y: number;
+}
 
 export type MapData = {
     w: number; // width of floor
