@@ -14,7 +14,23 @@ export function init(debugMode: boolean) {
     debug = debugMode;
     setInterval(() => {
         for (const itemGate of map.itemGates) {
-            services.itemGate.update(itemGate);
+            if (items.length < users.length) {
+                const type = Math.floor(Math.random() * common.itemCounts.length);
+                const item = {
+                    type,
+                    count: common.itemCounts[type],
+                    lifetime: 3000,
+                    slowdown: 0,
+                    vx: Math.random() + .5,
+                    vy: Math.random() + .5,
+                    dead: false,
+                    x: 0,
+                    y: 0,
+                };
+                items.push(item);
+                item.x = (itemGate.x + .5) * common.tileWidth;
+                item.y = (itemGate.y + .5) * common.tileHeight;
+            }
         }
 
         for (const item of items) {
