@@ -34,7 +34,25 @@ export function init(debugMode: boolean) {
         }
 
         for (const item of items) {
-            services.item.update(item);
+            item.slowdown++;
+            if (item.x >= common.w - common.itemSize || item.x <= common.itemSize) {
+                item.vx *= -1;
+            }
+
+            if (item.y >= common.h - common.itemSize || item.y <= common.itemSize) {
+                item.vy *= -1;
+            }
+            item.lifetime--;
+            if (item.lifetime < 0) {
+                item.dead = true;
+            }
+            if (item.slowdown < 100) {
+                item.x += item.vx * item.slowdown / 100;
+                item.y += item.vy * item.slowdown / 100;
+            } else {
+                item.x += item.vx;
+                item.y += item.vy;
+            }
         }
         for (const grenade of grenades) {
             services.grenade.update(grenade);
