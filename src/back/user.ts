@@ -405,6 +405,7 @@ export function killed(user: User, action: core.KillReason, byUser?: User) {
             killer.score++;
         }
     }
+    user.dieing = true;
 
     core.announce({
         kind: common.ProtocolKind.userDead,
