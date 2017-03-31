@@ -235,4 +235,4 @@ export enum KillReason {
     mine,
     bomb,
     fall,
-};
+}

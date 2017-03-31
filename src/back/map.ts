@@ -10,7 +10,7 @@ export interface Map {
     borns: core.Position[];
     doors: common.Door[];
     itemGates: core.ItemGate[];
-};
+}
 
 export function create(): Map {
     const w = common.tw;

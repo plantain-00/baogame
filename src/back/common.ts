@@ -18,7 +18,7 @@ export enum ItemType {
     doublejump = 6,
     flypack = 7,
     grenade = 8,
-};
+}
 
 export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3];
 
