@@ -6,6 +6,7 @@ import * as brust from "./effects/brust";
 import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as shotLine from "./effects/shotLine";
+import { locale } from "./locales";
 
 export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
@@ -240,7 +241,7 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
     if (user.itemType !== common.ItemType.hide || user.id === currentUserId) {
         ctx.fillText(user.name, 0, -50);
         if (user.nearLadder && user.id === currentUserId) {
-            ctx.fillText("上", 0, -70);
+            ctx.fillText(locale.ui.up, 0, -70);
         }
     }
 
