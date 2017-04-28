@@ -6,7 +6,7 @@ module.exports = {
         index: "./static/dist/front/index",
     },
     output: {
-        path: path.join(__dirname, "static/scripts/"),
+        path: path.join(__dirname, "scripts/"),
         filename: "[name].js"
     },
     plugins: [
