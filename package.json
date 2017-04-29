@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "debug": "node dist/app.js --debug",
-    "build": "tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
+    "build": "npm run clean && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
     "clean": "rimraf dist/ static/dist/ static/scripts/",
     "lint": "tslint \"src/**/*.ts\""
   },
