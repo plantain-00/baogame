@@ -1,5 +1,3 @@
-export const staticScriptsIndexJs = "index-363237682ea353d43d97a94f8612e80f.js";
-export const staticIndexCss = "index-561cd983fadf52779b8d44a101b7cf98.css";
 export const staticImgsArmPng = "arm-e2d45799570eae86ed13fe25dd343c0f.png";
 export const staticImgsBombPng = "bomb-4fc5282fd4fce9bbce191538c9d7d15e.png";
 export const staticImgsGrenadePng = "grenade-a0f84fb8ccfebd39a2e5aecb4f56c420.png";
@@ -23,4 +21,3 @@ export const staticImgsMinePng = "mine-e1491094a95ccae88d172bc7b2ec1ba9.png";
 export const staticImgsTileDoorPng = "door-5085c517ebe59561d6580ec98bc23aeb.png";
 export const staticImgsTileItemGatePng = "itemGate-bfc5abe6eab81118d638fe5dd93aa635.png";
 export const staticImgsTileSignPng = "sign-982a10e4bec4cf10e83b953be0044f44.png";
-export const staticIndexHtml = "index-a72a9034209f1b377cf85828572d63f6.html";

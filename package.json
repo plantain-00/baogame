@@ -36,7 +36,7 @@
     "@types/minimist": "1.2.0",
     "@types/node": "7.0.14",
     "@types/uws": "0.13.0",
-    "rev-static": "2.4.0",
+    "rev-static": "2.4.2",
     "rimraf": "2.6.1",
     "tslib": "1.6.1",
     "tslint": "5.1.0",
