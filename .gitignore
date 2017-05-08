@@ -41,3 +41,4 @@ static/scripts
 static/index.html
 static/index-*.css
 !*.config.js
+static/imgs/**/*-*.png

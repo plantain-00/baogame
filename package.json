@@ -15,7 +15,7 @@
     "start": "node dist/app.js",
     "debug": "node dist/app.js --debug",
     "build": "npm run clean && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
-    "clean": "rimraf dist/ static/dist/ static/scripts/",
+    "clean": "rimraf dist/ static/dist/ static/scripts/ \"static/imgs/**/*-*.png\"",
     "lint": "tslint \"src/**/*.ts\""
   },
   "engines": {
@@ -36,7 +36,7 @@
     "@types/minimist": "1.2.0",
     "@types/node": "7.0.14",
     "@types/uws": "0.13.0",
-    "rev-static": "2.1.2",
+    "rev-static": "2.4.0",
     "rimraf": "2.6.1",
     "tslib": "1.6.1",
     "tslint": "5.1.0",
