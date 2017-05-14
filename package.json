@@ -14,9 +14,10 @@
   "scripts": {
     "start": "node dist/app.js",
     "debug": "node dist/app.js --debug",
-    "build": "npm run clean && rev-static --config static/rev-static.image.js && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
+    "build": "npm run clean && npm run file2variable && rev-static --config static/rev-static.image.js && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
     "clean": "rimraf dist/ static/dist/ static/scripts/ \"static/imgs/**/*-*.png\"",
-    "lint": "tslint \"src/**/*.ts\""
+    "lint": "tslint \"src/**/*.ts\"",
+    "file2variable": "file2variable-cli static/protocol.proto -o src/front/proto-variables.ts --protobuf"
   },
   "engines": {
     "node": ">=6"
@@ -26,7 +27,6 @@
     "express": "4.15.2",
     "minimist": "1.2.0",
     "protobufjs": "6.7.3",
-    "raw-loader": "0.5.1",
     "reconnection": "1.0.0",
     "uws": "0.14.5"
   },
@@ -36,6 +36,7 @@
     "@types/minimist": "1.2.0",
     "@types/node": "7.0.14",
     "@types/uws": "0.13.0",
+    "file2variable-cli": "1.3.0",
     "rev-static": "2.4.2",
     "rimraf": "2.6.1",
     "tslib": "1.6.1",

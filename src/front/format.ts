@@ -1,9 +1,9 @@
-import * as protobuf from "protobufjs";
+import * as protobuf from "protobufjs/light";
 
 import * as common from "../back/common";
+import { staticProtocolProto } from "./proto-variables";
 
-const protofile: string = require("raw-loader!../../protocol.proto");
-const protocolType = (protobuf.parse(protofile)["root"] as protobuf.Root).lookup("protocolPackage.Protocol") as protobuf.Type;
+const protocolType = protobuf.Root.fromJSON(staticProtocolProto).lookup("protocolPackage.Protocol") as protobuf.Type;
 
 export function encode(protocol: common.Protocol, debug: boolean): Uint8Array | string {
     return debug ? JSON.stringify(protocol) : protocolType.encode(protocol).finish();
