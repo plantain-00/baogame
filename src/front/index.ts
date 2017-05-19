@@ -8,83 +8,85 @@ import * as drawer from "./drawer";
 import * as libs from "./libs";
 import * as locales from "./locales";
 import * as format from "./format";
+import { srcFrontTemplateHtml } from "./proto-variables";
 
 const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     || navigator.userAgent.indexOf("Android") > -1
     || navigator.userAgent.indexOf("iPad") > -1;
 
-const app: any = new libs.Vue({
-    el: "#container",
-    data: {
-        userName: localStorage.getItem("userName") || locales.locale.ui.noOne,
-        showDialog: false,
-        showFail: false,
-        showMobileControl: isMobile,
-        ui: locales.locale.ui,
-        fps: 0,
-    },
-    methods: {
-        join(this: libs.App) {
-            if (this.userName) {
-                localStorage.setItem("userName", this.userName);
-            } else {
-                localStorage.removeItem("userName");
+@libs.Component({
+    template: srcFrontTemplateHtml,
+})
+class App extends libs.Vue {
+    userName = localStorage.getItem("userName") || locales.locale.ui.noOne;
+    showDialog = false;
+    showFail = false;
+    showMobileControl = isMobile;
+    ui = locales.locale.ui;
+    fps = 0;
+
+    join() {
+        if (this.userName) {
+            localStorage.setItem("userName", this.userName);
+        } else {
+            localStorage.removeItem("userName");
+        }
+        emit({
+            kind: common.ProtocolKind.join,
+            join: {
+                userName: this.userName!,
+            },
+        });
+    }
+    stopPropagation(e: KeyboardEvent) {
+        e.stopPropagation();
+    }
+    touchstart(e: TouchEvent) {
+        const t = (e.target as HTMLElement).dataset.act;
+        if (t === "a") {
+            if (!control.itemDown) {
+                control.itemPress = true;
             }
-            emit({
-                kind: common.ProtocolKind.join,
-                join: {
-                    userName: this.userName!,
-                },
-            });
-        },
-        stopPropagation(e: KeyboardEvent) {
-            e.stopPropagation();
-        },
-        touchstart(e: TouchEvent) {
-            const t = (e.target as HTMLElement).dataset.act;
-            if (t === "a") {
-                if (!control.itemDown) {
-                    control.itemPress = true;
-                }
-                control.itemDown = 20000;
-            } else if (t === "l") {
-                if (!control.leftDown) {
-                    control.leftPress = true;
-                }
-                control.leftDown = 20000;
-            } else if (t === "r") {
-                if (!control.rightDown) {
-                    control.rightPress = true;
-                }
-                control.rightDown = 20000;
-            } else if (t === "u") {
-                if (!control.upDown) {
-                    control.upPress = true;
-                }
-                control.upDown = 20000;
-            } else if (t === "d") {
-                if (!control.downDown) {
-                    control.downPress = true;
-                }
-                control.downDown = 20000;
+            control.itemDown = 20000;
+        } else if (t === "l") {
+            if (!control.leftDown) {
+                control.leftPress = true;
             }
-        },
-        touchend(e: TouchEvent) {
-            const t = (e.target as HTMLElement).dataset.act;
-            if (t === "a") {
-                control.itemDown = 0;
-            } else if (t === "l") {
-                control.leftDown = 0;
-            } else if (t === "r") {
-                control.rightDown = 0;
-            } else if (t === "u") {
-                control.upDown = 0;
-            } else if (t === "d") {
-                control.downDown = 0;
+            control.leftDown = 20000;
+        } else if (t === "r") {
+            if (!control.rightDown) {
+                control.rightPress = true;
             }
-        },
-    },
-});
+            control.rightDown = 20000;
+        } else if (t === "u") {
+            if (!control.upDown) {
+                control.upPress = true;
+            }
+            control.upDown = 20000;
+        } else if (t === "d") {
+            if (!control.downDown) {
+                control.downPress = true;
+            }
+            control.downDown = 20000;
+        }
+    }
+    touchend(e: TouchEvent) {
+        const t = (e.target as HTMLElement).dataset.act;
+        if (t === "a") {
+            control.itemDown = 0;
+        } else if (t === "l") {
+            control.leftDown = 0;
+        } else if (t === "r") {
+            control.rightDown = 0;
+        } else if (t === "u") {
+            control.upDown = 0;
+        } else if (t === "d") {
+            control.downDown = 0;
+        }
+    }
+}
+
+const app = new App({ el: "#container" });
 
 let currentUserId: number;
 let currentUser: common.User;

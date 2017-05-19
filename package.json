@@ -17,7 +17,7 @@
     "build": "npm run clean && npm run file2variable && rev-static --config static/rev-static.image.js && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
     "clean": "rimraf dist/ static/dist/ static/scripts/ \"static/imgs/**/*-*.png\"",
     "lint": "tslint \"src/**/*.ts\"",
-    "file2variable": "file2variable-cli static/protocol.proto -o src/front/proto-variables.ts --protobuf"
+    "file2variable": "file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify"
   },
   "engines": {
     "node": ">=6"
@@ -43,6 +43,7 @@
     "tslint": "5.1.0",
     "typescript": "2.3.2",
     "vue": "2.3.0",
+    "vue-class-component": "5.0.1",
     "webpack": "2.4.1"
   }
 }
