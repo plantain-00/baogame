@@ -263,11 +263,7 @@ export function update(user: User) {
     } else if (user.status === common.userStatus.standing) {
         if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
-                if (user.itemType === common.ItemType.power) {
-                    user.vx = -.4;
-                } else {
-                    user.vx = -1;
-                }
+                user.vx = user.itemType === common.ItemType.power ? -0.4 : -1;
             } else {
                 if (user.itemType === common.ItemType.power) {
                     user.vx -= .08;
@@ -279,11 +275,7 @@ export function update(user: User) {
             user.vx = Math.max(user.vx, -4, -user.control.leftDown / 20);
         } else if (!user.control.leftDown && user.control.rightDown) {
             if (user.vx < 0) {
-                if (user.itemType === common.ItemType.power) {
-                    user.vx = .4;
-                } else {
-                    user.vx = 1;
-                }
+                user.vx = user.itemType === common.ItemType.power ? 0.4 : 1;
             } else {
                 if (user.itemType === common.ItemType.power) {
                     user.vx += .08;

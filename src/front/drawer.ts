@@ -224,18 +224,14 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
         img = images.throll;
     } else if (user.itemType === common.ItemType.bomb) {
         img = images.wtf;
-    } else if (user.status === common.userStatus.falling
-        || user.status === common.userStatus.climbing) {
-        img = images.happy;
     } else {
-        img = images.normal;
+        img = user.status === common.userStatus.falling
+            || user.status === common.userStatus.climbing
+            ? images.happy
+            : images.normal;
     }
 
-    if (user.id === currentUserId) {
-        ctx.fillStyle = "#ffa";
-    } else {
-        ctx.fillStyle = "#f77";
-    }
+    ctx.fillStyle = user.id === currentUserId ? "#ffa" : "#f77";
 
     // 用户指示器
     if (user.itemType !== common.ItemType.hide || user.id === currentUserId) {
