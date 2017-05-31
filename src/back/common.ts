@@ -8,7 +8,7 @@ export const th = 15;
 export const w = tw * tileWidth;
 export const h = th * tileHeight;
 
-export enum ItemType {
+export const enum ItemType {
     power = 0,
     gun = 1,
     mine = 2,
@@ -71,7 +71,7 @@ export type ItemGate = {
     y: number;
 };
 
-export enum ProtocolKind {
+export const enum ProtocolKind {
     tick = 0,
     initSuccess = 1,
     join = 2,
@@ -158,7 +158,7 @@ export type UserDeadProtocol = {
 
 export type Protocol = InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
 
-export enum userStatus {
+export const enum userStatus {
     dieing = 0,
     climbing = 1,
     rolling2 = 2,

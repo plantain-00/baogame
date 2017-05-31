@@ -228,7 +228,7 @@ export type MapData = {
     itemGates: ItemGate[]; // show a gate and create item here
 };
 
-export enum KillReason {
+export const enum KillReason {
     power,
     drug,
     gun,
