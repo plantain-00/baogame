@@ -1,4 +1,4 @@
-export interface Toast {
+export type Toast = {
     dy: number;
     life: number;
     t: number;
@@ -7,7 +7,7 @@ export interface Toast {
     size: number;
     txt: string;
     height: number;
-}
+};
 
 export function create(x: number, y: number, size: number, txt: string, height: number) {
     return {

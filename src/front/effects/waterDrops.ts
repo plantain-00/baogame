@@ -1,10 +1,10 @@
-export interface WaterDrops {
+export type WaterDrops = {
     life: number;
     drops: { x: number; y: number; vx: number; vy: number }[];
     x: number;
     y: number;
     height: number;
-}
+};
 
 export function create(x: number, y: number, vy: number, height: number) {
     const result: WaterDrops = {

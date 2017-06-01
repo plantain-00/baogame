@@ -1,11 +1,11 @@
-export interface ShotLine {
+export type ShotLine = {
     life: number;
     x: number;
     y: number;
     dir: number;
     height: number;
     width: number;
-}
+};
 
 export function create(x: number, y: number, dir: number, height: number, width: number) {
     return {

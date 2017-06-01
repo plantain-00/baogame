@@ -2,7 +2,7 @@ import * as services from "./services";
 import * as common from "./common";
 import * as core from "./core";
 
-export interface Map {
+export type Map = {
     w: number;
     h: number;
     floor: number[][];
@@ -10,7 +10,7 @@ export interface Map {
     borns: core.Position[];
     doors: common.Door[];
     itemGates: core.ItemGate[];
-}
+};
 
 export function create(): Map {
     const w = common.tw;

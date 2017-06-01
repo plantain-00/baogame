@@ -176,6 +176,7 @@ export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     try {
         ws.send(services.format.encode(protocol, debug), { binary: !debug });
     } catch (e) {
+        // tslint:disable-next-line:no-console
         console.log(e);
     }
 }
@@ -188,12 +189,12 @@ export function announce(protocol: common.Protocol) {
     }
 }
 
-export interface Mine {
+export type Mine = {
     x: number;
     y: number;
     creater: services.user.User;
     dead?: boolean;
-}
+};
 
 export type Position = {
     x: number;

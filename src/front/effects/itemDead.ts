@@ -1,11 +1,11 @@
-export interface ItemDead {
+export type ItemDead = {
     life: number;
     x: number;
     y: number;
     name: string;
     height: number;
     itemSize: number;
-}
+};
 
 export function create(x: number, y: number, name: string, height: number, itemSize: number): ItemDead {
     return {

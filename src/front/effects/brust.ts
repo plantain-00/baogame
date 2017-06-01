@@ -1,4 +1,4 @@
-export interface Brust {
+export type Brust = {
     life: number;
     drops: { x: number; y: number }[];
     vy: number;
@@ -6,7 +6,7 @@ export interface Brust {
     y: number;
     height: number;
     size: number;
-}
+};
 
 export function create(x: number, y: number, count: number, w: number, height: number, dx = 0, dy = 0, size = 6) {
     const drops: { x: number; y: number }[] = [];

@@ -5,7 +5,7 @@ import * as libs from "./libs";
 
 let nextId = 0;
 
-export interface User {
+export type User = {
     id: number;
     name: string;
     onFloor?: number;
@@ -44,7 +44,7 @@ export interface User {
     goright: boolean;
     facing: boolean;
     ws: libs.WebSocket;
-}
+};
 
 export function create(name: string, ws: libs.WebSocket): User {
     const user = {
@@ -174,7 +174,9 @@ export function update(user: User) {
     user.flying = 0;
 
     for (const key in user.ignore) {
-        user.ignore[key]--;
+        if (user.ignore.hasOwnProperty(key)) {
+            user.ignore[key]--;
+        }
     }
 
     if (user.itemType === common.ItemType.power || user.itemType === common.ItemType.hide || user.itemType === common.ItemType.bomb) {

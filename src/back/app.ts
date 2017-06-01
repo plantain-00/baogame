@@ -8,11 +8,12 @@ const server = libs.http.createServer(app);
 const wss = new libs.WebSocketServer({ server });
 
 const argv = libs.minimist(process.argv.slice(2));
-const port = argv["p"] || 8030;
-const host = argv["h"] || "localhost";
-const debug: boolean = argv["debug"];
+const port = argv.p || 8030;
+const host = argv.h || "localhost";
+const debug: boolean = argv.debug;
 
 server.listen(port || 8030, () => {
+    // tslint:disable-next-line:no-console
     console.log(`Listening on ${host}:${port}${debug ? "(debug)" : "(production)"}`);
 });
 

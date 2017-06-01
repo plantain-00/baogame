@@ -2,7 +2,7 @@ import * as services from "./services";
 import * as common from "./common";
 import * as core from "./core";
 
-export interface Grenade {
+export type Grenade = {
     x: number;
     y: number;
     vx: number;
@@ -11,7 +11,7 @@ export interface Grenade {
     r: number;
     dead: boolean;
     creater: services.user.User;
-}
+};
 
 export function throwGrenade(user: services.user.User) {
     const grenade = {

@@ -1,11 +1,11 @@
-export interface Smoke {
+export type Smoke = {
     life: number;
     totalLife: number;
     chaos: number;
     x: number;
     y: number;
     size: number;
-}
+};
 
 export function create(x: number, y: number, size: number, life: number): Smoke {
     return {

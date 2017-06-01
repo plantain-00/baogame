@@ -1,13 +1,13 @@
 import { draw as drawSmoke, Smoke, create as createSmoke } from "./smoke";
 
-export interface Flare {
+export type Flare = {
     txt: string;
     life: number;
     smokes: Smoke[];
     x: number;
     y: number;
     height: number;
-}
+};
 
 export function create(x: number, y: number, power: number, height: number, large?: boolean): Flare {
     const flare: Flare = {
