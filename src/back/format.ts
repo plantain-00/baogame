@@ -20,5 +20,5 @@ export function decode(protocol: ArrayBuffer | string): common.Protocol {
     if (typeof protocol === "string") {
         return JSON.parse(protocol);
     }
-    return protocolType.decode(new Buffer(protocol)).toObject() as common.Protocol;
+    return protocolType.decode(new Buffer(protocol)).toJSON() as common.Protocol;
 }
