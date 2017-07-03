@@ -13,5 +13,6 @@ module.exports = {
   sha: 256,
   customNewFileName: (filePath, fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
   noOutputFiles: [],
-  es6: 'src/front/variables.ts'
+  es6: 'src/front/variables.ts',
+  base: 'static/imgs'
 }
