@@ -46,7 +46,7 @@
     "karma-firefox-launcher": "1.0.1",
     "karma-jasmine": "1.1.0",
     "karma-webpack": "2.0.3",
-    "rev-static": "2.6.0",
+    "rev-static": "2.7.1",
     "rimraf": "2.6.1",
     "standard": "10.0.2",
     "tslib": "1.7.1",
