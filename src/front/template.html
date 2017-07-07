@@ -1,28 +1,28 @@
 <div>
     <div v-if="showDialog" class="joining">
         <div class="center">
-            <h4 class="message">{{showFail ? ui.youAreDead : ui.joinGame}}</h4>
-            {{ui.yourName}}
+            <h4 class="message">{{showFail ? locale.ui.youAreDead : locale.ui.joinGame}}</h4>
+            {{locale.ui.yourName}}
             <input class="txt-input" v-model="userName" @keydown="stopPropagation($event)" @keyup="stopPropagation($event)"/>
             <div>
-                <a href="javascript:void(0)" class="btn joinBtn" @click="join()">{{ui.joinByPressE}}</a>
+                <a href="javascript:void(0)" class="btn joinBtn" @click="join()">{{locale.ui.joinByPressE}}</a>
             </div>
         </div>
     </div>
     <div v-if="showMobileControl" class="mobileController">
         <div class="left">
-            <div data-act="l" class="moreBtn l" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.left}}</div>
-            <div data-act="r" class="moreBtn r" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.right}}</div>
+            <div data-act="l" class="moreBtn l" @touchstart="touchstart($event)" @touchend="touchend($event)">{{locale.ui.left}}</div>
+            <div data-act="r" class="moreBtn r" @touchstart="touchstart($event)" @touchend="touchend($event)">{{locale.ui.right}}</div>
         </div>
         <div class="right">
-            <div data-act="a" class="moreBtn item" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.item}}</div>
-            <div data-act="u" class="moreBtn up" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.up}}</div>
-            <div data-act="d" class="moreBtn down" @touchstart="touchstart($event)" @touchend="touchend($event)">{{ui.down}}</div>
+            <div data-act="a" class="moreBtn item" @touchstart="touchstart($event)" @touchend="touchend($event)">{{locale.ui.item}}</div>
+            <div data-act="u" class="moreBtn up" @touchstart="touchstart($event)" @touchend="touchend($event)">{{locale.ui.up}}</div>
+            <div data-act="d" class="moreBtn down" @touchstart="touchstart($event)" @touchend="touchend($event)">{{locale.ui.down}}</div>
         </div>
     </div>
     <div class="notice">
         <div class="noticeFix">
-            <div class="noticeItem">{{ui.notice}}</div>
+            <div class="noticeItem">{{locale.ui.notice}}</div>
         </div>
     </div>
     <div class="fps">fps: {{fps}}</div>

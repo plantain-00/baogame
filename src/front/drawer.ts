@@ -6,7 +6,7 @@ import * as brust from "./effects/brust";
 import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as shotLine from "./effects/shotLine";
-import { locale } from "./locales";
+import { locale } from "./index";
 
 export const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];

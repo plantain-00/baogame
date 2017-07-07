@@ -1,10 +1,13 @@
 module.exports = {
   inputFiles: [
-    'static/scripts/index.js',
+    'static/scripts/*.bundle-*.js',
     'static/index.css',
     'static/*.ejs.html'
   ],
   excludeFiles: [],
+  revisedFiles: [
+    'static/scripts/*.bundle-*.js'
+  ],
   outputFiles: file => file.replace('.ejs', ''),
   json: false,
   ejsOptions: {
@@ -12,7 +15,6 @@ module.exports = {
   },
   sha: 256,
   customNewFileName: (filePath, fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
-  noOutputFiles: [],
   base: 'static',
   fileSize: 'static/file-size.json'
 }

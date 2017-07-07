@@ -6,9 +6,55 @@ import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import * as libs from "./libs";
-import * as locales from "./locales";
 import * as format from "./format";
 import { srcFrontTemplateHtml } from "./proto-variables";
+
+const defaultLocale = {
+    item: [
+        "power",
+        "gun",
+        "mine",
+        "drug",
+        "hide",
+        "bomb",
+        "doublejump",
+        "flypack",
+        "grenade",
+    ],
+    score: [
+        "is on a Killing Spree",
+        "is Dominating",
+        "has a Mega-Kill",
+        "is Unstoppable",
+        "is Wicked Sick",
+        "has a M-m-m-m....Monster Kill",
+        "is Godlike",
+        "Holy Shit",
+    ],
+    ui: {
+        youAreDead: "You are dead",
+        joinGame: "Join game",
+        yourName: "Your name:",
+        joinByPressE: "Join by press 'e'",
+        left: "left",
+        right: "right",
+        up: "up",
+        down: "down",
+        useItem: "item",
+        notice: "W,A,S,D: move Q: use item",
+        noOne: "no one",
+    },
+};
+
+export type Locale = typeof defaultLocale;
+
+export function getScoreText(score: number) {
+    if (score <= 8) {
+        return locale.score[score - 1];
+    }
+    return locale.score[7];
+}
+export let locale: Locale = defaultLocale;
 
 const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     || navigator.userAgent.indexOf("Android") > -1
@@ -18,12 +64,15 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     template: srcFrontTemplateHtml,
 })
 class App extends libs.Vue {
-    userName = localStorage.getItem("userName") || locales.locale.ui.noOne;
     showDialog = false;
     showFail = false;
     showMobileControl = isMobile;
-    ui = locales.locale.ui;
+    locale = locale;
     fps = 0;
+
+    get userName() {
+        return localStorage.getItem("userName") || this.locale.ui.noOne;
+    }
 
     join() {
         if (this.userName) {
@@ -86,7 +135,7 @@ class App extends libs.Vue {
     }
 }
 
-const app = new App({ el: "#container" });
+let app: App;
 
 let currentUserId: number;
 let currentUser: common.User;
@@ -215,130 +264,146 @@ setInterval(() => {
 }, 1000);
 
 const urlProtocol = location.protocol === "https:" ? "wss:" : "ws:";
-const reconnector = new libs.Reconnector(() => {
-    ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
-    ws.binaryType = "arraybuffer";
-    ws.onmessage = evt => {
-        debug = typeof evt.data === "string";
-        const protocol = format.decode(evt.data);
-        if (protocol.kind === common.ProtocolKind.initSuccess) {
-            drawer.drawBg(ctxBg, protocol.initSuccess.map, common.w, common.h);
-            game.itemGates = protocol.initSuccess.map.itemGates || [];
-            game.doors = protocol.initSuccess.map.doors || [];
-            app.showDialog = true;
-        } else if (protocol.kind === common.ProtocolKind.joinSuccess) {
-            currentUserId = protocol.joinSuccess.userId;
-            app.showDialog = false;
-        } else if (protocol.kind === common.ProtocolKind.tick) {
-            t++;
-            fps++;
-            if (protocol.tick.users) {
-                for (let i = 0; i < protocol.tick.users.length; i++) {
-                    if (protocol.tick.users[i].id === currentUserId) {
-                        currentUser = protocol.tick.users[i];
-                        break;
+
+function start() {
+    app = new App({ el: "#container" });
+
+    const reconnector = new libs.Reconnector(() => {
+        ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
+        ws.binaryType = "arraybuffer";
+        ws.onmessage = evt => {
+            debug = typeof evt.data === "string";
+            const protocol = format.decode(evt.data);
+            if (protocol.kind === common.ProtocolKind.initSuccess) {
+                drawer.drawBg(ctxBg, protocol.initSuccess.map, common.w, common.h);
+                game.itemGates = protocol.initSuccess.map.itemGates || [];
+                game.doors = protocol.initSuccess.map.doors || [];
+                app.showDialog = true;
+            } else if (protocol.kind === common.ProtocolKind.joinSuccess) {
+                currentUserId = protocol.joinSuccess.userId;
+                app.showDialog = false;
+            } else if (protocol.kind === common.ProtocolKind.tick) {
+                t++;
+                fps++;
+                if (protocol.tick.users) {
+                    for (let i = 0; i < protocol.tick.users.length; i++) {
+                        if (protocol.tick.users[i].id === currentUserId) {
+                            currentUser = protocol.tick.users[i];
+                            break;
+                        }
+                    }
+                }
+
+                context.clearRect(0, 0, common.w, common.h);
+                context.save();
+                context.translate(cdx, cdy);
+                if (cdx > .5) {
+                    cdx *= -.98;
+                } else {
+                    cdx = 0;
+                }
+                if (cdy > .5) {
+                    cdy *= -.97;
+                } else {
+                    cdy = 0;
+                }
+                drawer.drawWater(context, 20, "#758", common.h, common.w, t);
+
+                drawer.drawDoors(context, game.doors, common.h);
+                drawer.drawItemGates(context, game.itemGates, common.h);
+
+                if (protocol.tick.mines) {
+                    for (const mine of protocol.tick.mines) {
+                        context.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
+                        if (mine.dead) {
+                            cdx = 3;
+                            cdy = 11;
+                            drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
+                        }
+                    }
+                }
+
+                if (protocol.tick.users) {
+                    for (const user of protocol.tick.users) {
+                        if (user.dead === true) {
+                            drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
+                        } else {
+                            drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
+                        }
+                    }
+                }
+
+                drawer.drawWater(context, 10, "#95a", common.h, common.w, t);
+
+                if (protocol.tick.items) {
+                    for (const item of protocol.tick.items) {
+                        drawer.drawItem(context, item, t, common.h);
+                        if (item.dead) {
+                            const itemName = locale.item[item.type];
+                            drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
+                        }
+                    }
+                }
+
+                if (protocol.tick.grenades) {
+                    for (const grenade of protocol.tick.grenades) {
+                        drawer.drawGrenade(context, grenade, common.h);
+                    }
+                }
+
+                drawer.draw(context);
+
+                context.restore();
+
+                const controlProtocol: common.ControlProtocol = {
+                    kind: common.ProtocolKind.control,
+                    control,
+                };
+                const thisControl = JSON.stringify(controlProtocol);
+                if (thisControl !== lastControl) {
+                    lastControl = thisControl;
+                    emit(controlProtocol);
+                }
+                control.leftPress = false;
+                control.rightPress = false;
+                control.upPress = false;
+                control.downPress = false;
+                control.itemPress = false;
+            } else if (protocol.kind === common.ProtocolKind.explode) {
+                cdx = 8;
+                cdy = 9;
+                drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
+            } else if (protocol.kind === common.ProtocolKind.userDead) {
+                if (protocol.userDead.user.id === currentUserId) {
+                    setTimeout(() => {
+                        app.showFail = true;
+                        app.showDialog = true;
+                    }, 500);
+                }
+                if (protocol.userDead.killer) {
+                    const killer = protocol.userDead.killer;
+                    if (killer.score >= 3) {
+                        drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + getScoreText(killer.score), common.h));
                     }
                 }
             }
+        };
+        ws.onclose = () => {
+            reconnector.reconnect();
+        };
+        ws.onopen = () => {
+            reconnector.reset();
+        };
+    });
+}
 
-            context.clearRect(0, 0, common.w, common.h);
-            context.save();
-            context.translate(cdx, cdy);
-            if (cdx > .5) {
-                cdx *= -.98;
-            } else {
-                cdx = 0;
-            }
-            if (cdy > .5) {
-                cdy *= -.97;
-            } else {
-                cdy = 0;
-            }
-            drawer.drawWater(context, 20, "#758", common.h, common.w, t);
-
-            drawer.drawDoors(context, game.doors, common.h);
-            drawer.drawItemGates(context, game.itemGates, common.h);
-
-            if (protocol.tick.mines) {
-                for (const mine of protocol.tick.mines) {
-                    context.drawImage(images.mine, mine.x - 12, common.h - mine.y - 3, 23, 5);
-                    if (mine.dead) {
-                        cdx = 3;
-                        cdy = 11;
-                        drawer.flares.push(flare.create(mine.x, mine.y, 0, common.h));
-                    }
-                }
-            }
-
-            if (protocol.tick.users) {
-                for (const user of protocol.tick.users) {
-                    if (user.dead === true) {
-                        drawer.waterDrops.push(waterDrop.create(user.x, user.y, user.vy, common.h));
-                    } else {
-                        drawer.drawUser(context, user, currentUserId, common.h, common.w, common.userWidth, common.userHeight);
-                    }
-                }
-            }
-
-            drawer.drawWater(context, 10, "#95a", common.h, common.w, t);
-
-            if (protocol.tick.items) {
-                for (const item of protocol.tick.items) {
-                    drawer.drawItem(context, item, t, common.h);
-                    if (item.dead) {
-                        const itemName = locales.locale.item[item.type];
-                        drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));
-                    }
-                }
-            }
-
-            if (protocol.tick.grenades) {
-                for (const grenade of protocol.tick.grenades) {
-                    drawer.drawGrenade(context, grenade, common.h);
-                }
-            }
-
-            drawer.draw(context);
-
-            context.restore();
-
-            const controlProtocol: common.ControlProtocol = {
-                kind: common.ProtocolKind.control,
-                control,
-            };
-            const thisControl = JSON.stringify(controlProtocol);
-            if (thisControl !== lastControl) {
-                lastControl = thisControl;
-                emit(controlProtocol);
-            }
-            control.leftPress = false;
-            control.rightPress = false;
-            control.upPress = false;
-            control.downPress = false;
-            control.itemPress = false;
-        } else if (protocol.kind === common.ProtocolKind.explode) {
-            cdx = 8;
-            cdy = 9;
-            drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
-        } else if (protocol.kind === common.ProtocolKind.userDead) {
-            if (protocol.userDead.user.id === currentUserId) {
-                setTimeout(() => {
-                    app.showFail = true;
-                    app.showDialog = true;
-                }, 500);
-            }
-            if (protocol.userDead.killer) {
-                const killer = protocol.userDead.killer;
-                if (killer.score >= 3) {
-                    drawer.toasts.push(toast.create(killer.x, killer.y, killer.score * 1.5 + 14, killer.name + locales.getScoreText(killer.score), common.h));
-                }
-            }
-        }
-    };
-    ws.onclose = () => {
-        reconnector.reconnect();
-    };
-    ws.onopen = () => {
-        reconnector.reset();
-    };
-});
+if (navigator.language === "zh-CN") {
+    import ("./locales/" + navigator.language + ".js").then(module => {
+        locale = module.locale;
+        start();
+    }, error => {
+        start();
+    });
+} else {
+    start();
+}

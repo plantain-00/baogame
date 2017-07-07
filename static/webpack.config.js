@@ -7,7 +7,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'scripts/'),
-    filename: '[name].js'
+    filename: '[name].bundle-[hash].js',
+    publicPath: 'scripts/'
   },
   plugins: [
     new webpack.DefinePlugin({
