@@ -1,12 +1,14 @@
 module.exports = {
   inputFiles: [
-    'static/scripts/*.bundle-*.js',
-    'static/index.css',
+    'static/scripts/*.bundle.js',
+    'static/index.bundle.css',
     'static/*.ejs.html'
   ],
   excludeFiles: [],
   revisedFiles: [
-    'static/scripts/*.bundle-*.js'
+  ],
+  inlinedFiles: [
+    'static/index.bundle.css'
   ],
   outputFiles: file => file.replace('.ejs', ''),
   json: false,

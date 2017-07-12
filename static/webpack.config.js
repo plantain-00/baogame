@@ -3,11 +3,12 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    index: './static/dist/front/index'
+    index: './static/dist/front/index',
+    vendor: './static/dist/front/vendor'
   },
   output: {
     path: path.join(__dirname, 'scripts/'),
-    filename: '[name].bundle-[hash].js',
+    filename: '[name].bundle.js',
     publicPath: 'scripts/'
   },
   plugins: [
@@ -24,6 +25,9 @@ module.exports = {
       output: {
         comments: false
       }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['index', 'vendor']
     })
   ],
   resolve: {

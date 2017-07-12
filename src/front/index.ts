@@ -397,13 +397,9 @@ function start() {
     });
 }
 
+import { locale as zhCNLocale } from "./locales/zh-CN.js";
+
 if (navigator.language === "zh-CN") {
-    import ("./locales/" + navigator.language + ".js").then(module => {
-        locale = module.locale;
-        start();
-    }, error => {
-        start();
-    });
-} else {
-    start();
+    locale = zhCNLocale;
 }
+start();

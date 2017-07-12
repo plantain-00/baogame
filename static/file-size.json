@@ -1,5 +1,6 @@
 {
-  "scripts0BundleJs": "450 B",
-  "scriptsIndexBundleJs": "167 kB",
-  "indexCss": "2.99 kB"
+  "scriptsIndexBundleJs": "83.7 kB 25 kB",
+  "scriptsVendorBundleJs": "83.6 kB 30.2 kB",
+  "indexBundleCss": "2.15 kB 802 B",
+  "staticIndexHtml": "2.66 kB 1.06 kB"
 }
