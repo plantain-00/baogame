@@ -1,6 +1,7 @@
 module.exports = {
   include: [
     'dist/*.js',
+    'static/protocol.proto',
     'static/scripts/*.bundle-*.js',
     'static/index.html',
     'LICENSE',
