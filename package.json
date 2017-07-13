@@ -22,7 +22,8 @@
     "fix": "standard --fix \"**/*.config.js\"",
     "file2variable": "file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify",
     "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js",
-    "image2base64": "image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs"
+    "image2base64": "image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs",
+    "release": "clean-release"
   },
   "engines": {
     "node": ">=6"
@@ -42,6 +43,7 @@
     "@types/minimist": "1.2.0",
     "@types/uws": "0.13.0",
     "clean-css-cli": "4.1.6",
+    "clean-release": "1.1.0",
     "file2variable-cli": "1.4.0",
     "image2base64-cli": "2.0.1",
     "jasmine": "2.6.0",
