@@ -355,7 +355,7 @@ function start() {
 
                 context.restore();
 
-                const controlProtocol: common.ControlProtocol = {
+                const controlProtocol: common.Protocol = {
                     kind: common.ProtocolKind.control,
                     control,
                 };

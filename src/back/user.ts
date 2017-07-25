@@ -34,7 +34,7 @@ export type User = {
     ladder?: common.Ladder;
     doubleJumping: boolean;
     flying: number;
-    status: common.userStatus;
+    status: common.UserStatus;
     r: number;
     vr: number;
     control: common.Control;
@@ -83,7 +83,7 @@ export function create(name: string, ws: libs.WebSocket): User {
         },
         doubleJumping: false,
         flying: 0,
-        status: common.userStatus.standing,
+        status: common.UserStatus.standing,
         r: 0,
         vr: 0,
         flypackActive: false,
@@ -97,14 +97,14 @@ export function create(name: string, ws: libs.WebSocket): User {
     user.y = y + common.tileHeight / 2;
     return user;
 }
-function getStatus(user: User): common.userStatus {
+function getStatus(user: User): common.UserStatus {
     user.crawl = false;
-    if (user.dieing) { return common.userStatus.dieing; }
+    if (user.dieing) { return common.UserStatus.dieing; }
     if ((user.vy <= 0 || user.onLadder) && services.mine.check(user)) {
-        return common.userStatus.dieing;
+        return common.UserStatus.dieing;
     }
     if (user.onLadder && user.vx === 0 && user.vy === 0) {
-        return common.userStatus.climbing;
+        return common.UserStatus.climbing;
     } else {
         const onFloor = services.map.onFloor(user.x, user.y);
         user.onFloor = onFloor;
@@ -117,15 +117,15 @@ function getStatus(user: User): common.userStatus {
                     user.rolling = false;
                 } else {
                     user.crawl = true;
-                    return common.userStatus.rolling2;
+                    return common.UserStatus.rolling2;
                 }
             }
             if (user.danger) {
                 if (Math.abs(user.vx) < .2) {
                     user.danger = false;
-                    return common.userStatus.standing;
+                    return common.UserStatus.standing;
                 } else {
-                    return common.userStatus.rolling;
+                    return common.UserStatus.rolling;
                 }
             }
             if (typeof user.mining === "number" && user.mining > 0) {
@@ -133,7 +133,7 @@ function getStatus(user: User): common.userStatus {
                 if (user.mining === 0) {
                     services.mine.lay(user);
                 } else {
-                    return common.userStatus.mining;
+                    return common.UserStatus.mining;
                 }
             }
             if ((user.control.upDown || user.control.downDown) && user.nearLadder) {
@@ -142,30 +142,30 @@ function getStatus(user: User): common.userStatus {
                 user.vx = 0;
                 user.ladder = user.nearLadder;
                 user.x = user.ladder.x * common.tileWidth;
-                return common.userStatus.climbing;
+                return common.UserStatus.climbing;
             } else if (user.control.downDown) {
                 user.crawl = true;
                 if (Math.abs(user.vx) < .2) {
-                    return common.userStatus.crawling;
+                    return common.UserStatus.crawling;
                 } else {
                     user.rolling = true;
                     user.rollPoint = 20;
                     if (user.vx > 0) { user.vx += 2; }
                     if (user.vx < 0) { user.vx -= 2; }
-                    return common.userStatus.rolling2;
+                    return common.UserStatus.rolling2;
                 }
             } else if (user.control.itemPress && user.vx === 0 && user.itemType === common.ItemType.mine && user.itemCount > 0) {
                 user.mining = 20;
-                return common.userStatus.mining;
+                return common.UserStatus.mining;
             } else {
                 user.lastTouch = undefined;
                 if (user.itemType === common.ItemType.doublejump) {
                     user.canDoubleJump = true;
                 }
-                return common.userStatus.standing;
+                return common.UserStatus.standing;
             }
         } else {
-            return common.userStatus.falling;
+            return common.UserStatus.falling;
         }
     }
 }
@@ -191,9 +191,9 @@ export function update(user: User) {
     }
     user.status = getStatus(user);
 
-    if (user.status === common.userStatus.falling
-        || user.status === common.userStatus.standing
-        || user.status === common.userStatus.climbing) {
+    if (user.status === common.UserStatus.falling
+        || user.status === common.UserStatus.standing
+        || user.status === common.UserStatus.climbing) {
         if (user.fireing) {
             user.fireing--;
             if (user.fireing === 5) {
@@ -212,10 +212,10 @@ export function update(user: User) {
         user.fireing = 0;
     }
 
-    if (user.status === common.userStatus.falling
-        || user.status === common.userStatus.standing
-        || user.status === common.userStatus.climbing
-        || user.status === common.userStatus.crawling) {
+    if (user.status === common.UserStatus.falling
+        || user.status === common.UserStatus.standing
+        || user.status === common.UserStatus.climbing
+        || user.status === common.UserStatus.crawling) {
         // grenade
         if (user.grenadeing > 0 && user.control.itemDown) {
             user.grenadeing++;
@@ -234,14 +234,14 @@ export function update(user: User) {
         user.grenadeing = 0;
     }
 
-    if (user.status === common.userStatus.dieing) {
+    if (user.status === common.UserStatus.dieing) {
         user.vx *= .98;
         user.vy -= .2;
         user.vy = Math.max(-9, user.vy);
         user.r += user.vr;
         user.vr *= .96;
     }
-    if (user.status === common.userStatus.climbing) {
+    if (user.status === common.UserStatus.climbing) {
         if (user.control.upDown && !user.control.downDown && user.y < user.ladder!.y2 * common.tileHeight - common.userHeight) {
             user.y += 3;
         } else if (user.control.downDown && !user.control.upDown && user.y > user.ladder!.y1 * common.tileHeight + 3) {
@@ -262,7 +262,7 @@ export function update(user: User) {
                 user.onLadder = false;
             }
         }
-    } else if (user.status === common.userStatus.standing) {
+    } else if (user.status === common.UserStatus.standing) {
         if (user.control.leftDown && !user.control.rightDown) {
             if (user.vx > 0) {
                 user.vx = user.itemType === common.ItemType.power ? -0.4 : -1;
@@ -296,11 +296,11 @@ export function update(user: User) {
         } else {
             user.vy = 0;
         }
-    } else if (user.status === common.userStatus.rolling2) {
+    } else if (user.status === common.UserStatus.rolling2) {
         user.vx *= .96;
-    } else if (user.status === common.userStatus.rolling) {
+    } else if (user.status === common.UserStatus.rolling) {
         user.vx *= .9;
-    } else if (user.status === common.userStatus.falling) {
+    } else if (user.status === common.UserStatus.falling) {
         if (user.control.upPress && user.canDoubleJump) {
             user.doubleJumping = true;
             user.canDoubleJump = false;
@@ -338,7 +338,7 @@ export function update(user: User) {
         if (user.vy === -9) {
             user.danger = true;
         }
-    } else if (user.status === common.userStatus.crawling) {
+    } else if (user.status === common.UserStatus.crawling) {
         user.vx = 0;
     }
 

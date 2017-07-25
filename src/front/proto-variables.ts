@@ -1,410 +1,403 @@
 // tslint:disable:object-literal-key-quotes trailing-comma
 export const staticProtocolProto = {
     "nested": {
-        "protocolPackage": {
-            "nested": {
-                "Protocol": {
-                    "fields": {
-                        "kind": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "tick": {
-                            "type": "Tick",
-                            "id": 2
-                        },
-                        "initSuccess": {
-                            "type": "InitSuccess",
-                            "id": 3
-                        },
-                        "join": {
-                            "type": "Join",
-                            "id": 4
-                        },
-                        "joinSuccess": {
-                            "type": "JoinSuccess",
-                            "id": 5
-                        },
-                        "control": {
-                            "type": "Control",
-                            "id": 6
-                        },
-                        "explode": {
-                            "type": "Explode",
-                            "id": 7
-                        },
-                        "userDead": {
-                            "type": "UserDead",
-                            "id": 8
-                        }
-                    }
+        "ItemType": {
+            "values": {
+                "power": 0,
+                "gun": 1,
+                "mine": 2,
+                "drug": 3,
+                "hide": 4,
+                "bomb": 5,
+                "doublejump": 6,
+                "flypack": 7,
+                "grenade": 8
+            }
+        },
+        "ProtocolKind": {
+            "values": {
+                "tick": 0,
+                "initSuccess": 1,
+                "join": 2,
+                "joinSuccess": 3,
+                "control": 4,
+                "explode": 5,
+                "userDead": 6
+            }
+        },
+        "UserStatus": {
+            "values": {
+                "dieing": 0,
+                "climbing": 1,
+                "rolling2": 2,
+                "standing": 3,
+                "rolling": 4,
+                "mining": 5,
+                "crawling": 6,
+                "falling": 7
+            }
+        },
+        "Item": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
                 },
-                "Tick": {
-                    "fields": {
-                        "users": {
-                            "rule": "repeated",
-                            "type": "User",
-                            "id": 1
-                        },
-                        "items": {
-                            "rule": "repeated",
-                            "type": "Item",
-                            "id": 2
-                        },
-                        "mines": {
-                            "rule": "repeated",
-                            "type": "Mine",
-                            "id": 3
-                        },
-                        "grenades": {
-                            "rule": "repeated",
-                            "type": "Grenade",
-                            "id": 4
-                        }
-                    }
+                "y": {
+                    "type": "uint32",
+                    "id": 2
                 },
-                "InitSuccess": {
-                    "fields": {
-                        "map": {
-                            "rule": "required",
-                            "type": "MapData",
-                            "id": 1
-                        }
-                    }
+                "type": {
+                    "type": "ItemType",
+                    "id": 3
                 },
-                "Join": {
-                    "fields": {
-                        "userName": {
-                            "rule": "required",
-                            "type": "string",
-                            "id": 1
-                        }
-                    }
+                "dead": {
+                    "type": "bool",
+                    "id": 4
+                }
+            }
+        },
+        "Mine": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
                 },
-                "JoinSuccess": {
-                    "fields": {
-                        "userId": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        }
-                    }
+                "y": {
+                    "type": "uint32",
+                    "id": 2
                 },
-                "Control": {
-                    "fields": {
-                        "leftDown": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "rightDown": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "upDown": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 3
-                        },
-                        "downDown": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 4
-                        },
-                        "itemDown": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 5
-                        },
-                        "leftPress": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 6
-                        },
-                        "rightPress": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 7
-                        },
-                        "upPress": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 8
-                        },
-                        "downPress": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 9
-                        },
-                        "itemPress": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 10
-                        }
-                    }
+                "dead": {
+                    "type": "bool",
+                    "id": 3
+                }
+            }
+        },
+        "Grenade": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
                 },
-                "Explode": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "power": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 3
-                        }
-                    }
+                "y": {
+                    "type": "uint32",
+                    "id": 2
                 },
-                "UserDead": {
-                    "fields": {
-                        "user": {
-                            "rule": "required",
-                            "type": "User",
-                            "id": 1
-                        },
-                        "killer": {
-                            "type": "User",
-                            "id": 2
-                        }
-                    }
+                "r": {
+                    "type": "uint32",
+                    "id": 3
+                }
+            }
+        },
+        "User": {
+            "fields": {
+                "itemType": {
+                    "type": "ItemType",
+                    "id": 1
                 },
-                "MapData": {
-                    "fields": {
-                        "w": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "h": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "floors": {
-                            "rule": "repeated",
-                            "type": "uint32",
-                            "id": 3
-                        },
-                        "ladders": {
-                            "rule": "repeated",
-                            "type": "Ladder",
-                            "id": 4
-                        },
-                        "doors": {
-                            "rule": "repeated",
-                            "type": "Door",
-                            "id": 5
-                        },
-                        "itemGates": {
-                            "rule": "repeated",
-                            "type": "ItemGate",
-                            "id": 6
-                        }
-                    }
+                "itemCount": {
+                    "type": "uint32",
+                    "id": 2
                 },
-                "Ladder": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "float",
-                            "id": 1
-                        },
-                        "y1": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "y2": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 3
-                        }
-                    }
+                "nearLadder": {
+                    "type": "Ladder",
+                    "id": 3
                 },
-                "Door": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        }
-                    }
+                "faceing": {
+                    "type": "int32",
+                    "id": 4
                 },
-                "ItemGate": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "float",
-                            "id": 2
-                        }
-                    }
+                "fireing": {
+                    "type": "uint32",
+                    "id": 5
                 },
-                "User": {
-                    "fields": {
-                        "itemType": {
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "itemCount": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "nearLadder": {
-                            "type": "Ladder",
-                            "id": 3
-                        },
-                        "faceing": {
-                            "rule": "required",
-                            "type": "int32",
-                            "id": 4
-                        },
-                        "fireing": {
-                            "type": "uint32",
-                            "id": 5
-                        },
-                        "grenadeing": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 6
-                        },
-                        "danger": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 7
-                        },
-                        "status": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 8
-                        },
-                        "name": {
-                            "rule": "required",
-                            "type": "string",
-                            "id": 9
-                        },
-                        "id": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 10
-                        },
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 11
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 12
-                        },
-                        "vy": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 13
-                        },
-                        "score": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 14
-                        },
-                        "dead": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 15
-                        },
-                        "doubleJumping": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 16
-                        },
-                        "flying": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 17
-                        }
-                    }
+                "grenadeing": {
+                    "type": "uint32",
+                    "id": 6
                 },
-                "Item": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "type": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 3
-                        },
-                        "dead": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 4
-                        }
-                    }
+                "danger": {
+                    "type": "bool",
+                    "id": 7
                 },
-                "Mine": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "dead": {
-                            "rule": "required",
-                            "type": "bool",
-                            "id": 3
-                        }
-                    }
+                "status": {
+                    "type": "UserStatus",
+                    "id": 8
                 },
-                "Grenade": {
-                    "fields": {
-                        "x": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 1
-                        },
-                        "y": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 2
-                        },
-                        "r": {
-                            "rule": "required",
-                            "type": "uint32",
-                            "id": 3
-                        }
-                    }
+                "name": {
+                    "type": "string",
+                    "id": 9
+                },
+                "id": {
+                    "type": "uint32",
+                    "id": 10
+                },
+                "x": {
+                    "type": "uint32",
+                    "id": 11
+                },
+                "y": {
+                    "type": "uint32",
+                    "id": 12
+                },
+                "vy": {
+                    "type": "uint32",
+                    "id": 13
+                },
+                "score": {
+                    "type": "uint32",
+                    "id": 14
+                },
+                "dead": {
+                    "type": "bool",
+                    "id": 15
+                },
+                "doubleJumping": {
+                    "type": "bool",
+                    "id": 16
+                },
+                "flying": {
+                    "type": "uint32",
+                    "id": 17
+                }
+            }
+        },
+        "Door": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "y": {
+                    "type": "uint32",
+                    "id": 2
+                }
+            }
+        },
+        "ItemGate": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "y": {
+                    "type": "float",
+                    "id": 2
+                }
+            }
+        },
+        "Tick": {
+            "fields": {
+                "users": {
+                    "rule": "repeated",
+                    "type": "User",
+                    "id": 1
+                },
+                "items": {
+                    "rule": "repeated",
+                    "type": "Item",
+                    "id": 2
+                },
+                "mines": {
+                    "rule": "repeated",
+                    "type": "Mine",
+                    "id": 3
+                },
+                "grenades": {
+                    "rule": "repeated",
+                    "type": "Grenade",
+                    "id": 4
+                }
+            }
+        },
+        "MapData": {
+            "fields": {
+                "w": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "h": {
+                    "type": "uint32",
+                    "id": 2
+                },
+                "floors": {
+                    "rule": "repeated",
+                    "type": "uint32",
+                    "id": 3
+                },
+                "ladders": {
+                    "rule": "repeated",
+                    "type": "Ladder",
+                    "id": 4
+                },
+                "doors": {
+                    "rule": "repeated",
+                    "type": "Door",
+                    "id": 5
+                },
+                "itemGates": {
+                    "rule": "repeated",
+                    "type": "ItemGate",
+                    "id": 6
+                }
+            }
+        },
+        "InitSuccess": {
+            "fields": {
+                "map": {
+                    "type": "MapData",
+                    "id": 1
+                }
+            }
+        },
+        "Join": {
+            "fields": {
+                "userName": {
+                    "type": "string",
+                    "id": 1
+                }
+            }
+        },
+        "JoinSuccess": {
+            "fields": {
+                "userId": {
+                    "type": "uint32",
+                    "id": 1
+                }
+            }
+        },
+        "Control": {
+            "fields": {
+                "leftDown": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "rightDown": {
+                    "type": "uint32",
+                    "id": 2
+                },
+                "upDown": {
+                    "type": "uint32",
+                    "id": 3
+                },
+                "downDown": {
+                    "type": "uint32",
+                    "id": 4
+                },
+                "itemDown": {
+                    "type": "uint32",
+                    "id": 5
+                },
+                "leftPress": {
+                    "type": "bool",
+                    "id": 6
+                },
+                "rightPress": {
+                    "type": "bool",
+                    "id": 7
+                },
+                "upPress": {
+                    "type": "bool",
+                    "id": 8
+                },
+                "downPress": {
+                    "type": "bool",
+                    "id": 9
+                },
+                "itemPress": {
+                    "type": "bool",
+                    "id": 10
+                }
+            }
+        },
+        "ControlProtocol": {
+            "fields": {
+                "kind": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "control": {
+                    "type": "Control",
+                    "id": 2
+                }
+            }
+        },
+        "Explode": {
+            "fields": {
+                "x": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "y": {
+                    "type": "uint32",
+                    "id": 2
+                },
+                "power": {
+                    "type": "uint32",
+                    "id": 3
+                }
+            }
+        },
+        "UserDead": {
+            "fields": {
+                "user": {
+                    "type": "User",
+                    "id": 1
+                },
+                "killer": {
+                    "type": "User",
+                    "id": 2
+                }
+            }
+        },
+        "Protocol": {
+            "fields": {
+                "kind": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "initSuccess": {
+                    "type": "InitSuccess",
+                    "id": 2
+                },
+                "join": {
+                    "type": "Join",
+                    "id": 3
+                },
+                "joinSuccess": {
+                    "type": "JoinSuccess",
+                    "id": 4
+                },
+                "control": {
+                    "type": "Control",
+                    "id": 5
+                },
+                "tick": {
+                    "type": "Tick",
+                    "id": 6
+                },
+                "explode": {
+                    "type": "Explode",
+                    "id": 7
+                },
+                "userDead": {
+                    "type": "UserDead",
+                    "id": 8
+                }
+            }
+        },
+        "Ladder": {
+            "fields": {
+                "x": {
+                    "type": "float",
+                    "id": 1
+                },
+                "y1": {
+                    "type": "uint32",
+                    "id": 2
+                },
+                "y2": {
+                    "type": "uint32",
+                    "id": 3
                 }
             }
         }

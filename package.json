@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "debug": "node dist/app.js --debug",
-    "build": "npm run clean && npm run cleanCss && npm run file2variable && npm run image2base64 && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
+    "build": "npm run clean && npm run cleanCss && npm run types-as-schema && npm run file2variable && npm run image2base64 && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
     "clean": "rimraf dist/ static/dist/ static/scripts/ static/index-*.css",
     "lint": "tslint \"src/**/*.ts\" && npm run standard",
     "cleanCss": "cleancss -o static/index.bundle.css static/index.css",
@@ -23,7 +23,8 @@
     "file2variable": "file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify",
     "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js",
     "image2base64": "image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs",
-    "release": "clean-release"
+    "release": "clean-release",
+    "types-as-schema": "types-as-schema src/back/common.ts --protobuf static/protocol.proto"
   },
   "engines": {
     "node": ">=6"
@@ -57,6 +58,7 @@
     "standard": "10.0.2",
     "tslib": "1.7.1",
     "tslint": "5.4.3",
+    "types-as-schema": "1.2.1",
     "typescript": "2.4.1",
     "vue": "2.3.4",
     "vue-class-component": "5.0.2",

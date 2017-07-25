@@ -212,21 +212,21 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
     ctx.translate(user.x, height - user.y);
     if (user.dead) {
         img = images.alone;
-    } else if (user.status === common.userStatus.dieing) {
+    } else if (user.status === common.UserStatus.dieing) {
         img = images.alone;
     } else if (user.itemType === common.ItemType.power) {
         img = images.win;
     } else if (user.danger) {
         img = images.danger;
-    } else if (user.status === common.userStatus.crawling
-        || user.status === common.userStatus.mining
-        || user.status === common.userStatus.rolling2) {
+    } else if (user.status === common.UserStatus.crawling
+        || user.status === common.UserStatus.mining
+        || user.status === common.UserStatus.rolling2) {
         img = images.throll;
     } else if (user.itemType === common.ItemType.bomb) {
         img = images.wtf;
     } else {
-        img = user.status === common.userStatus.falling
-            || user.status === common.userStatus.climbing
+        img = user.status === common.UserStatus.falling
+            || user.status === common.UserStatus.climbing
             ? images.happy
             : images.normal;
     }
@@ -257,9 +257,9 @@ export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, curre
         ctx.globalAlpha = user.itemCount > 900 ? (user.itemCount - 900) / 100 : user.itemCount > 100 ? 0 : (100 - user.itemCount) / 100;
     }
 
-    if (user.status === common.userStatus.crawling
-        || user.status === common.userStatus.mining
-        || user.status === common.userStatus.rolling2) {
+    if (user.status === common.UserStatus.crawling
+        || user.status === common.UserStatus.mining
+        || user.status === common.UserStatus.rolling2) {
         ctx.drawImage(img, -userWidth / 2, -25, userWidth, userHeight);
     } else {
         ctx.drawImage(img, -userWidth / 2, -userHeight, userWidth, userHeight);

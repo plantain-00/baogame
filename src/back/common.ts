@@ -23,51 +23,114 @@ export const enum ItemType {
 export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3];
 
 export type Item = {
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y: number;
     type: ItemType;
     dead: boolean;
 };
 
 export type Mine = {
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y: number;
     dead: boolean;
 };
 
 export type Grenade = {
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y: number;
+    /**
+     * @type uint32
+     */
     r: number;
 };
 
 export type User = {
     itemType?: ItemType;
+    /**
+     * @type uint32
+     */
     itemCount: number;
     nearLadder?: Ladder;
+    /**
+     * @type int32
+     */
     faceing: number;
+    /**
+     * @type uint32
+     */
     fireing?: number;
+    /**
+     * @type uint32
+     */
     grenadeing: number;
     danger: boolean,
-    status: userStatus;
+    status: UserStatus;
     name: string;
+    /**
+     * @type uint32
+     */
     id: number;
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y: number;
+    /**
+     * @type uint32
+     */
     vy: number;
+    /**
+     * @type uint32
+     */
     score: number;
     dead: boolean,
     doubleJumping: boolean,
+    /**
+     * @type uint32
+     */
     flying: number;
 };
 
 export type Door = {
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y: number;
 };
 
 export type ItemGate = {
+    /**
+     * @type uint32
+     */
     x: number;
+    /**
+     * @type float
+     */
     y: number;
 };
 
@@ -81,51 +144,66 @@ export const enum ProtocolKind {
     userDead = 6,
 }
 
-export type TickProtocol = {
-    kind: ProtocolKind.tick;
-    tick: {
-        users: User[];
-        items: Item[];
-        mines: Mine[];
-        grenades: Grenade[];
-    };
+type Tick = {
+    users: User[];
+    items: Item[];
+    mines: Mine[];
+    grenades: Grenade[];
 };
 
 export type MapData = {
+    /**
+     * @type uint32
+     */
     w: number;
+    /**
+     * @type uint32
+     */
     h: number;
+    /**
+     * @type uint32
+     */
     floors: number[];
     ladders: Ladder[];
     doors: Door[],
     itemGates: ItemGate[],
 };
 
-export type InitSuccessProtocol = {
-    kind: ProtocolKind.initSuccess;
-    initSuccess: {
-        map: MapData;
-    }
+type InitSuccess = {
+    map: MapData;
 };
 
-export type JoinProtocol = {
-    kind: ProtocolKind.join;
-    join: {
-        userName: string;
-    };
+type Join = {
+    userName: string;
 };
 
-export type JoinSuccessProtocol = {
-    kind: ProtocolKind.joinSuccess;
-    joinSuccess: {
-        userId: number;
-    };
+type JoinSuccess = {
+    /**
+     * @type uint32
+     */
+    userId: number;
 };
 
 export type Control = {
+    /**
+     * @type uint32
+     */
     leftDown: number;
+    /**
+     * @type uint32
+     */
     rightDown: number;
+    /**
+     * @type uint32
+     */
     upDown: number;
+    /**
+     * @type uint32
+     */
     downDown: number;
+    /**
+     * @type uint32
+     */
     itemDown: number;
     leftPress: boolean;
     rightPress: boolean;
@@ -139,26 +217,63 @@ export type ControlProtocol = {
     control: Control;
 };
 
-export type ExplodeProtocol = {
-    kind: ProtocolKind.explode;
-    explode: {
-        x: number;
-        y: number;
-        power: number;
-    };
+type Explode = {
+    /**
+     * @type uint32
+     */
+    x: number;
+    /**
+     * @type uint32
+     */
+    y: number;
+    /**
+     * @type uint32
+     */
+    power: number;
 };
 
-export type UserDeadProtocol = {
-    kind: ProtocolKind.userDead;
-    userDead: {
-        user: User;
-        killer?: User;
-    };
+type UserDead = {
+    user: User;
+    killer?: User;
 };
 
-export type Protocol = InitSuccessProtocol | JoinProtocol | JoinSuccessProtocol | ControlProtocol | TickProtocol | ExplodeProtocol | UserDeadProtocol;
+export type Protocol =
+    {
+        kind: ProtocolKind.initSuccess;
+        initSuccess: InitSuccess;
+    }
+    |
+    {
+        kind: ProtocolKind.join;
+        join: Join;
+    }
+    |
+    {
+        kind: ProtocolKind.joinSuccess;
+        joinSuccess: JoinSuccess;
+    }
+    |
+    {
+        kind: ProtocolKind.control;
+        control: Control;
+    }
+    |
+    {
+        kind: ProtocolKind.tick;
+        tick: Tick;
+    }
+    |
+    {
+        kind: ProtocolKind.explode;
+        explode: Explode;
+    }
+    |
+    {
+        kind: ProtocolKind.userDead;
+        userDead: UserDead;
+    };
 
-export const enum userStatus {
+export const enum UserStatus {
     dieing = 0,
     climbing = 1,
     rolling2 = 2,
@@ -170,7 +285,16 @@ export const enum userStatus {
 }
 
 export type Ladder = { // (x,y1) until (x,y2)
+    /**
+     * @type float
+     */
     x: number;
+    /**
+     * @type uint32
+     */
     y1: number;
+    /**
+     * @type uint32
+     */
     y2: number;
 };
