@@ -14,17 +14,11 @@
   "scripts": {
     "start": "node dist/app.js",
     "debug": "node dist/app.js --debug",
-    "build": "npm run clean && npm run cleanCss && npm run types-as-schema && npm run file2variable && npm run image2base64 && tsc -p src/back/ && tsc -p src/front/ && webpack --config static/webpack.config.js && rev-static --config static/rev-static.config.js",
-    "clean": "rimraf dist/ static/dist/ static/scripts/ static/index-*.css",
-    "lint": "tslint \"src/**/*.ts\" && npm run standard",
-    "cleanCss": "cleancss -o static/index.bundle.css static/index.css",
-    "standard": "standard \"**/*.config.js\"",
-    "fix": "standard --fix \"**/*.config.js\"",
-    "file2variable": "file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify",
-    "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js",
-    "image2base64": "image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs",
-    "release": "clean-release",
-    "types-as-schema": "types-as-schema src/back/common.ts --protobuf static/protocol.proto"
+    "build": "clean-scripts build",
+    "lint": "clean-scripts lint",
+    "test": "clean-scripts test",
+    "fix": "clean-scripts fix",
+    "release": "clean-scripts release"
   },
   "engines": {
     "node": ">=6"
@@ -45,6 +39,7 @@
     "@types/uws": "0.13.0",
     "clean-css-cli": "4.1.6",
     "clean-release": "1.1.0",
+    "clean-scripts": "1.0.0",
     "file2variable-cli": "1.4.0",
     "image2base64-cli": "2.0.1",
     "jasmine": "2.6.0",
