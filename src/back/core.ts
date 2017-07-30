@@ -141,7 +141,7 @@ export function init(debugMode: boolean) {
                     dead: mine.dead!,
                 }));
                 emit(user.ws, {
-                    kind: common.ProtocolKind.tick,
+                    kind: common.ResponseProtocolKind.tick,
                     tick: {
                         users: userdata,
                         items: itemdata,
@@ -172,7 +172,7 @@ export function init(debugMode: boolean) {
     };
 }
 
-export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
+export function emit(ws: libs.WebSocket, protocol: common.ResponseProtocol) {
     try {
         ws.send(services.format.encode(protocol, debug), { binary: !debug });
     } catch (e) {
@@ -181,7 +181,7 @@ export function emit(ws: libs.WebSocket, protocol: common.Protocol) {
     }
 }
 
-export function announce(protocol: common.Protocol) {
+export function announce(protocol: common.ResponseProtocol) {
     for (const user of users) {
         if (user.ws) {
             emit(user.ws, protocol);

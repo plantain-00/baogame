@@ -1,24 +1,26 @@
 import * as libs from "./libs";
 import * as common from "./common";
 
-let protocolType: libs.protobuf.Type;
+let requestProtocolType: libs.protobuf.Type;
+let responseProtocolType: libs.protobuf.Type;
 
 export function start() {
     (libs.protobuf.load("./static/protocol.proto") as Promise<libs.protobuf.Root>).then(root => {
-        protocolType = root.lookup("Protocol") as libs.protobuf.Type;
+        requestProtocolType = root.lookup("RequestProtocol") as libs.protobuf.Type;
+        responseProtocolType = root.lookup("ResponseProtocol") as libs.protobuf.Type;
     }, error => {
         // tslint:disable-next-line:no-console
         console.log(error);
     });
 }
 
-export function encode(protocol: common.Protocol, debug: boolean): string | Uint8Array {
-    return debug ? JSON.stringify(protocol) : protocolType.encode(protocol).finish();
+export function encode(protocol: common.ResponseProtocol, debug: boolean): string | Uint8Array {
+    return debug ? JSON.stringify(protocol) : responseProtocolType.encode(protocol).finish();
 }
 
-export function decode(protocol: ArrayBuffer | string): common.Protocol {
+export function decode(protocol: ArrayBuffer | string): common.RequestProtocol {
     if (typeof protocol === "string") {
         return JSON.parse(protocol);
     }
-    return protocolType.toObject(protocolType.decode(new Buffer(protocol))) as common.Protocol;
+    return requestProtocolType.toObject(requestProtocolType.decode(new Buffer(protocol))) as common.RequestProtocol;
 }

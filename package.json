@@ -39,7 +39,7 @@
     "@types/uws": "0.13.0",
     "clean-css-cli": "4.1.6",
     "clean-release": "1.1.0",
-    "clean-scripts": "1.0.0",
+    "clean-scripts": "1.0.1",
     "file2variable-cli": "1.4.0",
     "image2base64-cli": "2.0.1",
     "jasmine": "2.6.0",

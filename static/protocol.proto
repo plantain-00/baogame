@@ -12,12 +12,15 @@ enum ItemType {
     grenade = 8;
 }
 
-enum ProtocolKind {
+enum RequestProtocolKind {
+    join = 2;
+    control = 4;
+}
+
+enum ResponseProtocolKind {
     tick = 0;
     initSuccess = 1;
-    join = 2;
     joinSuccess = 3;
-    control = 4;
     explode = 5;
     userDead = 6;
 }
@@ -123,11 +126,6 @@ message Control {
     bool itemPress = 10;
 }
 
-message ControlProtocol {
-    uint32 kind = 1;
-    Control control = 2;
-}
-
 message Explode {
     uint32 x = 1;
     uint32 y = 2;
@@ -139,15 +137,19 @@ message UserDead {
     User killer = 2;
 }
 
-message Protocol {
+message RequestProtocol {
+    uint32 kind = 1;
+    Join join = 2;
+    Control control = 3;
+}
+
+message ResponseProtocol {
     uint32 kind = 1;
     InitSuccess initSuccess = 2;
-    Join join = 3;
-    JoinSuccess joinSuccess = 4;
-    Control control = 5;
-    Tick tick = 6;
-    Explode explode = 7;
-    UserDead userDead = 8;
+    JoinSuccess joinSuccess = 3;
+    Tick tick = 4;
+    Explode explode = 5;
+    UserDead userDead = 6;
 }
 
 message Ladder {

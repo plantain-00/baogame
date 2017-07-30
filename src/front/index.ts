@@ -81,7 +81,7 @@ class App extends libs.Vue {
             localStorage.removeItem("userName");
         }
         emit({
-            kind: common.ProtocolKind.join,
+            kind: common.RequestProtocolKind.join,
             join: {
                 userName: this.userName!,
             },
@@ -230,7 +230,7 @@ document.addEventListener("keyup", e => {
 let ws: WebSocket | undefined;
 let debug = false;
 
-function emit(protocol: common.Protocol) {
+function emit(protocol: common.RequestProtocol) {
     if (!ws) {
         return;
     }
@@ -274,15 +274,15 @@ function start() {
         ws.onmessage = evt => {
             debug = typeof evt.data === "string";
             const protocol = format.decode(evt.data);
-            if (protocol.kind === common.ProtocolKind.initSuccess) {
+            if (protocol.kind === common.ResponseProtocolKind.initSuccess) {
                 drawer.drawBg(ctxBg, protocol.initSuccess.map, common.w, common.h);
                 game.itemGates = protocol.initSuccess.map.itemGates || [];
                 game.doors = protocol.initSuccess.map.doors || [];
                 app.showDialog = true;
-            } else if (protocol.kind === common.ProtocolKind.joinSuccess) {
+            } else if (protocol.kind === common.ResponseProtocolKind.joinSuccess) {
                 currentUserId = protocol.joinSuccess.userId;
                 app.showDialog = false;
-            } else if (protocol.kind === common.ProtocolKind.tick) {
+            } else if (protocol.kind === common.ResponseProtocolKind.tick) {
                 t++;
                 fps++;
                 if (protocol.tick.users) {
@@ -355,8 +355,8 @@ function start() {
 
                 context.restore();
 
-                const controlProtocol: common.Protocol = {
-                    kind: common.ProtocolKind.control,
+                const controlProtocol: common.RequestProtocol = {
+                    kind: common.RequestProtocolKind.control,
                     control,
                 };
                 const thisControl = JSON.stringify(controlProtocol);
@@ -369,11 +369,11 @@ function start() {
                 control.upPress = false;
                 control.downPress = false;
                 control.itemPress = false;
-            } else if (protocol.kind === common.ProtocolKind.explode) {
+            } else if (protocol.kind === common.ResponseProtocolKind.explode) {
                 cdx = 8;
                 cdy = 9;
                 drawer.flares.push(flare.create(protocol.explode.x, protocol.explode.y, protocol.explode.power, common.h, true));
-            } else if (protocol.kind === common.ProtocolKind.userDead) {
+            } else if (protocol.kind === common.ResponseProtocolKind.userDead) {
                 if (protocol.userDead.user.id === currentUserId) {
                     setTimeout(() => {
                         app.showFail = true;

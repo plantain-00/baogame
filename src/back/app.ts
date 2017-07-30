@@ -25,7 +25,7 @@ core.init(debug);
 
 wss.on("connection", ws => {
     core.emit(ws, {
-        kind: common.ProtocolKind.initSuccess,
+        kind: common.ResponseProtocolKind.initSuccess,
         initSuccess: {
             map: core.mapData,
         },
@@ -36,14 +36,14 @@ wss.on("connection", ws => {
     ws.on("message", message => {
         const protocol = services.format.decode(message);
 
-        if (protocol.kind === common.ProtocolKind.join) {
+        if (protocol.kind === common.RequestProtocolKind.join) {
             if (protocol.join && typeof protocol.join.userName === "string") {
                 user = services.user.create(protocol.join.userName.trim().substring(0, 8), ws);
                 core.users.push(user);
 
-                core.emit(ws, { kind: common.ProtocolKind.joinSuccess, joinSuccess: { userId: user.id } });
+                core.emit(ws, { kind: common.ResponseProtocolKind.joinSuccess, joinSuccess: { userId: user.id } });
             }
-        } else if (protocol.kind === common.ProtocolKind.control) {
+        } else if (protocol.kind === common.RequestProtocolKind.control) {
             if (user && protocol.control) {
                 user.control = protocol.control;
             }

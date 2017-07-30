@@ -398,7 +398,7 @@ export function killed(user: User, killReason: core.KillReason, byUser?: User) {
     user.dieing = true;
 
     core.announce({
-        kind: common.ProtocolKind.userDead,
+        kind: common.ResponseProtocolKind.userDead,
         userDead: {
             user: getData(user),
             killer: killer ? getData(killer) : undefined,

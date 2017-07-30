@@ -14,13 +14,17 @@ export const staticProtocolProto = {
                 "grenade": 8
             }
         },
-        "ProtocolKind": {
+        "RequestProtocolKind": {
+            "values": {
+                "join": 2,
+                "control": 4
+            }
+        },
+        "ResponseProtocolKind": {
             "values": {
                 "tick": 0,
                 "initSuccess": 1,
-                "join": 2,
                 "joinSuccess": 3,
-                "control": 4,
                 "explode": 5,
                 "userDead": 6
             }
@@ -309,18 +313,6 @@ export const staticProtocolProto = {
                 }
             }
         },
-        "ControlProtocol": {
-            "fields": {
-                "kind": {
-                    "type": "uint32",
-                    "id": 1
-                },
-                "control": {
-                    "type": "Control",
-                    "id": 2
-                }
-            }
-        },
         "Explode": {
             "fields": {
                 "x": {
@@ -349,7 +341,23 @@ export const staticProtocolProto = {
                 }
             }
         },
-        "Protocol": {
+        "RequestProtocol": {
+            "fields": {
+                "kind": {
+                    "type": "uint32",
+                    "id": 1
+                },
+                "join": {
+                    "type": "Join",
+                    "id": 2
+                },
+                "control": {
+                    "type": "Control",
+                    "id": 3
+                }
+            }
+        },
+        "ResponseProtocol": {
             "fields": {
                 "kind": {
                     "type": "uint32",
@@ -359,29 +367,21 @@ export const staticProtocolProto = {
                     "type": "InitSuccess",
                     "id": 2
                 },
-                "join": {
-                    "type": "Join",
-                    "id": 3
-                },
                 "joinSuccess": {
                     "type": "JoinSuccess",
-                    "id": 4
-                },
-                "control": {
-                    "type": "Control",
-                    "id": 5
+                    "id": 3
                 },
                 "tick": {
                     "type": "Tick",
-                    "id": 6
+                    "id": 4
                 },
                 "explode": {
                     "type": "Explode",
-                    "id": 7
+                    "id": 5
                 },
                 "userDead": {
                     "type": "UserDead",
-                    "id": 8
+                    "id": 6
                 }
             }
         },

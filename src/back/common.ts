@@ -134,12 +134,15 @@ export type ItemGate = {
     y: number;
 };
 
-export const enum ProtocolKind {
+export const enum RequestProtocolKind {
+    join = 2,
+    control = 4,
+}
+
+export const enum ResponseProtocolKind {
     tick = 0,
     initSuccess = 1,
-    join = 2,
     joinSuccess = 3,
-    control = 4,
     explode = 5,
     userDead = 6,
 }
@@ -212,11 +215,6 @@ export type Control = {
     itemPress: boolean;
 };
 
-export type ControlProtocol = {
-    kind: ProtocolKind.control;
-    control: Control;
-};
-
 type Explode = {
     /**
      * @type uint32
@@ -237,39 +235,40 @@ type UserDead = {
     killer?: User;
 };
 
-export type Protocol =
+export type RequestProtocol =
     {
-        kind: ProtocolKind.initSuccess;
-        initSuccess: InitSuccess;
-    }
-    |
-    {
-        kind: ProtocolKind.join;
+        kind: RequestProtocolKind.join;
         join: Join;
     }
     |
     {
-        kind: ProtocolKind.joinSuccess;
+        kind: RequestProtocolKind.control;
+        control: Control;
+    };
+
+export type ResponseProtocol =
+    {
+        kind: ResponseProtocolKind.initSuccess;
+        initSuccess: InitSuccess;
+    }
+    |
+    {
+        kind: ResponseProtocolKind.joinSuccess;
         joinSuccess: JoinSuccess;
     }
     |
     {
-        kind: ProtocolKind.control;
-        control: Control;
-    }
-    |
-    {
-        kind: ProtocolKind.tick;
+        kind: ResponseProtocolKind.tick;
         tick: Tick;
     }
     |
     {
-        kind: ProtocolKind.explode;
+        kind: ResponseProtocolKind.explode;
         explode: Explode;
     }
     |
     {
-        kind: ProtocolKind.userDead;
+        kind: ResponseProtocolKind.userDead;
         userDead: UserDead;
     };
 
