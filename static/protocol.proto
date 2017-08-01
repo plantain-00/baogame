@@ -138,13 +138,13 @@ message UserDead {
 }
 
 message RequestProtocol {
-    uint32 kind = 1;
+    RequestProtocolKind kind = 1;
     Join join = 2;
     Control control = 3;
 }
 
 message ResponseProtocol {
-    uint32 kind = 1;
+    ResponseProtocolKind kind = 1;
     InitSuccess initSuccess = 2;
     JoinSuccess joinSuccess = 3;
     Tick tick = 4;

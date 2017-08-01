@@ -153,7 +153,7 @@ bg.width = common.w;
 bg.height = common.h;
 const ctxBg = bg.getContext("2d")!;
 
-let t = 0;
+let tick = 0;
 let cdx = 0;
 let cdy = 0;
 const game: {
@@ -283,7 +283,7 @@ function start() {
                 currentUserId = protocol.joinSuccess.userId;
                 app.showDialog = false;
             } else if (protocol.kind === common.ResponseProtocolKind.tick) {
-                t++;
+                tick++;
                 fps++;
                 if (protocol.tick.users) {
                     for (let i = 0; i < protocol.tick.users.length; i++) {
@@ -307,7 +307,7 @@ function start() {
                 } else {
                     cdy = 0;
                 }
-                drawer.drawWater(context, 20, "#758", common.h, common.w, t);
+                drawer.drawWater(context, 20, "#758", common.h, common.w, tick);
 
                 drawer.drawDoors(context, game.doors, common.h);
                 drawer.drawItemGates(context, game.itemGates, common.h);
@@ -333,11 +333,11 @@ function start() {
                     }
                 }
 
-                drawer.drawWater(context, 10, "#95a", common.h, common.w, t);
+                drawer.drawWater(context, 10, "#95a", common.h, common.w, tick);
 
                 if (protocol.tick.items) {
                     for (const item of protocol.tick.items) {
-                        drawer.drawItem(context, item, t, common.h);
+                        drawer.drawItem(context, item, tick, common.h);
                         if (item.dead) {
                             const itemName = locale.item[item.type];
                             drawer.itemDeads.push(itemDead.create(item.x, item.y, itemName, common.h, common.itemSize));

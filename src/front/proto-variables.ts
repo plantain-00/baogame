@@ -344,7 +344,7 @@ export const staticProtocolProto = {
         "RequestProtocol": {
             "fields": {
                 "kind": {
-                    "type": "uint32",
+                    "type": "RequestProtocolKind",
                     "id": 1
                 },
                 "join": {
@@ -360,7 +360,7 @@ export const staticProtocolProto = {
         "ResponseProtocol": {
             "fields": {
                 "kind": {
-                    "type": "uint32",
+                    "type": "ResponseProtocolKind",
                     "id": 1
                 },
                 "initSuccess": {
