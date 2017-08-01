@@ -7,7 +7,7 @@ module.exports = {
     'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs',
     'tsc -p src/back/',
     'tsc -p src/front/',
-    'webpack --config static/webpack.config.js',
+    'webpack --display-modules --config static/webpack.config.js',
     'rev-static --config static/rev-static.config.js'
   ],
   lint: [
