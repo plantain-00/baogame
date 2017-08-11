@@ -8,10 +8,10 @@ import * as itemDead from "./effects/itemDead";
 import * as shotLine from "./effects/shotLine";
 import { locale } from "./index";
 
-export const brusts: brust.Brust[] = [];
+const brusts: brust.Brust[] = [];
 export const flares: flare.Flare[] = [];
 export const itemDeads: itemDead.ItemDead[] = [];
-export const shotLines: shotLine.ShotLine[] = [];
+const shotLines: shotLine.ShotLine[] = [];
 export const toasts: toast.Toast[] = [];
 export const waterDrops: waterDrop.WaterDrops[] = [];
 
@@ -172,7 +172,7 @@ export function drawWater(ctx: CanvasRenderingContext2D, waterHeight: number, co
     ctx.fill();
 }
 
-export function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
+function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 6;
     if (index < 10) {

@@ -48,7 +48,7 @@ const defaultLocale = {
 
 export type Locale = typeof defaultLocale;
 
-export function getScoreText(score: number) {
+function getScoreText(score: number) {
     if (score <= 8) {
         return locale.score[score - 1];
     }

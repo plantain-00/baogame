@@ -27,7 +27,8 @@ module.exports = {
   ],
   lint: {
     ts: `tslint "src/**/*.ts"`,
-    js: `standard "**/*.config.js"`
+    js: `standard "**/*.config.js"`,
+    export: `no-unused-export "src/**/*.ts"`
   },
   test: {
     jasmine: [
@@ -43,5 +44,6 @@ module.exports = {
     ts: `tslint --fix "src/**/*.ts"`,
     js: `standard --fix "**/*.config.js"`
   },
-  release: `clean-release`
+  release: `clean-release`,
+  watch: `watch-then-execute "src/**/*.ts" "static/*.css" "src/front/template.html" --exclude "src/front/variables.ts,src/front/proto-variables.ts" --script "npm run build"`
 }

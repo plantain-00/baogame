@@ -21,7 +21,7 @@ win.src = variables.headWinPng;
 export const wtf = new Image();
 wtf.src = variables.headWtfPng;
 
-export const sign = new Image();
+const sign = new Image();
 sign.src = variables.tileSignPng;
 
 export const door = new Image();

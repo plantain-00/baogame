@@ -4,11 +4,11 @@ import * as services from "./services";
 
 export let map: services.map.Map;
 export let mapData: common.MapData;
-export let items: Item[] = [];
+let items: Item[] = [];
 export let users: services.user.User[] = [];
 export let grenades: services.grenade.Grenade[] = [];
 export let mines: Mine[] = [];
-export let debug = false;
+let debug = false;
 
 export function init(debugMode: boolean) {
     debug = debugMode;
@@ -189,7 +189,7 @@ export function announce(protocol: common.ResponseProtocol) {
     }
 }
 
-export type Mine = {
+type Mine = {
     x: number;
     y: number;
     creater: services.user.User;
@@ -207,7 +207,7 @@ export type ItemGate = {
     targetItem?: Item;
 };
 
-export interface Item {
+interface Item {
     type: common.ItemType;
     count: number;
     lifetime: number;
@@ -218,16 +218,6 @@ export interface Item {
     x: number;
     y: number;
 }
-
-export type MapData = {
-    w: number; // width of floor
-    h: number; // height of floor
-    floor: number[][];
-    ladders: common.Ladder[];
-    borns: Position[]; // user is born in one of these positions
-    doors: common.Door[]; // show a door and create npc here
-    itemGates: ItemGate[]; // show a gate and create item here
-};
 
 export const enum KillReason {
     power,
