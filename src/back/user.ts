@@ -21,7 +21,7 @@ export type User = {
     dieing: boolean;
     faceing: number;
     danger: boolean;
-    ignore: any[];
+    ignore: number[];
     itemType?: number;
     itemCount: number;
     fireing?: number;
@@ -173,11 +173,9 @@ export function update(user: User) {
     user.doubleJumping = false;
     user.flying = 0;
 
-    for (const key in user.ignore) {
-        if (user.ignore.hasOwnProperty(key)) {
-            user.ignore[key]--;
-        }
-    }
+    user.ignore.forEach((ignore, i) => {
+        user.ignore[i]--;
+    });
 
     if (user.itemType === common.ItemType.power || user.itemType === common.ItemType.hide || user.itemType === common.ItemType.bomb) {
         user.itemCount--;
