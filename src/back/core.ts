@@ -172,12 +172,16 @@ export function init(debugMode: boolean) {
     };
 }
 
+export function printInConsole(message: any) {
+    // tslint:disable-next-line:no-console
+    console.log(message);
+}
+
 export function emit(ws: libs.WebSocket, protocol: common.ResponseProtocol) {
     try {
         ws.send(services.format.encode(protocol, debug), { binary: !debug });
     } catch (e) {
-        // tslint:disable-next-line:no-console
-        console.log(e);
+        printInConsole(e);
     }
 }
 

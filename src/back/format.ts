@@ -1,5 +1,6 @@
 import * as libs from "./libs";
 import * as common from "./common";
+import * as core from "./core";
 
 let requestProtocolType: libs.protobuf.Type;
 let responseProtocolType: libs.protobuf.Type;
@@ -9,8 +10,7 @@ export function start() {
         requestProtocolType = root.lookup("RequestProtocol") as libs.protobuf.Type;
         responseProtocolType = root.lookup("ResponseProtocol") as libs.protobuf.Type;
     }, error => {
-        // tslint:disable-next-line:no-console
-        console.log(error);
+        core.printInConsole(error);
     });
 }
 

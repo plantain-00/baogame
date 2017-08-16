@@ -13,8 +13,7 @@ const host = argv.h || "localhost";
 const debug: boolean = argv.debug;
 
 server.listen(port || 8030, () => {
-    // tslint:disable-next-line:no-console
-    console.log(`Listening on ${host}:${port}${debug ? "(debug)" : "(production)"}`);
+    core.printInConsole(`Listening on ${host}:${port}${debug ? "(debug)" : "(production)"}`);
 });
 
 app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
