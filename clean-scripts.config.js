@@ -60,5 +60,14 @@ module.exports = {
     js: `standard --fix "**/*.config.js"`
   },
   release: `clean-release`,
-  watch: `watch-then-execute "src/**/*.ts" "static/*.css" "src/front/template.html" --exclude "src/front/variables.ts,src/front/proto-variables.ts" --script "npm run build"`
+  watch: {
+    schema: `watch-then-execute "src/back/common.ts" --script "clean-scripts build[0]"`,
+    back: `tsc -p src/back/ --watch`,
+    image: `image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs --watch`,
+    file: 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify --watch',
+    front: `tsc -p src/front/ --watch`,
+    webpack: `webpack --config static/webpack.config.js --watch`,
+    css: `watch-then-execute "static/index.css" --script "clean-scripts build[1].front[0].css"`,
+    rev: `rev-static --config static/rev-static.config.js --watch`
+  }
 }
