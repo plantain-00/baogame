@@ -23,17 +23,7 @@ module.exports = {
           css: `cleancss -o static/index.bundle.css static/index.css`,
           clean: `rimraf static/index-*.css`
         },
-        'rev-static --config static/rev-static.config.js',
-        async () => {
-          const puppeteer = require('puppeteer')
-          const server = childProcess.exec('node ./dist/app.js')
-          const browser = await puppeteer.launch()
-          const page = await browser.newPage()
-          await page.goto(`http://localhost:8030`)
-          await page.screenshot({ path: `static/screenshot.png`, fullPage: true })
-          server.kill()
-          browser.close()
-        }
+        'rev-static --config static/rev-static.config.js'
       ]
     }
   ],
@@ -51,22 +41,19 @@ module.exports = {
       'tsc -p static_spec',
       process.env.APPVEYOR ? 'echo "skip karma test"' : 'karma start static_spec/karma.config.js'
     ],
-    consistency: [
-      'git checkout static/screenshot.png',
-      () => new Promise((resolve, reject) => {
-        childProcess.exec('git status -s', (error, stdout, stderr) => {
-          if (error) {
-            reject(error)
+    consistency: () => new Promise((resolve, reject) => {
+      childProcess.exec('git status -s', (error, stdout, stderr) => {
+        if (error) {
+          reject(error)
+        } else {
+          if (stdout) {
+            reject(new Error(`generated files doesn't match.`))
           } else {
-            if (stdout) {
-              reject(new Error(`generated files doesn't match.`))
-            } else {
-              resolve()
-            }
+            resolve()
           }
-        }).stdout.pipe(process.stdout)
-      })
-    ]
+        }
+      }).stdout.pipe(process.stdout)
+    })
   },
   fix: {
     ts: `tslint --fix "src/**/*.ts"`,
