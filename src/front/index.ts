@@ -5,7 +5,7 @@ import * as toast from "./effects/toast";
 import * as waterDrop from "./effects/waterDrops";
 import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
-import * as libs from "./libs";
+import { Component, Vue, Reconnector } from "./libs";
 import * as format from "./format";
 import { srcFrontTemplateHtml } from "./proto-variables";
 
@@ -60,10 +60,10 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     || navigator.userAgent.indexOf("Android") > -1
     || navigator.userAgent.indexOf("iPad") > -1;
 
-@libs.Component({
+@Component({
     template: srcFrontTemplateHtml,
 })
-class App extends libs.Vue {
+class App extends Vue {
     showDialog = false;
     showFail = false;
     showMobileControl = isMobile;
@@ -268,7 +268,7 @@ const urlProtocol = location.protocol === "https:" ? "wss:" : "ws:";
 function start() {
     app = new App({ el: "#container" });
 
-    const reconnector = new libs.Reconnector(() => {
+    const reconnector = new Reconnector(() => {
         ws = new WebSocket(`${urlProtocol}//${location.host}/ws/`);
         ws.binaryType = "arraybuffer";
         ws.onmessage = evt => {
@@ -286,9 +286,9 @@ function start() {
                 tick++;
                 fps++;
                 if (protocol.tick.users) {
-                    for (let i = 0; i < protocol.tick.users.length; i++) {
-                        if (protocol.tick.users[i].id === currentUserId) {
-                            currentUser = protocol.tick.users[i];
+                    for (const user of protocol.tick.users) {
+                        if (user.id === currentUserId) {
+                            currentUser = user;
                             break;
                         }
                     }
