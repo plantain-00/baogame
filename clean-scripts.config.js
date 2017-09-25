@@ -23,7 +23,10 @@ module.exports = {
             'rimraf static/scripts/',
             'webpack --display-modules --config static/webpack.config.js'
           ],
-          css: `cleancss -o static/index.bundle.css static/index.css`,
+          css: [
+            `postcss static/index.css -o static/index.postcss.css`,
+            `cleancss -o static/index.bundle.css static/index.postcss.css`
+          ],
           clean: `rimraf static/index-*.css`
         },
         'rev-static --config static/rev-static.config.js'
