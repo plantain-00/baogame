@@ -49,3 +49,11 @@ wss.on("connection", ws => {
         }
     });
 });
+
+process.on("SIGINT", () => {
+    process.exit();
+});
+
+process.on("SIGTERM", () => {
+    process.exit();
+});
