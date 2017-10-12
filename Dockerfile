@@ -1,6 +1,6 @@
-FROM node:latest
+FROM node:alpine
 WORKDIR /app
 ADD . /app
-RUN yarn --production
+RUN apk add --no-cache make gcc g++ python && yarn --production
 EXPOSE 8030
 CMD ["node","dist/app.js"]
