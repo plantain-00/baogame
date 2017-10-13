@@ -31,6 +31,6 @@ key | default value | description
 
 #### docker
 
-```
-# docker run -d -p 8030:8030 plantain/baogame
+```bash
+docker run -d -p 8030:8030 plantain/baogame
 ```
