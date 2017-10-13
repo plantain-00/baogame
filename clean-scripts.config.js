@@ -3,6 +3,9 @@ const util = require('util')
 
 const execAsync = util.promisify(childProcess.exec)
 
+const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts"`
+const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+
 module.exports = {
   build: [
     'types-as-schema src/back/common.ts --protobuf static/protocol.proto',
@@ -34,9 +37,9 @@ module.exports = {
     }
   ],
   lint: {
-    ts: `tslint "src/**/*.ts"`,
-    js: `standard "**/*.config.js"`,
-    export: `no-unused-export "src/**/*.ts"`
+    ts: `tslint ${tsFiles}`,
+    js: `standard ${jsFiles}`,
+    export: `no-unused-export ${tsFiles}`
   },
   test: {
     jasmine: [
@@ -56,8 +59,8 @@ module.exports = {
     }
   },
   fix: {
-    ts: `tslint --fix "src/**/*.ts"`,
-    js: `standard --fix "**/*.config.js"`
+    ts: `tslint --fix ${tsFiles}`,
+    js: `standard --fix ${jsFiles}`
   },
   release: `clean-release`,
   watch: {
