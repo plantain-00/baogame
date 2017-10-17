@@ -1,9 +1,10 @@
 const childProcess = require('child_process')
 const util = require('util')
+const { Service } = require('clean-scripts')
 
 const execAsync = util.promisify(childProcess.exec)
 
-const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts"`
+const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
 
 module.exports = {
@@ -72,5 +73,10 @@ module.exports = {
     webpack: `webpack --config static/webpack.config.js --watch`,
     css: `watch-then-execute "static/index.css" --script "clean-scripts build[1].front[0].css"`,
     rev: `rev-static --config static/rev-static.config.js --watch`
-  }
+  },
+  screenshot: [
+    new Service(`node ./dist/app.js`),
+    `tsc -p screenshots`,
+    `node screenshots/index.js`
+  ]
 }
