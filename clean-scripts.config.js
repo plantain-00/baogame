@@ -2,6 +2,7 @@ const { Service, execAsync } = require('clean-scripts')
 
 const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+
 const file2variableCommand = 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify'
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
 const tscBackCommand = 'tsc -p src/back/'
@@ -9,9 +10,6 @@ const tscFrontCommand = 'tsc -p src/front/'
 const webpackCommand = 'webpack --display-modules --config static/webpack.config.js'
 const revstaticCommand = 'rev-static --config static/rev-static.config.js'
 const typesAsSchemaCommand = `types-as-schema "src/back/common.ts" --protobuf static/protocol.proto`
-const postcssCommand = `postcss static/index.css -o static/index.postcss.css`
-const cleancssFiles = `"static/index.postcss.css"`
-const cleancssCommand = `cleancss ${cleancssFiles} -o static/index.bundle.css`
 
 module.exports = {
   build: [
@@ -34,8 +32,8 @@ module.exports = {
             webpackCommand
           ],
           css: [
-            postcssCommand,
-            cleancssCommand
+            `postcss static/index.css -o static/index.postcss.css`,
+            `cleancss "static/index.postcss.css" -o static/index.bundle.css`
           ],
           clean: `rimraf static/index-*.css`
         },
@@ -77,8 +75,7 @@ module.exports = {
     file: `${file2variableCommand} --watch`,
     front: `${tscFrontCommand} --watch`,
     webpack: `${webpackCommand} --watch`,
-    postcss: `${postcssCommand} --watch`,
-    cleancss: `watch-then-execute ${cleancssFiles} --script '${cleancssCommand}'`,
+    css: `watch-then-execute "static/index.css" --script "clean-scripts build[1].front[0].css"`,
     rev: `${revstaticCommand} --watch`
   },
   screenshot: [
