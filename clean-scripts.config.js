@@ -2,34 +2,44 @@ const { Service, execAsync } = require('clean-scripts')
 
 const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+const file2variableCommand = 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify'
+const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
+const tscBackCommand = 'tsc -p src/back/'
+const tscFrontCommand = 'tsc -p src/front/'
+const webpackCommand = 'webpack --display-modules --config static/webpack.config.js'
+const revstaticCommand = 'rev-static --config static/rev-static.config.js'
+const typesAsSchemaCommand = `types-as-schema "src/back/common.ts" --protobuf static/protocol.proto`
+const postcssCommand = `postcss static/index.css -o static/index.postcss.css`
+const cleancssFiles = `"static/index.postcss.css"`
+const cleancssCommand = `cleancss ${cleancssFiles} -o static/index.bundle.css`
 
 module.exports = {
   build: [
-    'types-as-schema src/back/common.ts --protobuf static/protocol.proto',
+    typesAsSchemaCommand,
     {
       back: [
         `rimraf dist/`,
-        'tsc -p src/back/'
+        tscBackCommand
       ],
       front: [
         {
           js: [
             {
-              image: 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs',
-              file: 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify'
+              image: image2base64Command,
+              file: file2variableCommand
             },
             'rimraf static/dist/',
-            'tsc -p src/front/',
+            tscFrontCommand,
             'rimraf static/scripts/',
-            'webpack --display-modules --config static/webpack.config.js'
+            webpackCommand
           ],
           css: [
-            `postcss static/index.css -o static/index.postcss.css`,
-            `cleancss -o static/index.bundle.css static/index.postcss.css`
+            postcssCommand,
+            cleancssCommand
           ],
           clean: `rimraf static/index-*.css`
         },
-        'rev-static --config static/rev-static.config.js'
+        revstaticCommand
       ]
     }
   ],
@@ -61,14 +71,15 @@ module.exports = {
   },
   release: `clean-release`,
   watch: {
-    schema: `watch-then-execute "src/back/common.ts" --script "clean-scripts build[0]"`,
-    back: `tsc -p src/back/ --watch`,
-    image: `image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs --watch`,
-    file: 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify --watch',
-    front: `tsc -p src/front/ --watch`,
-    webpack: `webpack --config static/webpack.config.js --watch`,
-    css: `watch-then-execute "static/index.css" --script "clean-scripts build[1].front[0].css"`,
-    rev: `rev-static --config static/rev-static.config.js --watch`
+    schema: `${typesAsSchemaCommand} --watch`,
+    back: `${tscBackCommand} --watch`,
+    image: `${image2base64Command} --watch`,
+    file: `${file2variableCommand} --watch`,
+    front: `${tscFrontCommand} --watch`,
+    webpack: `${webpackCommand} --watch`,
+    postcss: `${postcssCommand} --watch`,
+    cleancss: `watch-then-execute ${cleancssFiles} --script '${cleancssCommand}'`,
+    rev: `${revstaticCommand} --watch`
   },
   screenshot: [
     new Service(`node ./dist/app.js`),
