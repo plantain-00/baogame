@@ -1,4 +1,5 @@
-const { Service, execAsync } = require('clean-scripts')
+const { Service, execAsync, executeScriptAsync } = require('clean-scripts')
+const { watch } = require('watch-then-execute')
 
 const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
@@ -10,6 +11,10 @@ const tscFrontCommand = 'tsc -p src/front/'
 const webpackCommand = 'webpack --display-modules --config static/webpack.config.js'
 const revstaticCommand = 'rev-static --config static/rev-static.config.js'
 const typesAsSchemaCommand = `types-as-schema "src/back/common.ts" --protobuf static/protocol.proto`
+const cssCommand = [
+  `postcss static/index.css -o static/index.postcss.css`,
+  `cleancss "static/index.postcss.css" -o static/index.bundle.css`
+]
 
 module.exports = {
   build: [
@@ -31,10 +36,7 @@ module.exports = {
             'rimraf static/scripts/',
             webpackCommand
           ],
-          css: [
-            `postcss static/index.css -o static/index.postcss.css`,
-            `cleancss "static/index.postcss.css" -o static/index.bundle.css`
-          ],
+          css: cssCommand,
           clean: `rimraf static/index-*.css`
         },
         revstaticCommand
@@ -75,7 +77,7 @@ module.exports = {
     file: `${file2variableCommand} --watch`,
     front: `${tscFrontCommand} --watch`,
     webpack: `${webpackCommand} --watch`,
-    css: `watch-then-execute "static/index.css" --script "clean-scripts build[1].front[0].css"`,
+    css: () => watch(['static/index.css'], [], () => executeScriptAsync(cssCommand)),
     rev: `${revstaticCommand} --watch`
   },
   screenshot: [

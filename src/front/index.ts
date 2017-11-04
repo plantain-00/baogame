@@ -138,7 +138,6 @@ class App extends Vue {
 let app: App;
 
 let currentUserId: number;
-let currentUser: common.User;
 
 const fg = document.getElementById("fg") as HTMLCanvasElement;
 fg.width = common.w;
@@ -285,14 +284,6 @@ function start() {
             } else if (protocol.kind === common.ResponseProtocolKind.tick) {
                 tick++;
                 fps++;
-                if (protocol.tick.users) {
-                    for (const user of protocol.tick.users) {
-                        if (user.id === currentUserId) {
-                            currentUser = user;
-                            break;
-                        }
-                    }
-                }
 
                 context.clearRect(0, 0, common.w, common.h);
                 context.save();

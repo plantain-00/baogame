@@ -4,17 +4,16 @@ import * as services from "./services";
 import * as core from "./core";
 
 const app = libs.express();
-const server = libs.http.createServer(app);
-const wss = new libs.WebSocketServer({ server });
 
 const argv = libs.minimist(process.argv.slice(2));
 const port = argv.p || 8030;
 const host = argv.h || "localhost";
 const debug: boolean = argv.debug;
 
-server.listen(port || 8030, () => {
+const server = app.listen(port || 8030, () => {
     core.printInConsole(`Listening on ${host}:${port}${debug ? "(debug)" : "(production)"}`);
 });
+const wss = new libs.WebSocketServer({ server });
 
 app.use(libs.express.static(libs.path.resolve(__dirname, "../static")));
 
