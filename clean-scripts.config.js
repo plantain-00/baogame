@@ -1,4 +1,4 @@
-const { Service, execAsync, executeScriptAsync } = require('clean-scripts')
+const { Service, checkGitStatus, executeScriptAsync } = require('clean-scripts')
 const { watch } = require('watch-then-execute')
 
 const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
@@ -57,13 +57,7 @@ module.exports = {
       'tsc -p static_spec',
       'karma start static_spec/karma.config.js'
     ],
-    consistency: async () => {
-      const { stdout } = await execAsync('git status -s')
-      if (stdout) {
-        console.log(stdout)
-        throw new Error(`generated files doesn't match.`)
-      }
-    }
+    consistency: () => checkGitStatus()
   },
   fix: {
     ts: `tslint --fix ${tsFiles}`,
