@@ -8,7 +8,7 @@ const file2variableCommand = 'file2variable-cli static/protocol.proto src/front/
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
 const tscBackCommand = 'tsc -p src/back/'
 const tscFrontCommand = 'tsc -p src/front/'
-const webpackCommand = 'webpack --display-modules --config static/webpack.config.js'
+const webpackCommand = 'webpack --config static/webpack.config.js'
 const revstaticCommand = 'rev-static --config static/rev-static.config.js'
 const typesAsSchemaCommand = `types-as-schema "src/back/common.ts" --protobuf static/protocol.proto`
 const cssCommand = [
@@ -64,7 +64,6 @@ module.exports = {
     ts: `tslint --fix ${tsFiles}`,
     js: `standard --fix ${jsFiles}`
   },
-  release: `clean-release`,
   watch: {
     schema: `${typesAsSchemaCommand} --watch`,
     back: `${tscBackCommand} --watch`,
