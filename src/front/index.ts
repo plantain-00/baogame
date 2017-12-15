@@ -61,9 +61,9 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
     || navigator.userAgent.indexOf("iPad") > -1;
 
 @Component({
-    template: srcFrontTemplateHtml,
+    render: srcFrontTemplateHtml,
 })
-class App extends Vue {
+export class App extends Vue {
     showDialog = false;
     showFail = false;
     showMobileControl = isMobile;
