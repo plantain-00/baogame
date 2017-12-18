@@ -4,7 +4,7 @@ const { watch } = require('watch-then-execute')
 const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
 
-const file2variableCommand = 'file2variable-cli static/protocol.proto src/front/template.html -o src/front/proto-variables.ts --protobuf --html-minify --vue --vue-type-name "App" --vue-type-path "./index"'
+const file2variableCommand = 'file2variable-cli --config static/file2variable.config.js'
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
 const tscBackCommand = 'tsc -p src/back/'
 const tscFrontCommand = 'tsc -p src/front/'

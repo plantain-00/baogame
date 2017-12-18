@@ -7,7 +7,7 @@ import * as itemDead from "./effects/itemDead";
 import * as drawer from "./drawer";
 import { Component, Vue, Reconnector } from "./libs";
 import * as format from "./format";
-import { srcFrontTemplateHtml } from "./proto-variables";
+import { srcFrontTemplateHtml, srcFrontTemplateHtmlStatic } from "./proto-variables";
 
 const defaultLocale = {
     item: [
@@ -62,6 +62,7 @@ const isMobile = navigator.userAgent.indexOf("iPhone") > -1
 
 @Component({
     render: srcFrontTemplateHtml,
+    staticRenderFns: srcFrontTemplateHtmlStatic,
 })
 export class App extends Vue {
     showDialog = false;
