@@ -1,3 +1,3 @@
-import "vue";
-import "vue-class-component";
-import "reconnection/browser/browser";
+import 'vue'
+import 'vue-class-component'
+import 'reconnection/browser/browser'
