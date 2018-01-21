@@ -173,7 +173,6 @@ export function init (debugMode: boolean) {
 }
 
 export function printInConsole (message: any) {
-    // tslint:disable-next-line:no-console
   console.log(message)
 }
 
