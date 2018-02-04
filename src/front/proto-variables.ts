@@ -3,7 +3,7 @@
  * It is not mean to be edited by hand
  */
 // tslint:disable
-import { App } from "./index";
+import { App } from "./index"
 
 // @ts-ignore
 export function srcFrontTemplateHtml(this: App) {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.showDialog)?_c('div',{staticClass:"joining"},[_c('div',{staticClass:"center"},[_c('h4',{staticClass:"message"},[_vm._v(_vm._s(_vm.showFail ? _vm.locale.ui.youAreDead : _vm.locale.ui.joinGame))]),_vm._v("\n            "+_vm._s(_vm.locale.ui.yourName)+"\n            "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.userName),expression:"userName"}],staticClass:"txt-input",domProps:{"value":(_vm.userName)},on:{"keydown":function($event){_vm.stopPropagation($event)},"keyup":function($event){_vm.stopPropagation($event)},"input":function($event){if($event.target.composing){ return; }_vm.userName=$event.target.value}}}),_vm._v(" "),_c('div',[_c('a',{staticClass:"btn joinBtn",attrs:{"href":"javascript:void(0)"},on:{"click":function($event){_vm.join()}}},[_vm._v(_vm._s(_vm.locale.ui.joinByPressE))])])])]):_vm._e(),_vm._v(" "),(_vm.showMobileControl)?_c('div',{staticClass:"mobileController"},[_c('div',{staticClass:"left"},[_c('div',{staticClass:"moreBtn l",attrs:{"data-act":"l"},on:{"touchstart":function($event){_vm.touchstart($event)},"touchend":function($event){_vm.touchend($event)}}},[_vm._v(_vm._s(_vm.locale.ui.left))]),_vm._v(" "),_c('div',{staticClass:"moreBtn r",attrs:{"data-act":"r"},on:{"touchstart":function($event){_vm.touchstart($event)},"touchend":function($event){_vm.touchend($event)}}},[_vm._v(_vm._s(_vm.locale.ui.right))])]),_vm._v(" "),_c('div',{staticClass:"right"},[_c('div',{staticClass:"moreBtn item",attrs:{"data-act":"a"},on:{"touchstart":function($event){_vm.touchstart($event)},"touchend":function($event){_vm.touchend($event)}}},[_vm._v(_vm._s(_vm.locale.ui.item))]),_vm._v(" "),_c('div',{staticClass:"moreBtn up",attrs:{"data-act":"u"},on:{"touchstart":function($event){_vm.touchstart($event)},"touchend":function($event){_vm.touchend($event)}}},[_vm._v(_vm._s(_vm.locale.ui.up))]),_vm._v(" "),_c('div',{staticClass:"moreBtn down",attrs:{"data-act":"d"},on:{"touchstart":function($event){_vm.touchstart($event)},"touchend":function($event){_vm.touchend($event)}}},[_vm._v(_vm._s(_vm.locale.ui.down))])])]):_vm._e(),_vm._v(" "),_c('div',{staticClass:"notice"},[_c('div',{staticClass:"noticeFix"},[_c('div',{staticClass:"noticeItem"},[_vm._v(_vm._s(_vm.locale.ui.notice))])])]),_vm._v(" "),_c('div',{staticClass:"fps"},[_vm._v("fps: "+_vm._s(_vm.fps))])])}
@@ -412,5 +412,5 @@ export const staticProtocolProto = {
             }
         }
     }
-};
+}
 // tslint:enable
