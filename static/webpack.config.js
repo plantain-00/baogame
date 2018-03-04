@@ -1,32 +1,23 @@
-const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
   entry: {
-    index: './static/dist/front/index',
-    vendor: './static/dist/front/vendor'
+    index: './static/dist/front/index'
   },
   output: {
     path: path.join(__dirname, 'scripts/'),
     filename: '[name].bundle.js',
     publicPath: 'scripts/'
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
       }
-    }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      output: {
-        comments: false
-      },
-      exclude: [
-      ]
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['index', 'vendor']
-    })
-  ]
+    }
+  }
 }
