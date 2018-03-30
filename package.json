@@ -63,11 +63,11 @@
     "tslint": "5.9.1",
     "tslint-config-standard": "7.0.0",
     "types-as-schema": "1.6.0",
-    "typescript": "2.7.2",
+    "typescript": "2.8.1",
     "vue": "2.5.16",
     "vue-class-component": "6.2.0",
     "watch-then-execute": "1.1.1",
-    "webpack": "4.2.0",
+    "webpack": "4.4.1",
     "webpack-cli": "2.0.13"
   }
 }
