@@ -11,6 +11,7 @@ module.exports = {
   ],
   exclude: [
   ],
+  askVersion: true,
   releaseRepository: 'https://github.com/plantain-00/baogame-release.git',
   postScript: [
     'cd "[dir]" && rm -rf .git',
