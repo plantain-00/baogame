@@ -7,7 +7,7 @@ export type Smoke = {
   size: number;
 }
 
-export function create (x: number, y: number, size: number, life: number): Smoke {
+export function create(x: number, y: number, size: number, life: number): Smoke {
   return {
     life: Math.floor(life),
     totalLife: Math.random() * 60 + 30,
@@ -18,7 +18,7 @@ export function create (x: number, y: number, size: number, life: number): Smoke
   }
 }
 
-export function draw (ctx: CanvasRenderingContext2D, t: number, smoke: Smoke) {
+export function draw(ctx: CanvasRenderingContext2D, t: number, smoke: Smoke) {
   t += smoke.chaos
   const g = t < 5 ? 255 - Math.floor(t * 50) : Math.min(255, Math.floor(t * 20))
   const b = t < 5 ? 0 : Math.min(255, Math.floor(t * 20))

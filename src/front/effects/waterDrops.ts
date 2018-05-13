@@ -6,7 +6,7 @@ export type WaterDrops = {
   height: number;
 }
 
-export function create (x: number, y: number, vy: number, height: number) {
+export function create(x: number, y: number, vy: number, height: number) {
   const result: WaterDrops = {
     life: 100,
     drops: [],
@@ -22,7 +22,7 @@ export function create (x: number, y: number, vy: number, height: number) {
   return result
 }
 
-export function draw (ctx: CanvasRenderingContext2D, waterDrop: WaterDrops) {
+export function draw(ctx: CanvasRenderingContext2D, waterDrop: WaterDrops) {
   ctx.save()
   ctx.fillStyle = '#95a'
   for (const drop of waterDrop.drops) {

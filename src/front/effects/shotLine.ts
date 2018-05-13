@@ -7,7 +7,7 @@ export type ShotLine = {
   width: number;
 }
 
-export function create (x: number, y: number, dir: number, height: number, width: number) {
+export function create(x: number, y: number, dir: number, height: number, width: number) {
   return {
     life: 20,
     x,
@@ -18,7 +18,7 @@ export function create (x: number, y: number, dir: number, height: number, width
   }
 }
 
-export function draw (ctx: CanvasRenderingContext2D, shotLint: ShotLine) {
+export function draw(ctx: CanvasRenderingContext2D, shotLint: ShotLine) {
   ctx.strokeStyle = `rgba(255,255,0,${(shotLint.life) / 20})`
   ctx.beginPath()
   if (shotLint.dir === 1) {

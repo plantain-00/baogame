@@ -12,7 +12,8 @@ export type Map = {
   itemGates: core.ItemGate[];
 }
 
-export function create (): Map {
+// tslint:disable-next-line:cognitive-complexity
+export function create(): Map {
   const w = common.tw
   const h = common.th
   const floor: number[][] = []
@@ -130,7 +131,7 @@ export function create (): Map {
     itemGates
   }
 }
-export function born () {
+export function born() {
   const i = Math.floor(Math.random() * core.map.borns.length)
   const { x, y } = core.map.borns[i]
   return {
@@ -138,7 +139,7 @@ export function born () {
     y: y * common.tileHeight
   }
 }
-export function onFloor (x: number, y: number) {
+export function onFloor(x: number, y: number) {
   x = Math.floor(x / common.tileWidth)
   if (y % common.tileHeight !== 0) {
     return undefined
@@ -149,7 +150,7 @@ export function onFloor (x: number, y: number) {
   }
   return core.map.floor[y][x]
 }
-export function nearLadder (u: services.user.User) {
+export function nearLadder(u: services.user.User) {
   if (onFloor(u.x, u.y) === undefined) {
     return undefined
   }
@@ -165,7 +166,7 @@ export function nearLadder (u: services.user.User) {
   }
   return undefined
 }
-export function onLadder (x: number, y: number) {
+export function onLadder(x: number, y: number) {
   for (const ladder of core.map.ladders) {
     if (Math.abs(x - ladder.x * common.tileWidth) < 8 && y >= ladder.y1 * common.tileHeight && y <= ladder.y2 * common.tileHeight) {
       return true

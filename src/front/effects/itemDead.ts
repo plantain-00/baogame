@@ -7,7 +7,7 @@ export type ItemDead = {
   itemSize: number;
 }
 
-export function create (x: number, y: number, name: string, height: number, itemSize: number): ItemDead {
+export function create(x: number, y: number, name: string, height: number, itemSize: number): ItemDead {
   return {
     life: 40,
     x,
@@ -18,7 +18,7 @@ export function create (x: number, y: number, name: string, height: number, item
   }
 }
 
-export function draw (ctx: CanvasRenderingContext2D, itemDead: ItemDead) {
+export function draw(ctx: CanvasRenderingContext2D, itemDead: ItemDead) {
   ctx.strokeStyle = 'rgba(255,255,255,' + (itemDead.life) / 40 + ')'
   ctx.beginPath()
   ctx.arc(itemDead.x, itemDead.height - itemDead.y, itemDead.itemSize + (40 - itemDead.life) / 2, 0, 2 * Math.PI)

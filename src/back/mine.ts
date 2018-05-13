@@ -1,7 +1,7 @@
 import * as services from './services'
 import * as core from './core'
 
-export function lay (user: services.user.User) {
+export function lay(user: services.user.User) {
   const x = user.x + user.faceing * 40
   if (services.map.onFloor(x, user.y)) {
     core.mines.push({
@@ -12,7 +12,7 @@ export function lay (user: services.user.User) {
     user.itemCount--
   }
 }
-export function check (user: services.user.User) {
+export function check(user: services.user.User) {
   for (let i = core.mines.length - 1; i >= 0; i--) {
     const mine = core.mines[i]
     if (Math.abs(user.x - mine.x) < 10 && Math.abs(user.y - mine.y) < 5) {

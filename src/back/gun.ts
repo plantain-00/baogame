@@ -2,7 +2,7 @@ import * as services from './services'
 import * as common from './common'
 import * as core from './core'
 
-export function check (u: services.user.User) {
+export function check(u: services.user.User) {
   const x = u.x
   const y = u.y + common.userHeight * 2 / 3
   const f = u.faceing

@@ -9,7 +9,7 @@ export type Flare = {
   height: number;
 }
 
-export function create (x: number, y: number, power: number, height: number, large?: boolean): Flare {
+export function create(x: number, y: number, power: number, height: number, large?: boolean): Flare {
   const flare: Flare = {
     txt: ' 嘭！',
     life: 70,
@@ -24,11 +24,11 @@ export function create (x: number, y: number, power: number, height: number, lar
       const len = Math.random() * 30 + 15
       for (let i = 0; i < len; i++) {
         flare.smokes.push(createSmoke(
-                    i * .04 * power * Math.sin(r),
-                    -i * .04 * power * Math.cos(r) + i * i * power / 3000,
-                    5 * Math.pow((len - i) / len, .6) * (Math.random() + 2),
-                    -i + Math.random() * len
-                ))
+          i * .04 * power * Math.sin(r),
+          -i * .04 * power * Math.cos(r) + i * i * power / 3000,
+          5 * Math.pow((len - i) / len, .6) * (Math.random() + 2),
+          -i + Math.random() * len
+        ))
       }
     }
   } else {
@@ -37,17 +37,17 @@ export function create (x: number, y: number, power: number, height: number, lar
       const len = Math.random() * 20 + 10
       for (let i = 0; i < len; i++) {
         flare.smokes.push(createSmoke(
-                    i * 5 * Math.sin(r),
-                    -i * 5 * Math.cos(r) + i * i / 10,
-                    3 * Math.pow((len - i) / len, .8) * (Math.random() + 2),
-                    -i + Math.random() * len
-                ))
+          i * 5 * Math.sin(r),
+          -i * 5 * Math.cos(r) + i * i / 10,
+          3 * Math.pow((len - i) / len, .8) * (Math.random() + 2),
+          -i + Math.random() * len
+        ))
       }
     }
   }
   return flare
 }
-export function draw (ctx: CanvasRenderingContext2D, flare: Flare) {
+export function draw(ctx: CanvasRenderingContext2D, flare: Flare) {
   ctx.save()
   ctx.translate(flare.x, flare.height - flare.y)
   ctx.fillStyle = '#fff'

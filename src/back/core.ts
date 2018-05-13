@@ -10,7 +10,8 @@ export let grenades: services.grenade.Grenade[] = []
 export let mines: Mine[] = []
 let debug = false
 
-export function init (debugMode: boolean) {
+// tslint:disable-next-line:cognitive-complexity
+export function init(debugMode: boolean) {
   debug = debugMode
   setInterval(() => {
     for (const itemGate of map.itemGates) {
@@ -103,7 +104,7 @@ export function init (debugMode: boolean) {
           continue
         }
         if ((users[i].x - item.x) * (users[i].x - item.x) + (users[i].y + common.userHeight / 2 - item.y) * (users[i].y + common.userHeight / 2 - item.y) >
-                    (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
+          (common.userWidth + common.itemSize) * (common.userWidth + common.itemSize) / 4) {
           continue
         }
         item.dead = true
@@ -172,11 +173,11 @@ export function init (debugMode: boolean) {
   }
 }
 
-export function printInConsole (message: any) {
+export function printInConsole(message: any) {
   console.log(message)
 }
 
-export function emit (ws: libs.WebSocket, protocol: common.ResponseProtocol) {
+export function emit(ws: libs.WebSocket, protocol: common.ResponseProtocol) {
   try {
     ws.send(services.format.encode(protocol, debug), { binary: !debug })
   } catch (e) {
@@ -184,7 +185,7 @@ export function emit (ws: libs.WebSocket, protocol: common.ResponseProtocol) {
   }
 }
 
-export function announce (protocol: common.ResponseProtocol) {
+export function announce(protocol: common.ResponseProtocol) {
   for (const user of users) {
     if (user.ws) {
       emit(user.ws, protocol)
@@ -223,10 +224,10 @@ interface Item {
 }
 
 export const enum KillReason {
-    power,
-    drug,
-    gun,
-    mine,
-    bomb,
-    fall
+  power,
+  drug,
+  gun,
+  mine,
+  bomb,
+  fall
 }

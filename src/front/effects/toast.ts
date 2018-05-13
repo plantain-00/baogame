@@ -9,7 +9,7 @@ export type Toast = {
   height: number;
 }
 
-export function create (x: number, y: number, size: number, txt: string, height: number) {
+export function create(x: number, y: number, size: number, txt: string, height: number) {
   return {
     dy: -60,
     life: 40,
@@ -22,7 +22,7 @@ export function create (x: number, y: number, size: number, txt: string, height:
   }
 }
 
-export function draw (ctx: CanvasRenderingContext2D, toast: Toast) {
+export function draw(ctx: CanvasRenderingContext2D, toast: Toast) {
   toast.t++
   ctx.save()
   if (toast.life < 10) {

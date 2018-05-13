@@ -15,7 +15,8 @@ const shotLines: shotLine.ShotLine[] = []
 export const toasts: toast.Toast[] = []
 export const waterDrops: waterDrop.WaterDrops[] = []
 
-export function draw (ctx: CanvasRenderingContext2D) {
+// tslint:disable-next-line:cognitive-complexity
+export function draw(ctx: CanvasRenderingContext2D) {
   for (let i = brusts.length - 1; i >= 0; i--) {
     const eff = brusts[i]
     if (eff.life < 0) {
@@ -78,9 +79,9 @@ export function draw (ctx: CanvasRenderingContext2D) {
 }
 
 // 绘制背景
-export function drawBg (ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
+export function drawBg(ctx: CanvasRenderingContext2D, map: common.MapData, width: number, height: number) {
   ctx.clearRect(0, 0, width, height)
-    // 绘制柱子
+  // 绘制柱子
   if (map.ladders) {
     for (const ladder of map.ladders) {
       ctx.fillStyle = '#888'
@@ -109,7 +110,7 @@ export function drawBg (ctx: CanvasRenderingContext2D, map: common.MapData, widt
     }
   }
 
-    // 绘制地板
+  // 绘制地板
   for (let i = 0; i < map.h; i++) {
     for (let j = 0; j < map.w; j++) {
       if (map.floors[i * map.w + j]) {
@@ -134,7 +135,7 @@ export function drawBg (ctx: CanvasRenderingContext2D, map: common.MapData, widt
   }
 }
 
-export function drawDoors (ctx: CanvasRenderingContext2D, doors: common.Door[], height: number) {
+export function drawDoors(ctx: CanvasRenderingContext2D, doors: common.Door[], height: number) {
   ctx.fillStyle = '#fff'
   ctx.font = '20px 宋体'
   for (const door of doors) {
@@ -143,7 +144,7 @@ export function drawDoors (ctx: CanvasRenderingContext2D, doors: common.Door[], 
   ctx.font = '14px 宋体'
 }
 
-export function drawItemGates (ctx: CanvasRenderingContext2D, itemGates: common.ItemGate[], height: number) {
+export function drawItemGates(ctx: CanvasRenderingContext2D, itemGates: common.ItemGate[], height: number) {
   ctx.fillStyle = '#fff'
   ctx.font = '20px 宋体'
   for (const itemGate of itemGates) {
@@ -152,7 +153,7 @@ export function drawItemGates (ctx: CanvasRenderingContext2D, itemGates: common.
   ctx.font = '14px 宋体'
 }
 
-export function drawWater (ctx: CanvasRenderingContext2D, waterHeight: number, color: string, height: number, width: number, t: number) {
+export function drawWater(ctx: CanvasRenderingContext2D, waterHeight: number, color: string, height: number, width: number, t: number) {
   const waveLen = 20
   let waveHeight = waterHeight / 5
   const c = waveLen / 2
@@ -172,7 +173,7 @@ export function drawWater (ctx: CanvasRenderingContext2D, waterHeight: number, c
   ctx.fill()
 }
 
-function drawWeapon (ctx: CanvasRenderingContext2D, index: number) {
+function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
   ctx.strokeStyle = '#fff'
   ctx.lineWidth = 6
   if (index < 10) {
@@ -202,7 +203,8 @@ function drawWeapon (ctx: CanvasRenderingContext2D, index: number) {
   ctx.lineWidth = 1
 }
 
-export function drawUser (ctx: CanvasRenderingContext2D, user: common.User, currentUserId: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number) {
+// tslint:disable-next-line:cognitive-complexity
+export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, currentUserId: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number) {
   if (user.doubleJumping) {
     brusts.push(brust.create(user.x, user.y, 10, 40, height))
   }
@@ -219,21 +221,21 @@ export function drawUser (ctx: CanvasRenderingContext2D, user: common.User, curr
   } else if (user.danger) {
     img = images.danger
   } else if (user.status === common.UserStatus.crawling
-        || user.status === common.UserStatus.mining
-        || user.status === common.UserStatus.rolling2) {
+    || user.status === common.UserStatus.mining
+    || user.status === common.UserStatus.rolling2) {
     img = images.throll
   } else if (user.itemType === common.ItemType.bomb) {
     img = images.wtf
   } else {
     img = user.status === common.UserStatus.falling
-            || user.status === common.UserStatus.climbing
-            ? images.happy
-            : images.normal
+      || user.status === common.UserStatus.climbing
+      ? images.happy
+      : images.normal
   }
 
   ctx.fillStyle = user.id === currentUserId ? '#ffa' : '#f77'
 
-    // 用户指示器
+  // 用户指示器
   if (user.itemType !== common.ItemType.hide || user.id === currentUserId) {
     ctx.fillText(user.name, 0, -50)
     if (user.nearLadder && user.id === currentUserId) {
@@ -258,8 +260,8 @@ export function drawUser (ctx: CanvasRenderingContext2D, user: common.User, curr
   }
 
   if (user.status === common.UserStatus.crawling
-        || user.status === common.UserStatus.mining
-        || user.status === common.UserStatus.rolling2) {
+    || user.status === common.UserStatus.mining
+    || user.status === common.UserStatus.rolling2) {
     ctx.drawImage(img, -userWidth / 2, -25, userWidth, userHeight)
   } else {
     ctx.drawImage(img, -userWidth / 2, -userHeight, userWidth, userHeight)
@@ -305,7 +307,7 @@ export function drawUser (ctx: CanvasRenderingContext2D, user: common.User, curr
   ctx.restore()
 }
 
-export function drawItem (ctx: CanvasRenderingContext2D, item: common.Item, t: number, height: number) {
+export function drawItem(ctx: CanvasRenderingContext2D, item: common.Item, t: number, height: number) {
   const s = common.itemSize
   ctx.strokeStyle = 'rgba(255,255,255,' + Math.abs((t % 300) / 150 - 1) + ')'
   ctx.lineWidth = 3
@@ -320,7 +322,7 @@ export function drawItem (ctx: CanvasRenderingContext2D, item: common.Item, t: n
   ctx.restore()
 }
 
-export function drawGrenade (ctx: CanvasRenderingContext2D, grenade: common.Grenade, height: number) {
+export function drawGrenade(ctx: CanvasRenderingContext2D, grenade: common.Grenade, height: number) {
   const w = 15
   const h = 18
   ctx.save()

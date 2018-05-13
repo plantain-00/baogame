@@ -13,7 +13,7 @@ export type Grenade = {
   creater: services.user.User;
 }
 
-export function throwGrenade (user: services.user.User) {
+export function throwGrenade(user: services.user.User) {
   const grenade = {
     x: 0,
     y: 0,
@@ -39,7 +39,7 @@ export function throwGrenade (user: services.user.User) {
   core.grenades.push(grenade)
 }
 
-export function explode (x: number, y: number, byUser: services.user.User, power: number) {
+export function explode(x: number, y: number, byUser: services.user.User, power: number) {
   for (const user of core.users) {
     const ux = user.x
     const uy = user.y + common.userHeight

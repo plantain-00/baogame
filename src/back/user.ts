@@ -46,7 +46,7 @@ export type User = {
   ws: libs.WebSocket;
 }
 
-export function create (name: string, ws: libs.WebSocket): User {
+export function create(name: string, ws: libs.WebSocket): User {
   const user = {
     id: nextId++,
     name,
@@ -97,7 +97,8 @@ export function create (name: string, ws: libs.WebSocket): User {
   user.y = y + common.tileHeight / 2
   return user
 }
-function getStatus (user: User): common.UserStatus {
+// tslint:disable-next-line:cognitive-complexity
+function getStatus(user: User): common.UserStatus {
   user.crawl = false
   if (user.dieing) { return common.UserStatus.dieing }
   if ((user.vy <= 0 || user.onLadder) && services.mine.check(user)) {
@@ -169,7 +170,8 @@ function getStatus (user: User): common.UserStatus {
     }
   }
 }
-export function update (user: User) {
+// tslint:disable-next-line:cognitive-complexity
+export function update(user: User) {
   user.doubleJumping = false
   user.flying = 0
 
@@ -190,8 +192,8 @@ export function update (user: User) {
   user.status = getStatus(user)
 
   if (user.status === common.UserStatus.falling
-        || user.status === common.UserStatus.standing
-        || user.status === common.UserStatus.climbing) {
+    || user.status === common.UserStatus.standing
+    || user.status === common.UserStatus.climbing) {
     if (user.fireing) {
       user.fireing--
       if (user.fireing === 5) {
@@ -202,8 +204,8 @@ export function update (user: User) {
         services.gun.check(user)
       }
     } else if (user.control.itemPress
-            && user.itemType === common.ItemType.gun
-            && user.itemCount > 0) {
+      && user.itemType === common.ItemType.gun
+      && user.itemCount > 0) {
       user.fireing = 25
     }
   } else {
@@ -211,10 +213,10 @@ export function update (user: User) {
   }
 
   if (user.status === common.UserStatus.falling
-        || user.status === common.UserStatus.standing
-        || user.status === common.UserStatus.climbing
-        || user.status === common.UserStatus.crawling) {
-        // grenade
+    || user.status === common.UserStatus.standing
+    || user.status === common.UserStatus.climbing
+    || user.status === common.UserStatus.crawling) {
+    // grenade
     if (user.grenadeing > 0 && user.control.itemDown) {
       user.grenadeing++
       user.grenadeing = Math.min(25, user.grenadeing)
@@ -340,7 +342,7 @@ export function update (user: User) {
     user.vx = 0
   }
 
-    // final process
+  // final process
   user.x += user.vx
   if (user.x <= 0) { user.vx = Math.abs(user.vx) }
   if (user.x >= common.w) { user.vx = -Math.abs(user.vx) }
@@ -363,7 +365,7 @@ export function update (user: User) {
     }
   }
 }
-export function killed (user: User, killReason: core.KillReason, byUser?: User) {
+export function killed(user: User, killReason: core.KillReason, byUser?: User) {
   if (user.dieing) {
     return
   }
@@ -381,7 +383,7 @@ export function killed (user: User, killReason: core.KillReason, byUser?: User) 
   } else if (killReason === core.KillReason.mine) {
     user.vy = 10
   } else if (killReason === core.KillReason.bomb) {
-        // todo
+    // todo
   } else {
     user.killer = user.lastTouch
   }
@@ -403,7 +405,7 @@ export function killed (user: User, killReason: core.KillReason, byUser?: User) 
     }
   })
 }
-export function getData (user: User): common.User {
+export function getData(user: User): common.User {
   return {
     itemType: user.itemType,
     itemCount: user.itemCount,
@@ -425,7 +427,8 @@ export function getData (user: User): common.User {
   }
 }
 
-export function collide (a: services.user.User, b: services.user.User) {
+// tslint:disable-next-line:cognitive-complexity
+export function collide(a: services.user.User, b: services.user.User) {
   if (a.dead || b.dead) {
     return
   }

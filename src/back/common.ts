@@ -9,15 +9,15 @@ export const w = tw * tileWidth
 export const h = th * tileHeight
 
 export const enum ItemType {
-    power = 0,
-    gun = 1,
-    mine = 2,
-    drug = 3,
-    hide = 4,
-    bomb = 5,
-    doublejump = 6,
-    flypack = 7,
-    grenade = 8
+  power = 0,
+  gun = 1,
+  mine = 2,
+  drug = 3,
+  hide = 4,
+  bomb = 5,
+  doublejump = 6,
+  flypack = 7,
+  grenade = 8
 }
 
 export const itemCounts = [1000, 3, 2, 4, 1000, 550, 0, 250, 3]
@@ -76,16 +76,16 @@ export type ItemGate = {
 }
 
 export const enum RequestProtocolKind {
-    join = 2,
-    control = 4
+  join = 2,
+  control = 4
 }
 
 export const enum ResponseProtocolKind {
-    tick = 0,
-    initSuccess = 1,
-    joinSuccess = 3,
-    explode = 5,
-    userDead = 6
+  tick = 0,
+  initSuccess = 1,
+  joinSuccess = 3,
+  explode = 5,
+  userDead = 6
 }
 
 type Tick = {
@@ -141,51 +141,51 @@ type UserDead = {
 }
 
 export type RequestProtocol =
-    {
-      kind: RequestProtocolKind.join;
-      join: Join;
-    }
-    |
-    {
-      kind: RequestProtocolKind.control;
-      control: Control;
-    }
+  {
+    kind: RequestProtocolKind.join;
+    join: Join;
+  }
+  |
+  {
+    kind: RequestProtocolKind.control;
+    control: Control;
+  }
 
 export type ResponseProtocol =
-    {
-      kind: ResponseProtocolKind.initSuccess;
-      initSuccess: InitSuccess;
-    }
-    |
-    {
-      kind: ResponseProtocolKind.joinSuccess;
-      joinSuccess: JoinSuccess;
-    }
-    |
-    {
-      kind: ResponseProtocolKind.tick;
-      tick: Tick;
-    }
-    |
-    {
-      kind: ResponseProtocolKind.explode;
-      explode: Explode;
-    }
-    |
-    {
-      kind: ResponseProtocolKind.userDead;
-      userDead: UserDead;
-    }
+  {
+    kind: ResponseProtocolKind.initSuccess;
+    initSuccess: InitSuccess;
+  }
+  |
+  {
+    kind: ResponseProtocolKind.joinSuccess;
+    joinSuccess: JoinSuccess;
+  }
+  |
+  {
+    kind: ResponseProtocolKind.tick;
+    tick: Tick;
+  }
+  |
+  {
+    kind: ResponseProtocolKind.explode;
+    explode: Explode;
+  }
+  |
+  {
+    kind: ResponseProtocolKind.userDead;
+    userDead: UserDead;
+  }
 
 export const enum UserStatus {
-    dieing = 0,
-    climbing = 1,
-    rolling2 = 2,
-    standing = 3,
-    rolling = 4,
-    mining = 5,
-    crawling = 6,
-    falling = 7
+  dieing = 0,
+  climbing = 1,
+  rolling2 = 2,
+  standing = 3,
+  rolling = 4,
+  mining = 5,
+  crawling = 6,
+  falling = 7
 }
 
 export type Ladder = { // (x,y1) until (x,y2)

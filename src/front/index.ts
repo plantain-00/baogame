@@ -48,7 +48,7 @@ const defaultLocale = {
 
 export type Locale = typeof defaultLocale
 
-function getScoreText (score: number) {
+function getScoreText(score: number) {
   if (score <= 8) {
     return locale.score[score - 1]
   }
@@ -57,8 +57,8 @@ function getScoreText (score: number) {
 export let locale: Locale = defaultLocale
 
 const isMobile = navigator.userAgent.indexOf('iPhone') > -1
-    || navigator.userAgent.indexOf('Android') > -1
-    || navigator.userAgent.indexOf('iPad') > -1
+  || navigator.userAgent.indexOf('Android') > -1
+  || navigator.userAgent.indexOf('iPad') > -1
 
 @Component({
   render: srcFrontTemplateHtml,
@@ -71,11 +71,11 @@ export class App extends Vue {
   locale = locale
   fps = 0
 
-  get userName () {
+  get userName() {
     return localStorage.getItem('userName') || this.locale.ui.noOne
   }
 
-  join () {
+  join() {
     if (this.userName) {
       localStorage.setItem('userName', this.userName)
     } else {
@@ -84,14 +84,14 @@ export class App extends Vue {
     emit({
       kind: common.RequestProtocolKind.join,
       join: {
-        userName: this.userName!
+        userName: this.userName
       }
     })
   }
-  stopPropagation (e: KeyboardEvent) {
+  stopPropagation(e: KeyboardEvent) {
     e.stopPropagation()
   }
-  touchstart (e: TouchEvent) {
+  touchstart(e: TouchEvent) {
     const t = (e.target as HTMLElement).dataset.act
     if (t === 'a') {
       if (!control.itemDown) {
@@ -120,7 +120,7 @@ export class App extends Vue {
       control.downDown = 20000
     }
   }
-  touchend (e: TouchEvent) {
+  touchend(e: TouchEvent) {
     const t = (e.target as HTMLElement).dataset.act
     if (t === 'a') {
       control.itemDown = 0
@@ -156,13 +156,14 @@ const ctxBg = bg.getContext('2d')!
 let tick = 0
 let cdx = 0
 let cdy = 0
-const game: {
-  doors: common.Door[],
-  itemGates: common.ItemGate[]
-} = {
-  doors: [],
-  itemGates: []
-}
+const game:
+  {
+    doors: common.Door[],
+    itemGates: common.ItemGate[]
+  } = {
+    doors: [],
+    itemGates: []
+  }
 
 let lastControl: string
 
@@ -230,7 +231,7 @@ document.addEventListener('keyup', e => {
 let ws: WebSocket | undefined
 let debug = false
 
-function emit (protocol: common.RequestProtocol) {
+function emit(protocol: common.RequestProtocol) {
   if (!ws) {
     return
   }
@@ -239,7 +240,7 @@ function emit (protocol: common.RequestProtocol) {
 
 const middle = document.getElementById('middle')!
 
-function checkDisplay () {
+function checkDisplay() {
   if (600 > window.innerHeight) {
     const h = window.innerHeight
     const w = Math.floor(h / 600 * 1100)
@@ -265,7 +266,8 @@ setInterval(() => {
 
 const urlProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
 
-function start () {
+// tslint:disable-next-line:cognitive-complexity
+function start() {
   app = new App({ el: '#container' })
 
   const reconnector = new Reconnector(() => {

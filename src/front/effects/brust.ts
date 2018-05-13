@@ -8,7 +8,7 @@ export type Brust = {
   size: number;
 }
 
-export function create (x: number, y: number, count: number, w: number, height: number, dx = 0, dy = 0, size = 6) {
+export function create(x: number, y: number, count: number, w: number, height: number, dx = 0, dy = 0, size = 6) {
   const drops: { x: number; y: number }[] = []
   for (let i = 0; i < count; i++) {
     drops.push({
@@ -27,7 +27,7 @@ export function create (x: number, y: number, count: number, w: number, height: 
   }
 }
 
-export function draw (ctx: CanvasRenderingContext2D, brust: Brust) {
+export function draw(ctx: CanvasRenderingContext2D, brust: Brust) {
   ctx.save()
   ctx.fillStyle = '#fff'
   ctx.globalAlpha = brust.life / 100
