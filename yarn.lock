@@ -1801,9 +1801,9 @@ clean-css@4.1.x, clean-css@^4.1.9:
   dependencies:
     source-map "0.5.x"
 
-clean-release@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/clean-release/-/clean-release-2.5.1.tgz#c30132003870b4dd5c78c95af85ecddc73fde3f4"
+clean-release@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/clean-release/-/clean-release-2.5.2.tgz#345c2868c33b1a03180a4c15c6ad4f80dfc366cc"
   dependencies:
     cpy "6.0.0"
     glob "7.1.2"
@@ -1813,9 +1813,9 @@ clean-release@2.5.1:
     rimraf "2.6.2"
     tmp "0.0.33"
 
-clean-scripts@1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/clean-scripts/-/clean-scripts-1.9.1.tgz#81b7102d0b509c919b7fcfcb87721f414f03d737"
+clean-scripts@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/clean-scripts/-/clean-scripts-1.9.2.tgz#24fd36c5e979384e32293855bd8d09a30616b804"
   dependencies:
     minimist "1.2.0"
     pretty-ms "3.1.0"
