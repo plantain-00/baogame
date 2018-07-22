@@ -42,7 +42,7 @@
     "@types/minimist": "1.2.0",
     "@types/puppeteer": "1.5.1",
     "@types/uws": "0.13.2",
-    "autoprefixer": "9.0.0",
+    "autoprefixer": "9.0.1",
     "clean-css-cli": "4.1.11",
     "clean-release": "2.6.0",
     "clean-scripts": "1.9.2",
