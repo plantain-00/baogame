@@ -13,7 +13,7 @@ const debug: boolean = argv.debug
 const server = app.listen(port || 8030, () => {
   core.printInConsole(`Listening on ${host}:${port}${debug ? '(debug)' : '(production)'}`)
 })
-const wss = new libs.WebSocketServer({ server })
+const wss = new libs.WebSocket.Server({ server })
 
 app.use(libs.express.static(libs.path.resolve(__dirname, '../static')))
 
@@ -31,7 +31,7 @@ wss.on('connection', ws => {
 
   let user: services.user.User | undefined
 
-  ws.on('message', message => {
+  ws.on('message', (message: ArrayBuffer) => {
     const protocol = services.format.decode(message)
 
     if (protocol.kind === common.RequestProtocolKind.join) {

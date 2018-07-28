@@ -269,9 +269,9 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@types/uws@0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@types/uws/-/uws-0.13.2.tgz#e3563c636132c171a4c9079620c71aba402ceb00"
+"@types/ws@5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-5.1.2.tgz#f02d3b1cd46db7686734f3ce83bdf46c49decd64"
   dependencies:
     "@types/events" "*"
     "@types/node" "*"
@@ -6353,10 +6353,6 @@ uuid@^3.1.0:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
-uws@99.0.0:
-  version "99.0.0"
-  resolved "https://registry.yarnpkg.com/uws/-/uws-99.0.0.tgz#15e83cda6a135f6a7a70bd399e865be9a14f8d9b"
-
 uws@~9.14.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/uws/-/uws-9.14.0.tgz#fac8386befc33a7a3705cbd58dc47b430ca4dd95"
@@ -6557,6 +6553,12 @@ write@^0.2.1:
   resolved "https://registry.yarnpkg.com/write/-/write-0.2.1.tgz#5fc03828e264cea3fe91455476f7a3c566cb0757"
   dependencies:
     mkdirp "^0.5.1"
+
+ws@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.0.0.tgz#eaa494aded00ac4289d455bac8d84c7c651cef35"
+  dependencies:
+    async-limiter "~1.0.0"
 
 ws@^5.1.1:
   version "5.2.2"
