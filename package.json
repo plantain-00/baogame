@@ -30,7 +30,7 @@
     "express": "4.16.3",
     "minimist": "1.2.0",
     "protobufjs": "6.8.8",
-    "reconnection": "2.0.1",
+    "reconnection": "2.0.3",
     "ws": "6.0.0"
   },
   "devDependencies": {

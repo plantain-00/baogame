@@ -4611,9 +4611,9 @@ readdirp@^2.0.0:
     readable-stream "^2.0.2"
     set-immediate-shim "^1.0.1"
 
-reconnection@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/reconnection/-/reconnection-2.0.1.tgz#651eaa19ddd7a07f160ddb8061d372c9caadf867"
+reconnection@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/reconnection/-/reconnection-2.0.3.tgz#ba37ed2f822eeab0031412b942c54f0c61dfc0fa"
   dependencies:
     tslib "1"
 
