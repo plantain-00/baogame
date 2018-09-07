@@ -70,7 +70,6 @@ module.exports = {
     back: `${tscBackCommand} --watch`,
     image: `${image2base64Command} --watch`,
     file: `${file2variableCommand} --watch`,
-    front: `${tscFrontCommand} --watch`,
     webpack: `${webpackCommand} --watch`,
     css: () => watch(['static/index.css'], [], () => executeScriptAsync(cssCommand)),
     rev: `${revstaticCommand} --watch`
