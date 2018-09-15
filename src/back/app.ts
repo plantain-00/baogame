@@ -41,10 +41,8 @@ wss.on('connection', ws => {
 
         core.emit(ws, { kind: common.ResponseProtocolKind.joinSuccess, joinSuccess: { userId: user.id } })
       }
-    } else if (protocol.kind === common.RequestProtocolKind.control) {
-      if (user && protocol.control) {
-        user.control = protocol.control
-      }
+    } else if (protocol.kind === common.RequestProtocolKind.control && user && protocol.control) {
+      user.control = protocol.control
     }
   })
 })

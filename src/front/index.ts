@@ -220,10 +220,8 @@ document.addEventListener('keyup', e => {
   } else if (e.keyCode === 81) {
     control.itemDown = 0
   }
-  if (e.keyCode === 69) {
-    if (app.showDialog) {
-      app.join()
-    }
+  if (e.keyCode === 69 && app.showDialog) {
+    app.join()
   }
   e.preventDefault()
 })
