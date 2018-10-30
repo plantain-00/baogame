@@ -48,7 +48,9 @@ module.exports = {
     js: `standard ${jsFiles}`,
     export: `no-unused-export ${tsFiles}`,
     commit: `commitlint --from=HEAD~1`,
-    markdown: `markdownlint README.md`
+    markdown: `markdownlint README.md`,
+    typeCoverageBack: 'type-coverage -p src/back --at-least 100',
+    typeCoverageFront: 'type-coverage -p src/front --at-least 98'
   },
   test: {
     jasmine: [
