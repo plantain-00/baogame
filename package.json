@@ -26,6 +26,9 @@
     "node": ">=6"
   },
   "homepage": "https://github.com/plantain-00/baogame#readme",
+  "typeCoverage": {
+    "atLeast": 97
+  },
   "dependencies": {
     "express": "4.16.4",
     "minimist": "1.2.0",
