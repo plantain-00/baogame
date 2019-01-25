@@ -9,7 +9,7 @@ export type Flare = {
   height: number;
 }
 
-export function create(x: number, y: number, power: number, height: number, large?: boolean): Flare {
+export function create(x: number, y: number, power: number, height: number, large = false): Flare {
   const flare: Flare = {
     txt: ' 嘭！',
     life: 70,
