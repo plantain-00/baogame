@@ -3,6 +3,7 @@
  * It is not mean to be edited by hand
  */
 // tslint:disable
+/* eslint-disable */
 import { App } from "./index"
 
 // @ts-ignore
@@ -413,4 +414,5 @@ export const staticProtocolProto = {
         }
     }
 }
+/* eslint-enable */
 // tslint:enable
