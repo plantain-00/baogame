@@ -26,26 +26,26 @@ type uint32 = number
 type int32 = number
 type float = number
 
-export type Item = {
+export interface Item {
   x: uint32;
   y: uint32;
   type: ItemType;
   dead: boolean;
 }
 
-export type Mine = {
+export interface Mine {
   x: uint32;
   y: uint32;
   dead: boolean;
 }
 
-export type Grenade = {
+export interface Grenade {
   x: uint32;
   y: uint32;
   r: uint32;
 }
 
-export type User = {
+export interface User {
   itemType?: ItemType;
   itemCount: uint32;
   nearLadder?: Ladder;
@@ -65,12 +65,12 @@ export type User = {
   flying: uint32;
 }
 
-export type Door = {
+export interface Door {
   x: uint32;
   y: uint32;
 }
 
-export type ItemGate = {
+export interface ItemGate {
   x: uint32;
   y: float;
 }
@@ -88,14 +88,14 @@ export const enum ResponseProtocolKind {
   userDead = 6
 }
 
-type Tick = {
+interface Tick {
   users: User[];
   items: Item[];
   mines: Mine[];
   grenades: Grenade[];
 }
 
-export type MapData = {
+export interface MapData {
   w: uint32;
   h: uint32;
   floors: uint32[];
@@ -104,19 +104,19 @@ export type MapData = {
   itemGates: ItemGate[],
 }
 
-type InitSuccess = {
+interface InitSuccess {
   map: MapData;
 }
 
-type Join = {
+interface Join {
   userName: string;
 }
 
-type JoinSuccess = {
+interface JoinSuccess {
   userId: uint32;
 }
 
-export type Control = {
+export interface Control {
   leftDown: uint32;
   rightDown: uint32;
   upDown: uint32;
@@ -129,13 +129,13 @@ export type Control = {
   itemPress: boolean;
 }
 
-type Explode = {
+interface Explode {
   x: uint32;
   y: uint32;
   power: uint32;
 }
 
-type UserDead = {
+interface UserDead {
   user: User;
   killer?: User;
 }
@@ -188,7 +188,7 @@ export const enum UserStatus {
   falling = 7
 }
 
-export type Ladder = { // (x,y1) until (x,y2)
+export interface Ladder { // (x,y1) until (x,y2)
   x: float;
   y1: uint32;
   y2: uint32;

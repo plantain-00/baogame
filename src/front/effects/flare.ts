@@ -1,6 +1,6 @@
 import { draw as drawSmoke, Smoke, create as createSmoke } from './smoke'
 
-export type Flare = {
+export interface Flare {
   txt: string;
   life: number;
   smokes: Smoke[];

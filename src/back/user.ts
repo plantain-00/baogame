@@ -5,7 +5,7 @@ import * as libs from './libs'
 
 let nextId = 0
 
-export type User = {
+export interface User {
   id: number;
   name: string;
   onFloor?: number;
@@ -97,7 +97,6 @@ export function create(name: string, ws: libs.WebSocket): User {
   user.y = y + common.tileHeight / 2
   return user
 }
-// tslint:disable-next-line:cognitive-complexity
 function getStatus(user: User): common.UserStatus {
   user.crawl = false
   if (user.dieing) { return common.UserStatus.dieing }
@@ -170,7 +169,6 @@ function getStatus(user: User): common.UserStatus {
     }
   }
 }
-// tslint:disable-next-line:cognitive-complexity
 export function update(user: User) {
   user.doubleJumping = false
   user.flying = 0
@@ -427,7 +425,6 @@ export function getData(user: User): common.User {
   }
 }
 
-// tslint:disable-next-line:cognitive-complexity
 export function collide(a: services.user.User, b: services.user.User) {
   if (a.dead || b.dead) {
     return

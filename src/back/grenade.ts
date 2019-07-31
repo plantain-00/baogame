@@ -2,7 +2,7 @@ import * as services from './services'
 import * as common from './common'
 import * as core from './core'
 
-export type Grenade = {
+export interface Grenade {
   x: number;
   y: number;
   vx: number;

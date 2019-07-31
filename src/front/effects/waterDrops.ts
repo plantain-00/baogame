@@ -1,4 +1,4 @@
-export type WaterDrops = {
+export interface WaterDrops {
   life: number;
   drops: { x: number; y: number; vx: number; vy: number }[];
   x: number;

@@ -1,4 +1,4 @@
-export type ItemDead = {
+export interface ItemDead {
   life: number;
   x: number;
   y: number;

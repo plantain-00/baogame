@@ -264,7 +264,6 @@ setInterval(() => {
 
 const urlProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
 
-// tslint:disable-next-line:cognitive-complexity
 function start() {
   app = new App({ el: '#container' })
 

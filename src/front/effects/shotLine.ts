@@ -1,4 +1,4 @@
-export type ShotLine = {
+export interface ShotLine {
   life: number;
   x: number;
   y: number;

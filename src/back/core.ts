@@ -10,7 +10,6 @@ export let grenades: services.grenade.Grenade[] = []
 export let mines: Mine[] = []
 let debug = false
 
-// tslint:disable-next-line:cognitive-complexity
 export function init(debugMode: boolean) {
   debug = debugMode
   setInterval(() => {
@@ -193,19 +192,19 @@ export function announce(protocol: common.ResponseProtocol) {
   }
 }
 
-type Mine = {
+interface Mine {
   x: number;
   y: number;
   creater: services.user.User;
   dead?: boolean;
 }
 
-export type Position = {
+export interface Position {
   x: number;
   y: number;
 }
 
-export type ItemGate = {
+export interface ItemGate {
   x: number;
   y: number;
   targetItem?: Item;

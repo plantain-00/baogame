@@ -1,4 +1,4 @@
-export type Toast = {
+export interface Toast {
   dy: number;
   life: number;
   t: number;

@@ -15,7 +15,6 @@ const shotLines: shotLine.ShotLine[] = []
 export const toasts: toast.Toast[] = []
 export const waterDrops: waterDrop.WaterDrops[] = []
 
-// tslint:disable-next-line:cognitive-complexity
 export function draw(ctx: CanvasRenderingContext2D) {
   for (let i = brusts.length - 1; i >= 0; i--) {
     const eff = brusts[i]
@@ -203,7 +202,6 @@ function drawWeapon(ctx: CanvasRenderingContext2D, index: number) {
   ctx.lineWidth = 1
 }
 
-// tslint:disable-next-line:cognitive-complexity
 export function drawUser(ctx: CanvasRenderingContext2D, user: common.User, currentUserId: number | undefined | null, height: number, width: number, userWidth: number, userHeight: number) {
   if (user.doubleJumping) {
     brusts.push(brust.create(user.x, user.y, 10, 40, height))

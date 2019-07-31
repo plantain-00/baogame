@@ -1,4 +1,4 @@
-export type Smoke = {
+export interface Smoke {
   life: number;
   totalLife: number;
   chaos: number;

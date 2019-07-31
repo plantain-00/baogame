@@ -2,7 +2,7 @@ import * as services from './services'
 import * as common from './common'
 import * as core from './core'
 
-export type Map = {
+export interface Map {
   w: number;
   h: number;
   floor: number[][];
@@ -12,7 +12,6 @@ export type Map = {
   itemGates: core.ItemGate[];
 }
 
-// tslint:disable-next-line:cognitive-complexity
 export function create(): Map {
   const w = common.tw
   const h = common.th

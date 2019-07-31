@@ -1,4 +1,4 @@
-export type Brust = {
+export interface Brust {
   life: number;
   drops: { x: number; y: number }[];
   vy: number;

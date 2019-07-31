@@ -12,11 +12,11 @@ import puppeteer from 'puppeteer'
   await page.waitFor(2000)
   await page.screenshot({ path: `screenshots/enter.png` })
 
-  await (page.keyboard as any).press('d', { delay: 1000 })
+  await page.keyboard.press('d', { delay: 1000 })
   await page.screenshot({ path: `screenshots/right.png` })
 
-  await (page.keyboard as any).press('a', { delay: 500 })
+  await page.keyboard.press('a', { delay: 500 })
   await page.screenshot({ path: `screenshots/left.png` })
 
-  browser.close()
+  await browser.close()
 })()
