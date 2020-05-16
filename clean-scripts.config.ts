@@ -1,15 +1,15 @@
-const { Service, executeScriptAsync, Program } = require('clean-scripts')
-const { watch } = require('watch-then-execute')
+import { executeScriptAsync, Program } from 'clean-scripts'
+import { watch } from 'watch-then-execute'
 
-const tsFiles = `"src/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
-const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+const tsFiles = `"src/**/*.ts"`
+const jsFiles = `"*.config.js" "static/**/*.config.js"`
 
 const file2variableCommand = 'file2variable-cli --config static/file2variable.config.js'
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
 const tscBackCommand = 'tsc -p src/back/'
 const tscFrontCommand = 'tsc -p src/front/'
 const webpackCommand = 'webpack --config static/webpack.config.js'
-const revstaticCommand = 'rev-static --config static/rev-static.config.js'
+const revstaticCommand = 'rev-static --config static/rev-static.config.ts'
 const typesAsSchemaCommand = `types-as-schema "src/back/common.ts" --protobuf static/protocol.proto`
 const cssCommand = [
   `postcss static/index.css -o static/index.postcss.css`,
@@ -52,15 +52,7 @@ module.exports = {
     typeCoverageFront: 'type-coverage -p src/front --strict'
   },
   test: {
-    jasmine: [
-      'tsc -p spec',
-      'jasmine'
-    ],
-    karma: [
-      'tsc -p static_spec',
-      'karma start static_spec/karma.config.js'
-    ],
-    start: new Program('clean-release --config clean-run.config.js', 30000)
+    start: new Program('clean-release --config clean-run.config.ts', 30000)
   },
   fix: `eslint --ext .js,.ts ${tsFiles} ${jsFiles} --fix`,
   watch: {
@@ -71,10 +63,5 @@ module.exports = {
     webpack: `${webpackCommand} --watch`,
     css: () => watch(['static/index.css'], [], () => executeScriptAsync(cssCommand)),
     rev: `${revstaticCommand} --watch`
-  },
-  screenshot: [
-    new Service(`node ./dist/app.js`),
-    `tsc -p screenshots`,
-    `node screenshots/index.js`
-  ]
+  }
 }

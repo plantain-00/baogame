@@ -1,4 +1,6 @@
-module.exports = {
+import { ConfigData } from 'clean-release'
+
+export default {
   include: [
     'dist/*.js',
     'static/protocol.proto',
@@ -23,4 +25,4 @@ module.exports = {
     'git push',
     'git push origin v[version]',
   ]
-}
+} as ConfigData

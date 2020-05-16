@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   inputFiles: [
     'static/scripts/*.bundle.js',
     'static/index.bundle.css',
