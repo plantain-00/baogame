@@ -46,7 +46,6 @@ module.exports = {
   lint: {
     ts: `eslint --ext .js,.ts ${tsFiles} ${jsFiles}`,
     export: `no-unused-export ${tsFiles}`,
-    commit: `commitlint --from=HEAD~1`,
     markdown: `markdownlint README.md`,
     typeCoverageBack: 'type-coverage -p src/back --strict',
     typeCoverageFront: 'type-coverage -p src/front --strict'
