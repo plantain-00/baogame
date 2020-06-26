@@ -2,7 +2,6 @@ import { executeScriptAsync, Program } from 'clean-scripts'
 import { watch } from 'watch-then-execute'
 
 const tsFiles = `"src/**/*.ts"`
-const jsFiles = `"*.config.js" "static/**/*.config.js"`
 
 const file2variableCommand = 'file2variable-cli --config static/file2variable.config.js'
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
@@ -44,7 +43,7 @@ module.exports = {
     }
   ],
   lint: {
-    ts: `eslint --ext .js,.ts ${tsFiles} ${jsFiles}`,
+    ts: `eslint --ext .js,.ts ${tsFiles}`,
     export: `no-unused-export ${tsFiles}`,
     markdown: `markdownlint README.md`,
     typeCoverageBack: 'type-coverage -p src/back --strict',
@@ -53,7 +52,7 @@ module.exports = {
   test: {
     start: new Program('clean-release --config clean-run.config.ts', 30000)
   },
-  fix: `eslint --ext .js,.ts ${tsFiles} ${jsFiles} --fix`,
+  fix: `eslint --ext .js,.ts ${tsFiles} --fix`,
   watch: {
     schema: `${typesAsSchemaCommand} --watch`,
     back: `${tscBackCommand} --watch`,
