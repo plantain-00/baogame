@@ -1,4 +1,6 @@
-module.exports = {
+import { Configuration } from 'file2variable-cli'
+
+const config: Configuration = {
   files: [
     'static/protocol.proto',
     'src/front/template.html'
@@ -9,9 +11,7 @@ module.exports = {
   handler: file => {
     if (file.endsWith('template.html')) {
       return {
-        type: 'vue',
-        name: 'App',
-        path: './index'
+        type: 'vue3',
       }
     }
     if (file.endsWith('.proto')) {
@@ -21,3 +21,5 @@ module.exports = {
   },
   out: 'src/front/proto-variables.ts'
 }
+
+export default config

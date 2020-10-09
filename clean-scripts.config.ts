@@ -3,7 +3,7 @@ import { watch } from 'watch-then-execute'
 
 const tsFiles = `"src/**/*.ts"`
 
-const file2variableCommand = 'file2variable-cli --config static/file2variable.config.js'
+const file2variableCommand = 'file2variable-cli --config static/file2variable.config.ts'
 const image2base64Command = 'image2base64-cli static/imgs/**/*.png static/imgs/*.png --es6 src/front/variables.ts --base static/imgs'
 const tscBackCommand = 'tsc -p src/back/'
 const tscFrontCommand = 'tsc -p src/front/'
@@ -47,7 +47,7 @@ module.exports = {
     export: `no-unused-export ${tsFiles}`,
     markdown: `markdownlint README.md`,
     typeCoverageBack: 'type-coverage -p src/back --strict',
-    typeCoverageFront: 'type-coverage -p src/front --strict'
+    typeCoverageFront: 'type-coverage -p src/front --strict --ignore-files "src/front/proto-variables.ts"'
   },
   test: {
     start: new Program('clean-release --config clean-run.config.ts', 30000)
