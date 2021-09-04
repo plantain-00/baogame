@@ -34,16 +34,16 @@
     "protobufjs": "6.11.2",
     "reconnection": "2.0.4",
     "tslib": "2.3.1",
-    "ws": "8.2.0"
+    "ws": "8.2.1"
   },
   "devDependencies": {
     "@types/express": "4.17.13",
     "@types/jquery": "3.5.6",
     "@types/minimist": "1.2.2",
     "@types/ws": "7.4.7",
-    "@typescript-eslint/eslint-plugin": "4.29.3",
-    "@typescript-eslint/parser": "4.29.3",
-    "autoprefixer": "10.3.3",
+    "@typescript-eslint/eslint-plugin": "4.30.0",
+    "@typescript-eslint/parser": "4.30.0",
+    "autoprefixer": "10.3.4",
     "clean-css-cli": "5.3.3",
     "clean-release": "2.15.2",
     "clean-scripts": "1.20.1",
@@ -61,13 +61,13 @@
     "rimraf": "3.0.2",
     "ts-loader": "9.2.5",
     "ts-node": "10.2.1",
-    "tsconfig-plantain": "0.0.1",
-    "type-coverage": "2.18.0",
+    "tsconfig-plantain": "0.0.2",
+    "type-coverage": "2.18.2",
     "types-as-schema": "1.40.0",
     "typescript": "4.4.2",
-    "vue": "3.2.6",
+    "vue": "3.2.8",
     "watch-then-execute": "1.2.0",
-    "webpack": "5.51.1",
+    "webpack": "5.52.0",
     "webpack-cli": "4.8.0"
   }
 }
