@@ -19,7 +19,7 @@ export function srcFrontTemplateHtml(_ctx, _cache) {
             _createTextVNode(" " + _toDisplayString(_ctx.locale.ui.yourName) + " ", 1 /* TEXT */),
             _withDirectives(_createElementVNode("input", {
               class: "txt-input",
-              "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (_ctx.userName = $event)),
+              "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => ((_ctx.userName) = $event)),
               onKeydown: _cache[1] || (_cache[1] = $event => (_ctx.stopPropagation($event))),
               onKeyup: _cache[2] || (_cache[2] = $event => (_ctx.stopPropagation($event)))
             }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
